@@ -360,7 +360,7 @@
 
       <!-- Duel Matrix -->
       <div class="matrix-arena-card">
-        <div class="grid-3x3">
+        <div id="duelMatrixGrid" class="matrix-grid-dynamic" data-total-tiles="9">
           <div id="dtile-0" class="glass-tile" data-index="0"><span class="order-badge"></span></div>
           <div id="dtile-1" class="glass-tile" data-index="1"><span class="order-badge"></span></div>
           <div id="dtile-2" class="glass-tile" data-index="2"><span class="order-badge"></span></div>
@@ -383,27 +383,33 @@
          SCREEN 4: ONLINE ROOM SETUP
          ===================================================================== -->
     <div id="view-online-lobby" class="screen-view">
-      <div class="glass-modal-card">
+      <div class="glass-modal-card lobby-modal-card">
         <h2 class="kinetic-text">1V1 ROOM DUEL</h2>
+        <div style="font-size: 0.74rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 12px; letter-spacing: 0.04em;">
+          PLAY WITH A FRIEND ON ANY PHONE, TABLET OR PC IN REAL-TIME
+        </div>
 
         <!-- Room Code Display Box -->
-        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 12px; margin-bottom: 12px;">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">ACTIVE ROOM CODE:</span>
-            <button id="btnCopyRoomCode" class="btn-funky" style="padding: 3px 8px; font-size: 0.7rem;">COPY</button>
+        <div class="lobby-code-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">HOST ROOM CODE:</span>
+            <div style="display: flex; gap: 6px;">
+              <button id="btnCopyRoomCode" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">COPY CODE</button>
+              <button id="btnCopyInviteLink" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">SHARE LINK</button>
+            </div>
           </div>
           <div id="lblRoomCode" class="room-code-tag kinetic-text">MIND</div>
-          <div id="roomStatusText" style="font-size: 0.78rem; font-weight: 800; color: var(--color-accent); text-align: center;">
-            WAITING FOR OPPONENT...
+          <div id="roomStatusText" class="room-status-indicator">
+            HOSTING ROOM // WAITING FOR OPPONENT...
           </div>
         </div>
 
-        <div style="border-top: var(--glass-border-subtle); padding-top: 12px;">
-          <label style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">JOIN ROOM WITH CODE:</label>
-          <input type="text" id="inputJoinRoom" class="glass-input-field" placeholder="ENTER 4 LETTERS" maxlength="4">
+        <div style="border-top: var(--glass-border-subtle); padding-top: 12px; margin-top: 10px;">
+          <label style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">HAVE A CODE? JOIN ROOM:</label>
+          <input type="text" id="inputJoinRoom" class="glass-input-field" placeholder="ENTER 4 LETTERS" maxlength="4" autocomplete="off" autocapitalize="characters">
           <div style="display: flex; gap: 8px;">
-            <button id="btnJoinRoomSubmit" class="btn-funky primary" style="flex: 1;">CONNECT ROOM</button>
-            <button id="btnPlayBot" class="btn-funky" style="flex: 1;">VS ROBOT</button>
+            <button id="btnJoinRoomSubmit" class="btn-funky primary" style="flex: 1.2; height: 44px; font-weight: 800;">CONNECT ROOM</button>
+            <button id="btnPlayBot" class="btn-funky" style="flex: 1; height: 44px;">VS ROBOT</button>
           </div>
         </div>
       </div>

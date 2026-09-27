@@ -207,15 +207,28 @@ class AudioAndVoiceEngine {
     ];
   }
 
+  init() {
+    if (!this.ctx) {
+      try {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioClass) {
+          this.ctx = new AudioClass();
+        }
+      } catch (e) {
+        console.warn("AudioContext init error:", e);
+      }
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      try {
+        this.ctx.resume().catch(() => {});
+      } catch (e) {}
+    }
+    return this.ctx;
+  }
+
   setupUnlock() {
     const unlock = () => {
-      if (!this.ctx) {
-        const AudioClass = window.AudioContext || window.webkitAudioContext;
-        this.ctx = new AudioClass();
-      }
-      if (this.ctx && this.ctx.state === 'suspended') {
-        this.ctx.resume();
-      }
+      this.init();
       window.removeEventListener('pointerdown', unlock);
       window.removeEventListener('keydown', unlock);
     };
@@ -788,9 +801,10 @@ class LofiRadioEngine {
       }
     ];
 
-    // Native HTML5 Audio (Direct to hardware speakers, no CORS tainting)
+    // Native HTML5 Audio (Direct to hardware speakers)
     this.audioEl = new Audio();
-    this.audioEl.preload = "auto";
+    this.audioEl.preload = "none"; // don't auto-preload — wait for user action
+    this.audioEl.crossOrigin = "anonymous";
     this.audioEl.volume = this.volume;
 
     this.audioEl.addEventListener('playing', () => {
@@ -805,13 +819,22 @@ class LofiRadioEngine {
       this.nextTrack();
     });
 
-    this.audioEl.addEventListener('error', (err) => {
-      console.warn("Real audio stream fallback: using procedural lo-fi synth", err);
+    this.audioEl.addEventListener('error', () => {
+      // Stream failed — stay on synth, don't crash the game
       if (this.isPlaying && this.mode !== 'STREAM') {
+        if (!this.synthIntervalId) {
+          this.startSynthPlayback(this.currentTrack);
+        }
+      }
+    });
+
+    this.audioEl.addEventListener('stalled', () => {
+      if (this.isPlaying && this.mode !== 'STREAM' && !this.synthIntervalId) {
         this.startSynthPlayback(this.currentTrack);
       }
     });
   }
+
 
   ensureContext() {
     if (this.audioEngine) {
@@ -967,12 +990,12 @@ class LofiRadioEngine {
     }
     const track = this.tracks[this.currentTrack];
 
-    // 1. Immediately start instant procedural acoustic Lo-Fi bed (0ms latency, zero silence)
+    // Step 1: Always start synth immediately for zero-latency audio (no silence ever)
     if (this.mode !== 'STREAM') {
       this.startSynthPlayback(this.currentTrack);
     }
 
-    // 2. Play real audio stream
+    // Step 2: Attempt real audio stream in background
     if (this.mode !== 'SYNTH' && this.audioEl) {
       try {
         if (this.audioEl.src !== track.url) {
@@ -980,24 +1003,28 @@ class LofiRadioEngine {
           this.audioEl.load();
         }
         this.audioEl.volume = this.volume;
-        const p = this.audioEl.play();
-        if (p !== undefined) {
-          p.then(() => {
+        const playPromise = this.audioEl.play();
+        if (playPromise && typeof playPromise.then === 'function') {
+          playPromise.then(() => {
+            // Stream is live! Switch off synth in AUTO mode
             if (this.mode === 'AUTO') {
               this.stopSynthPlayback();
             }
             this.updateRadioUI();
-          }).catch(err => {
-            console.log("Stream buffering, acoustic synth active:", err);
+          }).catch(() => {
+            // Stream blocked (autoplay policy or network) — synth keeps playing
+            if (!this.synthIntervalId && this.mode !== 'STREAM') {
+              this.startSynthPlayback(this.currentTrack);
+            }
           });
         }
       } catch (e) {
-        console.warn("Audio element play error:", e);
+        // Stream unavailable — synth already running
       }
     }
 
     this.isPlaying = true;
-    this.audioEngine.isSpeechMuted = true;
+    if (this.audioEngine) this.audioEngine.isSpeechMuted = true;
     if (window.speechSynthesis) {
       try { window.speechSynthesis.cancel(); } catch (e) {}
     }
@@ -1005,6 +1032,7 @@ class LofiRadioEngine {
     this.updateRadioUI();
     this.startVisualizer();
   }
+
 
   pauseTrack() {
     if (this.audioEl) {
@@ -2292,16 +2320,108 @@ function handleServerWebSocketMessage(msg) {
   }
 }
 
-function initDuelRoomLobby() {
-  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-  let code = '';
-  for (let i = 0; i < 4; i++) {
-    code += letters.charAt(Math.floor(Math.random() * letters.length));
-  }
-  APP_STATE.duel.roomCode = code;
-  document.getElementById('lblRoomCode').textContent = code;
+/* ==========================================================================
+   SECTION 10B: SUPABASE REALTIME CROSS-DEVICE DUEL ENGINE
+   Works across any two devices, anywhere in the world, over Supabase Broadcast
+   ========================================================================== */
+const DUEL_RT = {
+  channel: null,
+  isHost: false,
+  opponentHandle: ''
+};
 
-  // Join this room on the server
+function duelChannelName(code) {
+  return 'duel-room-' + code.toUpperCase();
+}
+
+function closeDuelChannel() {
+  if (DUEL_RT.channel && APP_STATE.supabaseClient) {
+    try {
+      APP_STATE.supabaseClient.removeChannel(DUEL_RT.channel);
+    } catch (e) {}
+    DUEL_RT.channel = null;
+  }
+}
+
+function sendDuelEvent(event, payload) {
+  // Prefer Supabase Realtime (cross-device), fall back to local WS (localhost)
+  if (DUEL_RT.channel) {
+    try {
+      DUEL_RT.channel.send({
+        type: 'broadcast',
+        event: event,
+        payload: payload
+      });
+      return;
+    } catch (e) {}
+  }
+  if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+    try {
+      APP_STATE.ws.send(JSON.stringify({ action: event, ...payload }));
+    } catch (e) {}
+  }
+}
+
+function hostRoomSupa(code) {
+  if (!APP_STATE.supabaseClient) return;
+  closeDuelChannel();
+  DUEL_RT.isHost = true;
+
+  const ch = APP_STATE.supabaseClient.channel(duelChannelName(code), {
+    config: { broadcast: { self: false } }
+  });
+
+  ch.on('broadcast', { event: 'player_joined' }, ({ payload }) => {
+    DUEL_RT.opponentHandle = payload.handle || 'OPPONENT';
+    const statusEl = document.getElementById('roomStatusText');
+    if (statusEl) statusEl.textContent = DUEL_RT.opponentHandle + ' JOINED // MATCH STARTING!';
+    audioVoice.speakHindi(['Opponent aa gaya! Duel shuru!']);
+    APP_STATE.duel.playerNumber = 1;
+    // Tell the joiner they are P2
+    ch.send({ type: 'broadcast', event: 'match_setup', payload: { playerNumber: 2, hostHandle: APP_STATE.playerHandle } });
+    setTimeout(() => startOnlineDuelMatch(false), 900);
+  });
+
+  ch.on('broadcast', { event: 'tap_progress_rt' }, ({ payload }) => {
+    if (APP_STATE.duel.active) {
+      APP_STATE.duel.p2Progress = payload.progress;
+      APP_STATE.duel.p2Score = payload.score;
+      updateDuelHUD();
+    }
+  });
+
+  ch.on('broadcast', { event: 'wrong_tap_rt' }, () => {
+    if (APP_STATE.duel.active) {
+      APP_STATE.duel.p2StunnedUntil = performance.now() + 1500;
+    }
+  });
+
+  ch.on('broadcast', { event: 'round_done_rt' }, ({ payload }) => {
+    if (APP_STATE.duel.active && payload.winner === 2) {
+      APP_STATE.duel.p2Score = payload.score;
+      updateDuelHUD();
+      if (APP_STATE.duel.p2Score >= APP_STATE.duel.targetScore) {
+        endDuelMatch(2);
+      } else {
+        setTimeout(() => {
+          const seq = generatePattern(4);
+          APP_STATE.duel.targetSequence = seq;
+          sendDuelEvent('sync_round_rt', { sequence: seq });
+          startSynchronizedDuelRound();
+        }, 800);
+      }
+    }
+  });
+
+  ch.subscribe((status) => {
+    if (status === 'SUBSCRIBED') {
+      console.log('Supabase duel room hosted:', code);
+    }
+  });
+
+  DUEL_RT.channel = ch;
+
+  // Also try local WS as secondary channel
   if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
     APP_STATE.ws.send(JSON.stringify({
       action: 'join_room',
@@ -2310,6 +2430,96 @@ function initDuelRoomLobby() {
       avatar: APP_STATE.playerAvatar
     }));
   }
+}
+
+function joinRoomSupa(code) {
+  if (!APP_STATE.supabaseClient) {
+    // Fallback: local WS
+    if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+      APP_STATE.ws.send(JSON.stringify({
+        action: 'join_room',
+        roomCode: code,
+        handle: APP_STATE.playerHandle,
+        avatar: APP_STATE.playerAvatar
+      }));
+    } else {
+      startOnlineDuelMatch(true); // bot fallback
+    }
+    return;
+  }
+  closeDuelChannel();
+  DUEL_RT.isHost = false;
+  APP_STATE.duel.roomCode = code;
+  APP_STATE.duel.playerNumber = 2;
+
+  const ch = APP_STATE.supabaseClient.channel(duelChannelName(code), {
+    config: { broadcast: { self: false } }
+  });
+
+  ch.on('broadcast', { event: 'match_setup' }, ({ payload }) => {
+    DUEL_RT.opponentHandle = payload.hostHandle || 'HOST';
+    APP_STATE.duel.playerNumber = payload.playerNumber || 2;
+    startOnlineDuelMatch(false);
+  });
+
+  ch.on('broadcast', { event: 'sync_round_rt' }, ({ payload }) => {
+    if (APP_STATE.duel.active) {
+      APP_STATE.duel.targetSequence = payload.sequence;
+      startSynchronizedDuelRound();
+    }
+  });
+
+  ch.on('broadcast', { event: 'tap_progress_rt' }, ({ payload }) => {
+    if (APP_STATE.duel.active) {
+      APP_STATE.duel.p2Progress = payload.progress;
+      APP_STATE.duel.p2Score = payload.score;
+      updateDuelHUD();
+    }
+  });
+
+  ch.on('broadcast', { event: 'wrong_tap_rt' }, () => {
+    if (APP_STATE.duel.active) {
+      APP_STATE.duel.p2StunnedUntil = performance.now() + 1500;
+    }
+  });
+
+  ch.subscribe((status) => {
+    if (status === 'SUBSCRIBED') {
+      // Announce join to host
+      ch.send({
+        type: 'broadcast',
+        event: 'player_joined',
+        payload: { handle: APP_STATE.playerHandle, avatar: APP_STATE.playerAvatar }
+      });
+      const statusEl = document.getElementById('roomStatusText');
+      if (statusEl) statusEl.textContent = 'CONNECTED // WAITING FOR HOST TO START...';
+    }
+  });
+
+  DUEL_RT.channel = ch;
+}
+
+function initDuelRoomLobby(prefillCode) {
+  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let code = '';
+  for (let i = 0; i < 4; i++) {
+    code += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  APP_STATE.duel.roomCode = code;
+  const codeEl = document.getElementById('lblRoomCode');
+  if (codeEl) codeEl.textContent = code;
+
+  const statusEl = document.getElementById('roomStatusText');
+  if (statusEl) statusEl.textContent = 'HOSTING ROOM // WAITING FOR OPPONENT...';
+
+  // Pre-fill join input if coming from URL ?room=CODE
+  if (prefillCode && prefillCode.length === 4) {
+    const joinInput = document.getElementById('inputJoinRoom');
+    if (joinInput) joinInput.value = prefillCode.toUpperCase();
+  }
+
+  // Host the room via Supabase Realtime (cross-device)
+  hostRoomSupa(code);
 
   switchView('view-online-lobby');
 }
@@ -2337,19 +2547,21 @@ function startOnlineDuelMatch(isVsBot = false) {
   switchView('view-duel-room');
 
   if (isVsBot) {
-    document.getElementById('duelP2Label').textContent = 'SHARMA JI KA ROBOT';
+    const p2lbl = document.getElementById('duelP2Label');
+    if (p2lbl) p2lbl.textContent = 'SHARMA JI KA ROBOT';
     startNewDuelRound();
     startBotBehavior();
   } else {
-    document.getElementById('duelP2Label').textContent = 'LIVE OPPONENT';
-    // If player 1, generate and sync round
-    if (APP_STATE.duel.playerNumber === 1 && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+    const p2lbl = document.getElementById('duelP2Label');
+    if (p2lbl) p2lbl.textContent = DUEL_RT.opponentHandle || 'LIVE OPPONENT';
+    // P1 (host) generates and syncs the pattern
+    if (APP_STATE.duel.playerNumber === 1) {
       const seq = generatePattern(4);
-      APP_STATE.ws.send(JSON.stringify({
-        action: 'sync_round',
-        roundSeq: seq
-      }));
+      APP_STATE.duel.targetSequence = seq;
+      sendDuelEvent('sync_round_rt', { sequence: seq });
+      startSynchronizedDuelRound();
     }
+    // P2 waits for sync_round_rt broadcast from host
   }
 
   function duelLoop(now) {
@@ -2357,15 +2569,16 @@ function startOnlineDuelMatch(isVsBot = false) {
     const duel = APP_STATE.duel;
 
     const p1Card = document.getElementById('duelP1Card');
-    p1Card.classList.toggle('is-stunned', now < duel.p1StunnedUntil);
+    if (p1Card) p1Card.classList.toggle('is-stunned', now < duel.p1StunnedUntil);
 
     const p2Card = document.getElementById('duelP2Card');
-    p2Card.classList.toggle('is-stunned', now < duel.p2StunnedUntil);
+    if (p2Card) p2Card.classList.toggle('is-stunned', now < duel.p2StunnedUntil);
 
-    duel.animFrameId = requestAnimationFrame(duelLoop);
+    APP_STATE.duel.animFrameId = requestAnimationFrame(duelLoop);
   }
-  duel.animFrameId = requestAnimationFrame(duelLoop);
+  APP_STATE.duel.animFrameId = requestAnimationFrame(duelLoop);
 }
+
 
 function startNewDuelRound() {
   const duel = APP_STATE.duel;
@@ -2451,14 +2664,13 @@ function handleDuelTileClick(playerNum, tileIndex) {
       duel.p1Progress++;
       if (tileEl) tileEl.classList.add('correct-tap');
 
-      // Broadcast progress over WebSocket
-      if (!duel.isVsBot && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
-        APP_STATE.ws.send(JSON.stringify({
-          action: 'tap_progress',
+      // Broadcast progress via Supabase Realtime (cross-device)
+      if (!duel.isVsBot) {
+        sendDuelEvent('tap_progress_rt', {
           tileIndex,
           progress: duel.p1Progress,
           score: duel.p1Score
-        }));
+        });
       }
     } else {
       duel.p2Progress++;
@@ -2484,8 +2696,8 @@ function handleDuelTileClick(playerNum, tileIndex) {
     triggerHaptic([100, 50, 100]);
     if (playerNum === 1) {
       duel.p1StunnedUntil = now + 1500;
-      if (!duel.isVsBot && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
-        APP_STATE.ws.send(JSON.stringify({ action: 'player_stun' }));
+      if (!duel.isVsBot) {
+        sendDuelEvent('wrong_tap_rt', {});
       }
     } else {
       duel.p2StunnedUntil = now + 1500;
@@ -2493,22 +2705,28 @@ function handleDuelTileClick(playerNum, tileIndex) {
   }
 }
 
+function endDuelMatch(winnerNum) {
+  const duel = APP_STATE.duel;
+  duel.active = false;
+  if (winnerNum === 1) {
+    audioVoice.playBhangraFanfare();
+    audioVoice.speakHindi(['Bawaal macha diya! You won the duel!']);
+  } else {
+    audioVoice.playMoyeMoyeTune();
+    audioVoice.speakHindi(['Moye Moye! Opponent won the duel!']);
+  }
+  setTimeout(() => switchView('view-menu'), 1800);
+}
+
 function checkDuelVictory() {
   const duel = APP_STATE.duel;
   updateDuelHUD();
 
   if (duel.p1Score >= duel.targetScore) {
-    audioVoice.playBhangraFanfare();
-    audioVoice.speakHindi(["Bawaal macha diya! You won the duel!"]);
-    if (!duel.isVsBot && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
-      APP_STATE.ws.send(JSON.stringify({ action: 'duel_victory' }));
-    }
-    setTimeout(() => switchView('view-menu'), 1500);
+    endDuelMatch(1);
     return;
   } else if (duel.p2Score >= duel.targetScore) {
-    audioVoice.playMoyeMoyeTune();
-    audioVoice.speakHindi(["Moye Moye! Opponent won the duel!"]);
-    setTimeout(() => switchView('view-menu'), 1500);
+    endDuelMatch(2);
     return;
   }
 
@@ -2516,13 +2734,14 @@ function checkDuelVictory() {
     if (duel.active) {
       if (duel.isVsBot) {
         startNewDuelRound();
-      } else if (duel.playerNumber === 1 && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+      } else if (duel.playerNumber === 1) {
+        // Host generates next round and broadcasts via Supabase
         const seq = generatePattern(4);
-        APP_STATE.ws.send(JSON.stringify({
-          action: 'sync_round',
-          roundSeq: seq
-        }));
+        duel.targetSequence = seq;
+        sendDuelEvent('sync_round_rt', { sequence: seq });
+        startSynchronizedDuelRound();
       }
+      // P2 waits for sync_round_rt
     }
   }, 700);
 }
@@ -2805,9 +3024,26 @@ function setupEventListeners() {
   const btnCopy = document.getElementById('btnCopyRoomCode');
   if (btnCopy) {
     btnCopy.addEventListener('click', () => {
-      navigator.clipboard.writeText(APP_STATE.duel.roomCode);
+      navigator.clipboard.writeText(APP_STATE.duel.roomCode).catch(() => {});
       btnCopy.textContent = 'COPIED!';
-      setTimeout(() => btnCopy.textContent = 'COPY', 1500);
+      setTimeout(() => btnCopy.textContent = 'COPY CODE', 1500);
+    });
+  }
+
+  // Share Invite Link Button — sends URL with ?room=CODE so friend auto-joins
+  const btnInviteLink = document.getElementById('btnCopyInviteLink');
+  if (btnInviteLink) {
+    btnInviteLink.addEventListener('click', () => {
+      const url = `${window.location.origin}${window.location.pathname}?room=${APP_STATE.duel.roomCode}`;
+      if (navigator.share) {
+        navigator.share({ title: 'DIMAAG KA FALOODA: 1v1 DUEL', url }).catch(() => {
+          navigator.clipboard.writeText(url).catch(() => {});
+        });
+      } else {
+        navigator.clipboard.writeText(url).catch(() => {});
+        btnInviteLink.textContent = 'LINK COPIED!';
+        setTimeout(() => btnInviteLink.textContent = 'SHARE LINK', 2000);
+      }
     });
   }
 
@@ -2817,17 +3053,13 @@ function setupEventListeners() {
     const code = document.getElementById('inputJoinRoom').value.trim().toUpperCase();
     if (code.length === 4) {
       APP_STATE.duel.roomCode = code;
-      if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
-        APP_STATE.ws.send(JSON.stringify({
-          action: 'join_room',
-          roomCode: code,
-          handle: APP_STATE.playerHandle,
-          avatar: APP_STATE.playerAvatar
-        }));
-      } else {
-        // Fallback to bot match if no server connection
-        startOnlineDuelMatch(true);
-      }
+      const statusEl = document.getElementById('roomStatusText');
+      if (statusEl) statusEl.textContent = 'CONNECTING TO ROOM ' + code + '...';
+      // Use Supabase Realtime for cross-device join
+      joinRoomSupa(code);
+    } else {
+      const joinInput = document.getElementById('inputJoinRoom');
+      if (joinInput) joinInput.focus();
     }
   });
 
@@ -2959,5 +3191,24 @@ window.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   initWebSocket();
   initSupabase();
+
+  // URL deep-link: ?room=CODE — auto-open lobby and pre-fill join code
+  const urlParams = new URLSearchParams(window.location.search);
+  const roomParam = urlParams.get('room');
+  if (roomParam && /^[A-Z0-9]{4}$/i.test(roomParam)) {
+    // Open lobby after Supabase has a moment to initialize
+    setTimeout(() => {
+      initDuelRoomLobby();
+      const joinInput = document.getElementById('inputJoinRoom');
+      if (joinInput) {
+        joinInput.value = roomParam.toUpperCase();
+        // Auto-submit join so friend connects immediately
+        const statusEl = document.getElementById('roomStatusText');
+        if (statusEl) statusEl.textContent = 'FOUND INVITE LINK // TAP CONNECT ROOM';
+      }
+    }, 800);
+  }
+
   console.log("DIMAAG KA FALOODA: BEAT RUN 2.0 (Ultra Funky Live Edition) Bootstrapped.");
 });
+

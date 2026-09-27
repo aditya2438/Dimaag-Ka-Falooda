@@ -640,10 +640,35 @@ header.funky-header {
 
 /* 6. VIEW: SINGLE PLAYER (SHARED MOBILE/BASE RULES) */
 #view-singleplay {
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 4px;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
+}
+
+/* Base (mobile-first): stack vertically, center stage takes all space */
+.singleplay-responsive-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 4px;
+  width: 100%;
+}
+
+/* Desktop side wings: hidden by default (shown only in media queries) */
+.desktop-wing-left,
+.desktop-wing-right {
+  display: none;
+}
+
+.desktop-center-stage {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 4px;
   overflow: hidden;
 }
 
@@ -761,12 +786,13 @@ header.funky-header {
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: var(--glass-border);
   box-shadow: var(--glass-rim), var(--glass-shadow);
-  border-radius: 24px;
-  padding: 10px;
+  border-radius: 20px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -791,12 +817,14 @@ header.funky-header {
   display: grid;
   width: 100%;
   height: 100%;
-  max-width: min(320px, 36vh);
-  max-height: min(320px, 36vh);
+  max-width: min(100%, 46vh, 350px);
+  max-height: min(100%, 46vh, 350px);
+  aspect-ratio: 1;
+  margin: auto;
   gap: 8px;
   justify-content: center;
   align-content: center;
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Dynamic density scaling based on total tiles */
@@ -989,9 +1017,12 @@ header.funky-header {
 #view-online-lobby { justify-content: center; gap: 12px; overflow-y: auto; overflow-x: hidden; }
 .glass-modal-card { background: var(--glass-card); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: var(--glass-border); box-shadow: var(--glass-rim), var(--glass-shadow-lg); border-radius: 24px; padding: 20px; max-height: 88dvh; overflow-y: auto; }
 .glass-modal-card h2 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 900; margin-bottom: 4px; }
+.lobby-modal-card { max-width: min(94vw, 440px); margin: auto; }
+.lobby-code-card { background: rgba(255, 255, 255, 0.05); border: var(--glass-border-subtle); border-radius: 18px; padding: 12px; margin-bottom: 12px; }
+.room-status-indicator { font-family: var(--font-mono); font-size: 0.76rem; font-weight: 800; color: var(--color-accent); text-align: center; margin-top: 6px; letter-spacing: 0.04em; animation: neonTextPulse 2s ease-in-out infinite; }
 .glass-input-field { width: 100%; background: rgba(255, 255, 255, 0.08); border: var(--glass-border); border-radius: 14px; padding: 10px 14px; color: #FFFFFF; font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; text-align: center; text-transform: uppercase; margin: 10px 0; outline: none; }
 .glass-input-field:focus { border-color: var(--color-primary); box-shadow: 0 0 16px var(--color-primary-glow); }
-.room-code-tag { font-family: var(--font-mono); font-size: 2.2rem; font-weight: 900; letter-spacing: 0.15em; color: var(--color-primary); background: rgba(255, 255, 255, 0.06); border: var(--glass-border-subtle); border-radius: 16px; padding: 10px; text-align: center; margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.room-code-tag { font-family: var(--font-mono); font-size: 2.2rem; font-weight: 900; letter-spacing: 0.15em; color: var(--color-primary); background: rgba(255, 255, 255, 0.06); border: var(--glass-border-subtle); border-radius: 16px; padding: 10px; text-align: center; margin: 8px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
 
 /* 9. VIEW: GAME OVER & LEADERBOARD */
 #view-gameover { justify-content: space-between; overflow-y: auto; overflow-x: hidden; gap: 10px; }
@@ -1034,17 +1065,262 @@ header.funky-header {
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); border-radius: 10px; }
 
 /* ==========================================================================
-   10. ADAPTIVE DESKTOP / LAPTOP / PC / MAC WIDESCREEN COCKPIT (min-width: 769px)
+   10. UNIVERSAL ADAPTIVE MULTI-DEVICE RESPONSIVE SUITE
+   Mobile (320px-520px), Tablet (521px-1024px), Laptop/Desktop (1025px+)
    ========================================================================== */
-/* By default on mobile, hide the desktop-only wings */
-.desktop-wing-left,
-.desktop-wing-right {
-  display: none;
+
+
+
+/* MOBILE ULTRA-COMPACT COCKPIT (max-width: 520px) */
+@media (max-width: 520px) {
+  #app {
+    padding: 4px 6px;
+    max-width: 100%;
+  }
+
+  header.funky-header {
+    padding: 5px 8px;
+    margin-bottom: 4px;
+    gap: 4px;
+    border-radius: 16px;
+  }
+
+  .brand-icon-box {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+  }
+  .brand-icon-box svg {
+    width: 16px;
+    height: 16px;
+  }
+  .brand-text-block h1 {
+    font-size: 0.88rem;
+    letter-spacing: -0.01em;
+  }
+  .brand-text-block .badge-sub {
+    font-size: 0.58rem;
+  }
+
+  /* Hide textual status capsule on small phones to maximize play area */
+  .funky-status-capsule {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 4px;
+  }
+  .header-actions .btn-funky {
+    padding: 5px 7px;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    font-size: 0.70rem;
+    justify-content: center;
+  }
+  /* Icon-only compact header action buttons on mobile */
+  #soundStatusText,
+  #radioStatusText {
+    display: none;
+  }
+
+  /* Singleplay HUD on phones */
+  .matrix-hud-row {
+    gap: 4px;
+  }
+  .hud-stat-pill {
+    padding: 3px 5px;
+    border-radius: 12px;
+  }
+  .hud-stat-label {
+    font-size: 0.58rem;
+  }
+  .hud-stat-value {
+    font-size: 1.15rem;
+    line-height: 1.1;
+  }
+  .shields-container {
+    gap: 4px;
+    margin-top: 2px;
+  }
+  .shield-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .combo-streak-row {
+    padding: 2px 8px;
+    font-size: 0.74rem;
+    border-radius: 9px;
+  }
+
+  .jugaad-powers-row {
+    gap: 4px;
+  }
+  .power-btn {
+    padding: 4px 2px;
+    font-size: 0.65rem;
+    height: 32px;
+    border-radius: 10px;
+  }
+  .power-btn svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .phase-status-glass {
+    padding: 4px 8px;
+    border-radius: 10px;
+  }
+  .phase-text-title {
+    font-size: 0.62rem;
+  }
+  .phase-pill-badge {
+    font-size: 0.72rem;
+    padding: 2px 7px;
+  }
+
+  .speed-timer-track {
+    height: 5px;
+  }
+
+  .matrix-arena-card {
+    padding: 6px;
+    border-radius: 16px;
+  }
+
+  .matrix-grid-dynamic {
+    max-width: min(100%, 46vh, 340px);
+    max-height: min(100%, 46vh, 340px);
+  }
+
+  /* Duel Scoreboard on phones */
+  .duel-scoreboard-hud {
+    gap: 4px;
+  }
+  .player-score-card {
+    padding: 6px 8px;
+    border-radius: 14px;
+  }
+  .card-player-label {
+    font-size: 0.70rem;
+  }
+  .card-points-badge {
+    font-size: 1.15rem;
+  }
+
+  /* Main menu stacks single column on mobile */
+  #view-menu.active {
+    display: flex !important;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Hero card compact on phone */
+  .funky-hero-card {
+    padding: 12px 14px;
+    margin-bottom: 0;
+  }
+  .funky-hero-card h2 {
+    font-size: 1.6rem;
+  }
+
+  /* Theme selector: 5 cols fit on small screen */
+  .theme-selector-row {
+    gap: 3px;
+  }
+  .theme-pill-btn {
+    font-size: 0.6rem;
+    padding: 4px 2px;
+  }
+
+  /* Menu mode items compact */
+  .mode-item-glass {
+    padding: 10px 12px;
+  }
+
+  /* Modals & lobby: full width on phone */
+  .glass-modal-card,
+  .lobby-modal-card,
+  .terminal-modal-card {
+    max-width: 100%;
+    border-radius: 16px;
+  }
+
+  /* Gameover card compact */
+  .gameover-glass-panel {
+    padding: 14px 12px;
+    border-radius: 18px;
+  }
+  .go-title-text {
+    font-size: 2rem;
+  }
+  .go-hero-score {
+    font-size: 3.2rem;
+  }
+
+  /* Leaderboard rows compact */
+  .lb-row-item {
+    padding: 8px 10px;
+  }
+  .lb-avatar-box {
+    width: 30px;
+    height: 30px;
+  }
 }
 
-@media (min-width: 769px) {
+
+/* TABLET BALANCED COCKPIT (min-width: 521px) and (max-width: 1024px) */
+@media (min-width: 521px) and (max-width: 1024px) {
   #app {
-    max-width: 1120px;
+    max-width: 740px;
+    width: 94%;
+    height: 94vh;
+    max-height: 94vh;
+    padding: 10px 16px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border: var(--glass-border-subtle);
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.75);
+  }
+
+  header.funky-header {
+    padding: 8px 14px;
+    margin-bottom: 8px;
+  }
+
+  .singleplay-responsive-layout {
+    display: grid !important;
+    grid-template-columns: 200px 1fr;
+    gap: 12px;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+  }
+
+  .desktop-wing-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .desktop-wing-right {
+    display: none; /* Keep arena spacious on tablet */
+  }
+
+  .matrix-grid-dynamic {
+    max-width: min(100%, 54vh, 420px);
+    max-height: min(100%, 54vh, 420px);
+  }
+}
+
+/* LAPTOP & DESKTOP WIDESCREEN COMMAND STATION (min-width: 1025px) */
+@media (min-width: 1025px) {
+  #app {
+    max-width: 1140px;
     width: 95%;
     height: 92vh;
     max-height: 92vh;
@@ -1081,6 +1357,11 @@ header.funky-header {
     justify-content: space-between;
     gap: 10px;
     min-height: 0;
+  }
+
+  .matrix-grid-dynamic {
+    max-width: min(100%, 56vh, 460px);
+    max-height: min(100%, 56vh, 460px);
   }
 
   /* Desktop Side Panels */
