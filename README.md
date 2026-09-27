@@ -1,6 +1,6 @@
-# BLIND MATRIX: MEMORY RUN 2.0 (ULTRA FUNKY EDITION)
+# DIMAAG KA FALOODA: BEAT RUN 2.0 (ULTRA FUNKY EDITION)
 > **Top 1% Joyful, Multi-Device Responsive Glassmorphic Memory & Reflex Speed Run Engine**  
-> *Crafted with Dynamic Escalating Blocks (9 to 60 Tiles), Retro-Terminal Hindi Lo-Fi Chill Radio (Station 108.4 FM), Adaptive Multi-Device Layout (PC Cockpit vs. Mobile Handheld), Kinetic Animated Typography, Living Micro-Interactions, Jelly Physics, Moving Canvas Doodads, Dimag Ki Batti (Think Feature), Combo Streak Multipliers, Viral "Moye Moye" Melodic Synthesizer, Comical Spoken Hindi Audio, Real-Time 1v1 Room Duel WebSocket Multiplayer, and Zero Emojis.*
+> *Crafted with Dynamic Escalating Blocks (9 to 60 Tiles), Real Hindi Lo-Fi Streams (Arijit Singh, Talwinder, Aditya Rikhari), DJ Rhythmic Beat Synced Tile Taps, Retro-Terminal Radio (Station 108.4 FM), Adaptive Multi-Device Layout (PC Cockpit vs. Mobile Handheld), Kinetic Animated Typography, Living Micro-Interactions, Jelly Physics, Moving Canvas Doodads, Dimag Ki Batti (Think Feature), Combo Streak Multipliers, Viral "Moye Moye" Melodic Synthesizer, Comical Spoken Hindi Audio, Real-Time 1v1 Room Duel WebSocket Multiplayer, and Zero Emojis.*
 
 ---
 
@@ -23,9 +23,9 @@ As players progress through the campaign, the toughness level and spatial comple
 
 ---
 
-## 2. Retro-Terminal Hindi Lo-Fi Chill Radio ("Station 108.4 FM")
+## 2. Real Hindi Lo-Fi Chill Radio ("Station 108.4 FM") & DJ Beat Taps
 
-A dedicated in-game chill radio station designed to induce a relaxing, peaceful, highly focused flow state:
+A dedicated in-game music stream paired with synchronized live DJ percussion beats:
 
 - **Header Terminal Button (`#btnRadioToggle`)**:
   - Displays animated radio frequency pulse waves when music is active.
@@ -34,19 +34,28 @@ A dedicated in-game chill radio station designed to induce a relaxing, peaceful,
   - CRT scanline overlay, macOS/Linux dot title bar, monospace command log output.
   - Real-time ASCII/Canvas audio visualizer spectrum (`#terminalVisualizerCanvas`).
   - Full playback controls: `[ PREV ]`, `[ PLAY / PAUSE ]`, `[ NEXT ]`, Volume Slider, and `[ PLAY IN BACKGROUND & RESUME GAME ]`.
-- **6 Peaceful, Soulful, Lovable Hindi Songs (Arijit Singh / Soulful Acoustic Style)**:
-  1. **"TUM HI HO"** (*Aashiqui 2* - Arijit Singh) — Soulful Piano Lo-Fi in E Minor.
-  2. **"KESARIYA"** (*Brahmāstra* - Arijit Singh) — Warm Saffron Sunrise Melodic Ambient.
-  3. **"CHANNA MEREYA"** (*Ae Dil Hai Mushkil* - Arijit Singh) — Calming Acoustic Minor Harmony.
-  4. **"RAABTA"** (*Agent Vinod* - Arijit Singh) — Serene Midnight Acoustic Lo-Fi Groove.
-  5. **"KAL HO NAA HO"** (*Kal Ho Naa Ho* - Sonu Nigam) — Peaceful Heartfelt Reflection.
-  6. **"APNA BANA LE"** (*Bhediya* - Arijit Singh) — Dreamy Romantic Ambient Chillwave.
+- **Top 10 Peaceful, Melodious Real Hindi Songs**:
+  1. **"KESARIYA"** (Arijit Singh) — *Brahmastra // Warm Saffron Love Song*
+  2. **"APNA BANA LE"** (Arijit Singh) — *Bhediya // Soulful Romantic Melody*
+  3. **"TUM HI HO"** (Arijit Singh) — *Aashiqui 2 // Iconic Love Anthem*
+  4. **"CHANNA MEREYA"** (Arijit Singh) — *ADHM // Melancholy Acoustic Soul*
+  5. **"RAABTA"** (Arijit Singh) — *Agent Vinod // Serene Midnight Groove*
+  6. **"DHUNDHALA"** (Talwinder & Yashraj) — *Chill Hypnotic Vibes*
+  7. **"HASEEN"** (Talwinder) — *Smooth Romantic Lo-Fi*
+  8. **"SAHIBA"** (Aditya Rikhari) — *Soulful Acoustic Love*
+  9. **"SAMJHO NA"** (Aditya Rikhari) — *Peaceful Melodious Flow*
+  10. **"FAASLE"** (Aditya Rikhari) — *Heartfelt Reflection*
+- **DJ-Style Rhythm Beats on Tile Clicks**:
+  - When tapping tiles (1, 2, 3...), punchy synthesized beats layer dynamically on top of the background music:
+    - Step 1: 808 Sub Kick
+    - Step 2: Crisp Snare / Clap
+    - Step 3: Metallic Trap Hi-Hat Roll
+    - Step 4: Heavy 808 Sub Bass Glide
+    - Step 5: DJ Vinyl Scratch Riser
+    - Step 6+: Turbo Double Beat Drop
+  - On mistake: Authentic DJ vinyl record needle scratch-stop sound (`playDJRecordStop()`).
 - **Automatic Spoken Dialogue Muting**:
-  - When any song starts playing, `audioVoice.isSpeechMuted = true` is set and `window.speechSynthesis.cancel()` is called.
-  - Spoken comedy dialogues are paused so the player can relax in a tranquil flow state.
-  - When the radio is paused or stopped, normal voice lines resume automatically.
-- **100% Procedurally Synthesized**:
-  - Zero external MP3 files, zero 404 errors, zero buffering delay. Everything is synthesized using the Web Audio API (polyphonic warm chords, sub-bass, vinyl crackle noise, and nylon guitar arpeggios).
+  - When background music plays, spoken comedy voice lines are automatically muted to ensure pure musical immersion. Spoken voice lines restore when radio is paused.
 
 ---
 

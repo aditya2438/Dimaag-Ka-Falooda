@@ -1,4 +1,4 @@
-# BLIND MATRIX: MEMORY RUN 2.0 - DEPLOYMENT & DATABASE GUIDE
+# DIMAAG KA FALOODA: BEAT RUN 2.0 - DEPLOYMENT & DATABASE GUIDE
 
 A complete, production-ready, step-by-step handbook to upload your game repository to GitHub, set up a 100% free Supabase PostgreSQL database for the live global leaderboard with real-time push synchronization, and host both the frontend and WebSocket 1v1 multiplayer backend for free.
 
@@ -46,12 +46,12 @@ git add .
 
 ### 3. Make the initial commit
 ```bash
-git commit -m "feat: Blind Matrix 2.0 with dynamic 60-block scaling, lofi radio, and round celebration wave"
+git commit -m "feat: Dimaag Ka Falooda Beat Run with 60 blocks, Hindi Lo-Fi radio, and live DJ beats"
 ```
 
 ### 4. Create a new repository on GitHub
 1. Open [https://github.com/new](https://github.com/new).
-2. Set **Repository name**: `blind-matrix-game` (or any preferred name).
+2. Set **Repository name**: `dimaag-ka-falooda-beat-run` (or any preferred name).
 3. Set Visibility: **Public**.
 4. Leave "Add a README file" **unchecked** (we already have a complete README).
 5. Click **Create repository**.
@@ -59,7 +59,7 @@ git commit -m "feat: Blind Matrix 2.0 with dynamic 60-block scaling, lofi radio,
 ### 5. Link local repository and push to GitHub
 Replace `<YOUR_GITHUB_USERNAME>` with your actual GitHub username:
 ```bash
-git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/blind-matrix-game.git
+git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/dimaag-ka-falooda-beat-run.git
 git branch -M main
 git push -u origin main
 ```
@@ -193,7 +193,7 @@ git push
 
 ## 4. Step 3: Free Cloud Hosting (Full Multiplayer Support)
 
-Because Blind Matrix 2.0 includes a **native Node.js WebSocket engine** for 1v1 room duels, we recommend deploying on **Render.com** (100% Free).
+Because Dimaag Ka Falooda: Beat Run 2.0 includes a **native Node.js WebSocket engine** for 1v1 room duels, we recommend deploying on **Render.com** (100% Free).
 
 ### Option A (Recommended): Render.com Free Web Service
 Render will run your Express static file server and native WebSocket server together on a free HTTPS/WSS URL.
@@ -201,9 +201,9 @@ Render will run your Express static file server and native WebSocket server toge
 1. Sign in to [https://dashboard.render.com](https://dashboard.render.com).
 2. Click **New +** &rarr; **Web Service**.
 3. Choose **Build and deploy from a Git repository**.
-4. Connect your GitHub account and select your `blind-matrix-game` repository.
+4. Connect your GitHub account and select your `dimaag-ka-falooda-beat-run` repository.
 5. Configure the deployment settings:
-   - **Name**: `blind-matrix` (or your choice)
+   - **Name**: `dimaag-ka-falooda-beat-run` (or your choice)
    - **Region**: Closest to your users (e.g., Singapore or Frankfurt or Oregon)
    - **Branch**: `main`
    - **Runtime**: `Node`
@@ -213,12 +213,12 @@ Render will run your Express static file server and native WebSocket server toge
 6. Click **Create Web Service**.
 7. Render will build and deploy your app in about 1–2 minutes.
 8. Once deployed, Render provides a public URL:  
-   `https://blind-matrix-xyz.onrender.com`
+   `https://dimaag-ka-falooda-xyz.onrender.com`
 
 **Everything works out of the box!**
 - The game frontend loads smoothly over HTTPS.
 - 1v1 Room Duels connect over secure WebSockets (`wss://`).
-- Lo-Fi Hindi Radio streams via Web Audio API.
+- Real Hindi Lo-Fi tracks stream peacefully in the background with live DJ beats.
 - Live global leaderboard synchronizes automatically with Supabase.
 
 ---
@@ -232,7 +232,7 @@ If you only want static hosting (Solo Mode + Bot Sparring + Live Supabase Leader
 3. Under **Branch**, select `main` and `/ (root)`.
 4. Click **Save**.
 5. After 1 minute, your site will be live at:  
-   `https://<YOUR_GITHUB_USERNAME>.github.io/blind-matrix-game/`
+   `https://<YOUR_GITHUB_USERNAME>.github.io/dimaag-ka-falooda-beat-run/`
 
 *Note: On GitHub Pages, 1v1 Bot Sparring works completely offline. For live player-vs-player room duels across different devices, host the `server.js` backend on Render.com.*
 

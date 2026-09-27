@@ -364,7 +364,7 @@ function handleClientDisconnect(socket) {
 // ============================================================================
 server.listen(PORT, () => {
   console.log(`=======================================================`);
-  console.log(`>> BLIND MATRIX: MEMORY RUN 2.0 (Ultra Funky Live Edition)`);
+  console.log(`>> DIMAAG KA FALOODA: BEAT RUN 2.0 (Ultra Funky Live Edition)`);
   console.log(`>> Local Web Game: http://localhost:${PORT}`);
   console.log(`>> Native WebSocket Live Multiplayer Server: Active`);
   console.log(`>> Press Ctrl + C to stop.`);

@@ -490,11 +490,24 @@ header.funky-header {
   line-height: 1.1;
 }
 
-.funky-hero-card .hero-tagline {
-  font-size: 0.84rem;
-  color: var(--text-secondary);
-  font-weight: 600;
+.hero-chips-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
   margin-bottom: 10px;
+}
+.chip-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: var(--glass-border-subtle);
+  color: var(--color-accent);
+  letter-spacing: 0.05em;
 }
 
 .desi-taunt-pill {
