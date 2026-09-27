@@ -403,10 +403,11 @@
 
         <!-- Room Code Display Box -->
         <div class="lobby-code-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap;">
             <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">HOST ROOM CODE:</span>
             <div style="display: flex; gap: 6px;">
-              <button id="btnCopyRoomCode" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">COPY CODE</button>
+              <button id="btnNewRoomCode" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">NEW CODE</button>
+              <button id="btnCopyRoomCode" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">COPY</button>
               <button id="btnCopyInviteLink" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">SHARE LINK</button>
             </div>
           </div>
@@ -418,7 +419,7 @@
 
         <div style="border-top: var(--glass-border-subtle); padding-top: 12px; margin-top: 10px;">
           <label style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">HAVE A CODE? JOIN ROOM:</label>
-          <input type="text" id="inputJoinRoom" class="glass-input-field" placeholder="ENTER 4 LETTERS" maxlength="4" autocomplete="off" autocapitalize="characters">
+          <input type="text" id="inputJoinRoom" class="glass-input-field" placeholder="ENTER 4-CHAR ALPHANUMERIC CODE" maxlength="4" autocomplete="off" autocapitalize="characters">
           <div style="display: flex; gap: 8px;">
             <button id="btnJoinRoomSubmit" class="btn-funky primary" style="flex: 1.2; height: 44px; font-weight: 800;">CONNECT ROOM</button>
             <button id="btnPlayBot" class="btn-funky" style="flex: 1; height: 44px;">VS ROBOT</button>
