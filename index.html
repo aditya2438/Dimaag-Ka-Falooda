@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BLIND MATRIX: MEMORY RUN</title>
+  
+  <!-- Funky Vector Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23080E21'/%3E%3Ccircle cx='20' cy='20' r='8' fill='%23FFB703'/%3E%3Ccircle cx='44' cy='20' r='8' fill='%23FF2A6D'/%3E%3Ccircle cx='20' cy='44' r='8' fill='%2305D9E8'/%3E%3Ccircle cx='44' cy='44' r='8' fill='%23FFE600'/%3E%3Cpath d='M20 20L44 44M44 20L20 44' stroke='%23FFFFFF' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts: Outfit (Playful High-Impact Display), Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Funky Fluid Glassmorphism Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Supabase JS Client for Realtime Global Leaderboard -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Interactive Ambient Funky Doodad Canvas -->
+  <canvas id="ambientCanvas"></canvas>
+
+  <!-- Master Application Container (Adaptive: PC Cockpit vs Mobile Handheld) -->
+  <div id="app">
+
+    <!-- Top Funky Glass Header -->
+    <header class="funky-header">
+      <div class="header-brand">
+        <div class="brand-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 5.6L20 10l-4.4 4 1.3 6-4.9-3.2L7.1 20l1.3-6L4 10l5.6-2.4z"/></svg>
+        </div>
+        <div class="brand-text-block">
+          <h1 class="kinetic-text">BLIND MATRIX</h1>
+          <div class="badge-sub">PRO REFLEX 2.0</div>
+        </div>
+      </div>
+
+      <!-- Live Dynamic Activity Capsule -->
+      <div id="funkyStatusCapsule" class="funky-status-capsule">
+        <span class="capsule-text">READY TO RUN</span>
+      </div>
+
+      <div class="header-actions">
+        <!-- Animated Motion-Based Audio Toggle -->
+        <button id="btnSoundToggle" class="btn-funky audio-active" title="Toggle Sound & Voices">
+          <div class="audio-eq-icon">
+            <svg viewBox="0 0 24 24">
+              <!-- Speaker Body -->
+              <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
+              <!-- Motion Equalizer Bars -->
+              <rect class="eq-bar eq-bar-1" x="14" y="8" width="2" height="8" rx="1" fill="currentColor"/>
+              <rect class="eq-bar eq-bar-2" x="17.5" y="5" width="2" height="14" rx="1" fill="currentColor"/>
+              <rect class="eq-bar eq-bar-3" x="21" y="9" width="2" height="6" rx="1" fill="currentColor"/>
+              <!-- Mute Slash line -->
+              <line class="eq-mute-slash" x1="2" y1="2" x2="22" y2="22" stroke="#FF3366" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span id="soundStatusText">AUDIO: ON</span>
+        </button>
+
+        <!-- Retro-Terminal Hindi Lo-Fi Chill Radio Button -->
+        <button id="btnRadioToggle" class="btn-funky" title="Open Hindi Lo-Fi Chill Radio Terminal">
+          <div class="radio-icon-box">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" fill="currentColor"/>
+              <circle class="radio-signal radio-signal-1" cx="6" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <path class="radio-signal radio-signal-2" d="M3 3a6 6 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span id="radioStatusText">LO-FI RADIO</span>
+        </button>
+
+        <!-- Return Menu Button -->
+        <button id="btnNavMenu" class="btn-funky" style="display: none;">
+          MENU
+        </button>
+      </div>
+    </header>
+
+    <!-- =====================================================================
+         SCREEN 1: MAIN LOBBY (ADAPTIVE: 2-COL ON PC, SINGLE-COL ON MOBILE)
+         ===================================================================== -->
+    <div id="view-menu" class="screen-view active">
+      <!-- Left Column on PC / Top Card on Mobile -->
+      <div class="funky-hero-card">
+        <svg class="hero-sparkle-top" viewBox="0 0 24 24"><path d="M12 0l2.5 8.5L23 11l-8.5 2.5L12 22l-2.5-8.5L1 11l8.5-2.5z"/></svg>
+        <div>
+          <h2 class="kinetic-text">BLIND MATRIX</h2>
+          <div class="hero-tagline">High-Stakes Spatial Memory & Reaction Speed Engine</div>
+
+          <!-- Real-Time Desi Taunt Banner -->
+          <div class="desi-taunt-pill">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <span id="lblDesiTaunt">Arey Sharma ji ke ladke ko dekho!</span>
+          </div>
+        </div>
+
+        <!-- Operator Profile Pill -->
+        <div class="operator-pill">
+          <div class="operator-info">
+            <div id="lblPlayerAvatarPreview" class="operator-avatar-preview">
+              <!-- Injected via game.js -->
+            </div>
+            <div style="text-align: left;">
+              <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">ACTIVE OPERATIVE</div>
+              <div id="lblPlayerHandle" class="operator-handle kinetic-text-gold">CHINTU_404</div>
+            </div>
+          </div>
+          <button id="btnEditProfile" class="btn-funky" style="padding: 6px 11px; font-size: 0.78rem;">EDIT IDENTITY</button>
+        </div>
+      </div>
+
+      <!-- Right Column on PC / Bottom Stack on Mobile -->
+      <div class="menu-right-col">
+        <!-- Mode Selection -->
+        <div class="modes-list">
+          <!-- Mode 1: Solo Campaign -->
+          <div id="btnStartSolo" class="mode-item-glass">
+            <div class="mode-icon-bubble">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            </div>
+            <div class="mode-details">
+              <span class="mode-badge">01 / SOLO CAMPAIGN</span>
+              <div class="mode-name">MEMORY RUN</div>
+              <div class="mode-desc">Recall patterns, survive decoy flickers, reverse mode, and unlock God Matrix rank!</div>
+            </div>
+          </div>
+
+          <!-- Mode 2: 1v1 Room Duel -->
+          <div id="btnStartOnline" class="mode-item-glass">
+            <div class="mode-icon-bubble">
+              <svg viewBox="0 0 24 24"><path d="M19.5 3h-15C3.12 3 2 4.12 2 5.5v13C2 19.88 3.12 21 4.5 21h15c1.38 0 2.5-1.12 2.5-2.5v-13C22 4.12 20.88 3 19.5 3zm-9 13.5l-4-4 1.41-1.41L10.5 13.67l6.09-6.08L18 9l-7.5 7.5z"/></svg>
+            </div>
+            <div class="mode-details">
+              <span class="mode-badge">02 / 1V1 REALTIME DUEL</span>
+              <div class="mode-name">ROOM DUEL</div>
+              <div class="mode-desc">Live WebSocket duel with room code. First to 10 points wins. Wrong tap = 1.5s stun!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Refined Funky Themes Selector -->
+        <div class="theme-selector-box">
+          <div class="theme-label-header">JOYFUL THEME MOODS:</div>
+          <div class="theme-selector-row">
+            <button class="theme-pill-btn active" data-theme="mango">MANGO</button>
+            <button class="theme-pill-btn" data-theme="bubblegum">BUBBLE</button>
+            <button class="theme-pill-btn" data-theme="carnival">CARNIVAL</button>
+            <button class="theme-pill-btn" data-theme="arcade">ARCADE</button>
+          </div>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="menu-bottom-row">
+          <button id="btnOpenLeaderboard" class="btn-funky">
+            <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1c1.9-.38 3.4-1.95 3.61-3.94C19.08 11.63 21 9.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+            TOP 10 RANKS
+          </button>
+          <button id="btnOpenSettings" class="btn-funky">
+            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+            CLOUD SYNC
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         SCREEN 2: SINGLE PLAYER (ADAPTIVE: 3-COL COCKPIT ON PC, STACK ON MOBILE)
+         ===================================================================== -->
+    <div id="view-singleplay" class="screen-view">
+      <div class="singleplay-responsive-layout">
+
+        <!-- DESKTOP LEFT WING (PC / LAPTOP / MAC COCKPIT) -->
+        <div class="desktop-wing-left">
+          <!-- Operative Telemetry Card -->
+          <div class="cockpit-panel-glass">
+            <div class="cockpit-panel-title">OPERATOR TELEMETRY</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div id="dtAvatarPreview" class="operator-avatar-preview"></div>
+              <div>
+                <div id="dtPlayerHandle" class="operator-handle kinetic-text-gold" style="font-size: 1rem;">CHINTU_PRO</div>
+                <div style="font-size: 0.72rem; color: var(--color-accent); font-weight: 700;">PRO MEMORIZER</div>
+              </div>
+            </div>
+            <!-- Neural Shields Status -->
+            <div style="margin-top: 6px; border-top: var(--glass-border-subtle); padding-top: 6px;">
+              <div style="font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono);">NEURAL SHIELDS</div>
+              <div id="dtShieldsContainer" class="shields-container" style="justify-content: flex-start; margin-top: 4px;">
+                <!-- Mirrored from main shields -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop Physical Numpad Helper Diagram -->
+          <div class="cockpit-panel-glass">
+            <div class="cockpit-panel-title">NUMPAD REFLEX MAP</div>
+            <div class="numpad-grid-helper">
+              <div class="numpad-key-box">[ 7 ]</div>
+              <div class="numpad-key-box">[ 8 ]</div>
+              <div class="numpad-key-box">[ 9 ]</div>
+              <div class="numpad-key-box">[ 4 ]</div>
+              <div class="numpad-key-box">[ 5 ]</div>
+              <div class="numpad-key-box">[ 6 ]</div>
+              <div class="numpad-key-box">[ 1 ]</div>
+              <div class="numpad-key-box">[ 2 ]</div>
+              <div class="numpad-key-box">[ 3 ]</div>
+            </div>
+            <div style="font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); text-align: center; margin-top: 2px;">
+              USE NUMPAD OR NUMBER KEYS
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER STAGE (ARENA & CORE ENGINE) -->
+        <div class="desktop-center-stage">
+          <!-- HUD Stat Bar -->
+          <div class="matrix-hud-row">
+            <div class="hud-stat-pill">
+              <div class="hud-stat-label">LEVEL</div>
+              <div id="spLevel" class="hud-stat-value glow-accent">LVL 1</div>
+            </div>
+            <div class="hud-stat-pill">
+              <div class="hud-stat-label">SCORE</div>
+              <div id="spScore" class="hud-stat-value kinetic-text">0</div>
+            </div>
+            <div class="hud-stat-pill">
+              <div class="hud-stat-label">3 SHIELDS</div>
+              <div class="shields-container">
+                <svg id="shield-1" class="shield-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                <svg id="shield-2" class="shield-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                <svg id="shield-3" class="shield-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Combo Streak Surge Row -->
+          <div class="combo-streak-row">
+            <div class="streak-pill-tag">
+              <svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>
+              <span id="spStreakLabel">1X STREAK</span>
+            </div>
+            <span id="spStreakBonusTag" class="streak-multiplier-badge">+0 PTS BONUS</span>
+          </div>
+
+          <!-- 3 Desi Jugaad Powers -->
+          <div class="jugaad-powers-row">
+            <button id="btnPowerChai" class="power-btn" title="Freeze speed timer for 2.5 seconds (Key: C)">
+              <svg viewBox="0 0 24 24">
+                <path class="steam-path" d="M9 3c0 1.5-1 2-1 3s1 1.5 1 3M14 3c0 1.5-1 2-1 3s1 1.5 1 3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <path d="M4 19h16v2H4zM6 9l1.5 10h9L18 9H6zm10 8H8l-1-6h10l-1 6z"/>
+              </svg>
+              CHAI [C]
+            </button>
+            <button id="btnPowerChashma" class="power-btn" title="Peek next tile for 450ms (Key: V)">
+              <svg viewBox="0 0 24 24">
+                <circle cx="7" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2.2"/>
+                <circle cx="17" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2.2"/>
+                <path class="lens-gleam" d="M6 10l2 4M16 10l2 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path fill="currentColor" d="M10.5 12h3M7 7l5-4 5 4"/>
+              </svg>
+              4K PEEK [V]
+            </button>
+            <!-- The "Think Feature" ("Dimag Ki Batti") -->
+            <button id="btnPowerThink" class="power-btn think-btn" title="Dimag Ki Batti: Focus highlight next step! (Key: T)">
+              <svg class="bulb-rays" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm-3 18v1c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9zm1-3v-1h4v1h-4z"/>
+              </svg>
+              THINK [T]
+            </button>
+          </div>
+
+          <!-- Phase Directive Banner -->
+          <div class="phase-status-glass">
+            <span class="phase-text-title">DIRECTIVE</span>
+            <span id="spPhasePill" class="phase-pill-badge memorize">MEMORIZE SEQUENCE</span>
+          </div>
+
+          <!-- Depleting Speed Timer Bar -->
+          <div class="speed-timer-track">
+            <div id="spTimerFill" class="speed-timer-fill"></div>
+          </div>
+
+          <!-- Escalating Dynamic Glass Matrix Arena (9 -> 12 -> 15 -> 20 -> 30 -> 40 -> 60 Blocks) -->
+          <div id="singleMatrixCard" class="matrix-arena-card">
+            <div class="fever-badge-pill">2X FEVER MODE!</div>
+            <div id="singleMatrixGrid" class="matrix-grid-dynamic">
+              <!-- Dynamically populated via setupSinglePlayerGrid() in game.js -->
+            </div>
+          </div>
+
+          <!-- Live Brain IQ Rank Banner -->
+          <div class="iq-meter-banner">
+            <span>BRAIN STATUS:</span>
+            <span id="spBrainIQ" class="iq-badge kinetic-text">CHINTU (50 IQ)</span>
+          </div>
+        </div>
+
+        <!-- DESKTOP RIGHT WING (PC / LAPTOP / MAC COCKPIT) -->
+        <div class="desktop-wing-right">
+          <!-- Brain IQ Radar Card -->
+          <div class="cockpit-panel-glass">
+            <div class="cockpit-panel-title">COGNITIVE RADAR</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary);">
+              Current Matrix Difficulty:
+            </div>
+            <div id="dtDiffLevel" style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--color-primary);">
+              STANDARD 3-SEQUENCE
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); line-height: 1.3;">
+              Survive 3 rounds to unlock Decoy Flickers, Ghost Grid, and Reverse Recall!
+            </div>
+          </div>
+
+          <!-- Live Desi Taunts Feed -->
+          <div class="cockpit-panel-glass">
+            <div class="cockpit-panel-title">DESI COMMENTARY</div>
+            <div id="dtLiveTaunt" style="font-size: 0.84rem; font-weight: 700; color: var(--color-coral); line-height: 1.35;">
+              "Arey Sharma ji ke ladke ko dekho!"
+            </div>
+          </div>
+
+          <!-- Live Leaderboard Quick Look -->
+          <div class="cockpit-panel-glass" style="flex: 1; min-height: 0;">
+            <div class="cockpit-panel-title">TOP HIGHEST SCORE</div>
+            <div style="display: flex; align-items: baseline; gap: 8px;">
+              <span id="dtHighScoreVal" class="kinetic-text" style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 900;">0</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">PTS</span>
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">
+              Beat Sharma Pro to achieve Alien Brain God rank!
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         SCREEN 3: 1V1 ROOM DUEL (LIVE WEBSOCKET SYNC)
+         ===================================================================== -->
+    <div id="view-duel-room" class="screen-view">
+      <!-- Duel Scoreboard HUD -->
+      <div class="duel-scoreboard-hud">
+        <div id="duelP1Card" class="player-score-card">
+          <div class="duel-stun-badge">MOYE MOYE (1.5S)</div>
+          <div class="score-card-top">
+            <span id="duelP1Label" class="card-player-label">YOU (PLAYER 1)</span>
+            <span id="duelP1Score" class="card-points-badge kinetic-text">0 / 10</span>
+          </div>
+        </div>
+        <div id="duelP2Card" class="player-score-card opponent">
+          <div class="duel-stun-badge">MOYE MOYE (1.5S)</div>
+          <div class="score-card-top">
+            <span id="duelP2Label" class="card-player-label">OPPONENT</span>
+            <span id="duelP2Score" class="card-points-badge kinetic-text">0 / 10</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Duel Phase Banner -->
+      <div class="phase-status-glass">
+        <span class="phase-text-title">DUEL STATUS</span>
+        <span id="duelPhaseStatus" class="phase-pill-badge memorize">MEMORIZE DUEL PATTERN</span>
+      </div>
+
+      <!-- Duel Matrix -->
+      <div class="matrix-arena-card">
+        <div class="grid-3x3">
+          <div id="dtile-0" class="glass-tile" data-index="0"><span class="order-badge"></span></div>
+          <div id="dtile-1" class="glass-tile" data-index="1"><span class="order-badge"></span></div>
+          <div id="dtile-2" class="glass-tile" data-index="2"><span class="order-badge"></span></div>
+          <div id="dtile-3" class="glass-tile" data-index="3"><span class="order-badge"></span></div>
+          <div id="dtile-4" class="glass-tile" data-index="4"><span class="order-badge"></span></div>
+          <div id="dtile-5" class="glass-tile" data-index="5"><span class="order-badge"></span></div>
+          <div id="dtile-6" class="glass-tile" data-index="6"><span class="order-badge"></span></div>
+          <div id="dtile-7" class="glass-tile" data-index="7"><span class="order-badge"></span></div>
+          <div id="dtile-8" class="glass-tile" data-index="8"><span class="order-badge"></span></div>
+        </div>
+      </div>
+
+      <div class="iq-meter-banner">
+        <span>FIRST TO 10 WINS DUEL</span>
+        <span>WRONG TAP = 1.5S STUN</span>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         SCREEN 4: ONLINE ROOM SETUP
+         ===================================================================== -->
+    <div id="view-online-lobby" class="screen-view">
+      <div class="glass-modal-card">
+        <h2 class="kinetic-text">1V1 ROOM DUEL</h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+          Share room code with a friend or battle live against Sharma Ji Ka Robot.
+        </p>
+
+        <!-- Room Code Display Box -->
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">ACTIVE ROOM CODE:</span>
+            <button id="btnCopyRoomCode" class="btn-funky" style="padding: 3px 8px; font-size: 0.7rem;">COPY</button>
+          </div>
+          <div id="lblRoomCode" class="room-code-tag kinetic-text">MIND</div>
+          <div id="roomStatusText" style="font-size: 0.78rem; font-weight: 800; color: var(--color-accent); text-align: center;">
+            WAITING FOR OPPONENT TO JOIN...
+          </div>
+        </div>
+
+        <div style="border-top: var(--glass-border-subtle); padding-top: 12px;">
+          <label style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">JOIN ROOM WITH CODE:</label>
+          <input type="text" id="inputJoinRoom" class="glass-input-field" placeholder="ENTER 4 LETTERS" maxlength="4">
+          <div style="display: flex; gap: 8px;">
+            <button id="btnJoinRoomSubmit" class="btn-funky primary" style="flex: 1;">CONNECT ROOM</button>
+            <button id="btnPlayBot" class="btn-funky" style="flex: 1;">VS ROBOT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         SCREEN 5: GAME OVER & SUMMARY BREAKDOWN
+         ===================================================================== -->
+    <div id="view-gameover" class="screen-view">
+      <div class="gameover-glass-panel">
+        <div class="go-title-text">MOYE MOYE!</div>
+        <div id="goReason" class="go-sub-text">ALL 3 NEURAL SHIELDS LOST</div>
+
+        <div style="font-size: 0.76rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">FINAL SCORE</div>
+        <div id="goFinalScore" class="go-hero-score kinetic-text">0</div>
+
+        <!-- 2x2 Telemetry Grid -->
+        <div class="metrics-2x2-grid">
+          <div class="metric-cell">
+            <div class="metric-cell-lbl">LEVEL REACHED</div>
+            <div id="goMaxLevel" class="metric-cell-val glow-accent">LVL 1</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-cell-lbl">BEST STREAK</div>
+            <div id="goStreak" class="metric-cell-val glow-gold">0X</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-cell-lbl">ALL-TIME BEST</div>
+            <div id="goHighScore" class="metric-cell-val">0</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-cell-lbl">VERDICT</div>
+            <div class="metric-cell-val" style="font-size: 0.88rem; color: var(--color-danger);">KHATAM TATA!</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button id="btnRestartGame" class="btn-funky primary" style="height: 48px; font-size: 1rem;">
+          PLAY AGAIN (EK AUR BAAR)
+        </button>
+        <button id="btnGameOverMenu" class="btn-funky" style="height: 44px;">
+          RETURN TO MENU
+        </button>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         SCREEN 6: TOP 10 LEADERBOARD (LIVE REALTIME SYNC)
+         ===================================================================== -->
+    <div id="view-leaderboard" class="screen-view">
+      <div class="leaderboard-glass-box">
+        <div class="lb-header-row">
+          <h2 class="kinetic-text">TOP 10 OPERATORS</h2>
+          <span id="lbSyncBadge" style="font-size: 0.72rem; color: var(--color-accent); font-family: var(--font-mono); font-weight: 800;">
+            LIVE REALTIME SYNC
+          </span>
+        </div>
+
+        <ul id="leaderboardList" class="lb-rows-container">
+          <!-- Populated via game.js -->
+        </ul>
+      </div>
+
+      <button id="btnLeaderboardBack" class="btn-funky" style="height: 44px;">
+        BACK TO MENU
+      </button>
+    </div>
+
+  </div> <!-- /#app -->
+
+  <!-- =======================================================================
+       MODAL 1: OPERATOR PROFILE & AVATAR PICKER (ZERO EMOJIS)
+       ======================================================================= -->
+  <div id="modalProfile" class="glass-modal-backdrop">
+    <div class="glass-modal-card" style="width: 100%; max-width: 380px;">
+      <h2 class="kinetic-text">OPERATOR IDENTITY</h2>
+      <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px;">
+        Select your handcrafted avatar and set your operative username.
+      </p>
+
+      <!-- SVG Avatar Grid (Zero Emojis!) -->
+      <div id="avatarGrid" class="avatar-selector-grid">
+        <!-- Injected via game.js -->
+      </div>
+
+      <input type="text" id="inputPlayerHandle" class="glass-input-field" maxlength="12" placeholder="e.g. CHINTU_PRO">
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
+        <button id="btnSaveProfile" class="btn-funky primary" style="width: 100%;">SAVE PROFILE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 2: CLOUD SUPABASE SETTINGS (OPTIONAL PERSISTENCE)
+       ======================================================================= -->
+  <div id="modalSettings" class="glass-modal-backdrop">
+    <div class="glass-modal-card" style="width: 100%; max-width: 400px;">
+      <h2 class="kinetic-text">SUPABASE CLOUD SYNC</h2>
+      <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 12px;">
+        Sync global top scores across devices. If left blank, offline local storage is active.
+      </p>
+
+      <label style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">SUPABASE URL:</label>
+      <input type="text" id="inputSupaUrl" class="glass-input-field" placeholder="https://xyz.supabase.co">
+
+      <label style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">SUPABASE ANON KEY:</label>
+      <input type="text" id="inputSupaKey" class="glass-input-field" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6...">
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
+        <button id="btnCloseSettings" class="btn-funky">CANCEL</button>
+        <button id="btnSaveSettings" class="btn-funky primary">SAVE & CONNECT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 3: RETRO HACKER / LO-FI CHILL RADIO TERMINAL (ZERO EMOJIS)
+       ======================================================================= -->
+  <div id="modalRadioTerminal" class="glass-modal-backdrop">
+    <div class="terminal-modal-card">
+      <!-- Terminal Window Bar -->
+      <div class="terminal-bar">
+        <div class="terminal-dots">
+          <span class="term-dot dot-red"></span>
+          <span class="term-dot dot-yellow"></span>
+          <span class="term-dot dot-green"></span>
+        </div>
+        <div class="terminal-title">TERMINAL // CHILLWAVE 108.4 FM</div>
+        <button id="btnCloseRadioTerminal" class="term-close-btn" title="Minimize Radio">X</button>
+      </div>
+
+      <!-- Live CRT Scanline Overlay -->
+      <div class="terminal-screen">
+        <div class="terminal-crt-scanline"></div>
+
+        <!-- Terminal Status & Banner -->
+        <div class="term-log-header">
+          <div class="term-badge-live">STATION ACTIVE</div>
+          <div class="term-freq">320 KBPS / 48kHz POLYPHONIC</div>
+        </div>
+
+        <div class="terminal-sys-log" id="terminalSysLog">
+          > STATION FREQ: 108.4 MHZ // AESTHETIC HINDI CHILLWAVE<br>
+          > SPEECH SYNTHESIS OVERRIDE: DIALOGUES AUTO-MUTED FOR FOCUS FLOW<br>
+          > SELECT A RELAXING TRACK BELOW TO PLAY IN BACKGROUND:
+        </div>
+
+        <!-- Real-Time Audio Visualizer Canvas -->
+        <div class="terminal-viz-box">
+          <canvas id="terminalVisualizerCanvas" width="380" height="48"></canvas>
+        </div>
+
+        <!-- Track List (6 Relaxing Soulful Hindi Songs) -->
+        <div class="terminal-tracks-list" id="terminalTracksList">
+          <div class="term-track-row" data-track="0">
+            <span class="track-num">[01]</span>
+            <div class="track-meta">
+              <div class="track-name">TUM HI HO</div>
+              <div class="track-sub">Aashiqui 2 // Soulful Piano Lo-Fi (Arijit Singh)</div>
+            </div>
+            <button class="track-play-btn" data-track="0">PLAY</button>
+          </div>
+          <div class="term-track-row" data-track="1">
+            <span class="track-num">[02]</span>
+            <div class="track-meta">
+              <div class="track-name">KESARIYA</div>
+              <div class="track-sub">Brahmastra // Warm Saffron Melodic Ambient (Arijit Singh)</div>
+            </div>
+            <button class="track-play-btn" data-track="1">PLAY</button>
+          </div>
+          <div class="term-track-row" data-track="2">
+            <span class="track-num">[03]</span>
+            <div class="track-meta">
+              <div class="track-name">CHANNA MEREYA</div>
+              <div class="track-sub">ADHM // Calming Acoustic Minor Harmony (Arijit Singh)</div>
+            </div>
+            <button class="track-play-btn" data-track="2">PLAY</button>
+          </div>
+          <div class="term-track-row" data-track="3">
+            <span class="track-num">[04]</span>
+            <div class="track-meta">
+              <div class="track-name">RAABTA</div>
+              <div class="track-sub">Agent Vinod // Serene Midnight Lo-Fi Groove (Arijit Singh)</div>
+            </div>
+            <button class="track-play-btn" data-track="3">PLAY</button>
+          </div>
+          <div class="term-track-row" data-track="4">
+            <span class="track-num">[05]</span>
+            <div class="track-meta">
+              <div class="track-name">KAL HO NAA HO</div>
+              <div class="track-sub">Nostalgia // Peaceful Heartfelt Reflection (Sonu Nigam)</div>
+            </div>
+            <button class="track-play-btn" data-track="4">PLAY</button>
+          </div>
+          <div class="term-track-row" data-track="5">
+            <span class="track-num">[06]</span>
+            <div class="track-meta">
+              <div class="track-name">APNA BANA LE</div>
+              <div class="track-sub">Bhediya // Dreamy Romantic Chillwave (Arijit Singh)</div>
+            </div>
+            <button class="track-play-btn" data-track="5">PLAY</button>
+          </div>
+        </div>
+
+        <!-- Terminal Deck / Controls Bar -->
+        <div class="terminal-controls-deck">
+          <div class="term-ctrl-buttons">
+            <button id="btnRadioPrev" class="term-ctrl-btn">[ PREV ]</button>
+            <button id="btnRadioPlayPause" class="term-ctrl-btn active">[ PLAY ]</button>
+            <button id="btnRadioNext" class="term-ctrl-btn">[ NEXT ]</button>
+          </div>
+          <div class="term-volume-box">
+            <span class="term-vol-label">VOL:</span>
+            <input type="range" id="radioVolumeSlider" min="0" max="100" value="70" class="term-slider">
+          </div>
+        </div>
+
+        <button id="btnMinimizeRadio" class="term-action-btn">
+          [ PLAY IN BACKGROUND & RESUME GAME ]
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- External Master Game Engine Script -->
+  <script src="game.js" defer></script>
+</body>
+</html>

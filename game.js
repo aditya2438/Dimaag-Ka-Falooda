@@ -1,0 +1,2634 @@
+/* ==========================================================================
+   BLIND MATRIX: MEMORY RUN 2.0 - ULTRA FUNKY MASTER ENGINE (game.js)
+   Engine Architecture: Pure Vanilla JS, Web Audio API + Speech Synth,
+   Native WebSocket 1v1 Room Duel Sync, Fever Mode, Living Micro-Interactions
+   Designed for Freshers & Students: Readable, Well-Documented & Zero Emojis
+   ========================================================================== */
+
+/* ==========================================================================
+   SECTION 1: BESPOKE FUNNY DESI SVG AVATARS (ZERO EMOJIS)
+   ========================================================================== */
+const AVATARS = {
+  cutting_chai: `<svg viewBox="0 0 24 24"><path fill="#F59E0B" d="M4 19h16v2H4z"/><path fill="#D97706" d="M6 7l1.5 10h9L18 7H6zm10 8H8l-1-6h10l-1 6z"/><path fill="#FCD34D" d="M9 3c0 1.5-1 2-1 3s1 1.5 1 3h2c0-1.5-1-2-1-3s1-1.5 1-3H9zm4 0c0 1.5-1 2-1 3s1 1.5 1 3h2c0-1.5-1-2-1-3s1-1.5 1-3h-2z"/></svg>`,
+  sharma_beta: `<svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="3.5" fill="none" stroke="#FACC15" stroke-width="2.2"/><circle cx="17" cy="12" r="3.5" fill="none" stroke="#FACC15" stroke-width="2.2"/><path fill="#FACC15" d="M10.5 12h3M7 7l5-4 5 4M12 16v3m-3 0h6"/></svg>`,
+  auto_rocket: `<svg viewBox="0 0 24 24"><path fill="#A3E635" d="M12 2L4 8v10h2v2h2v-2h8v2h2v-2h2V8l-8-6zm-4 8h8v4H8v-4zm4-6l5 4H7l5-4z"/><circle cx="8" cy="16" r="1.5" fill="#000"/><circle cx="16" cy="16" r="1.5" fill="#000"/></svg>`,
+  chintu_pro: `<svg viewBox="0 0 24 24"><path fill="#06B6D4" d="M12 2a9 9 0 0 0-9 9v4a4 4 0 0 0 4 4h2v-8H5v-0.5A7 7 0 0 1 12 4.5a7 7 0 0 1 7 7V12h-4v8h2a4 4 0 0 0 4-4v-4a9 9 0 0 0-9-9z"/><rect x="8" y="10" width="8" height="4" rx="2" fill="#FFFFFF"/></svg>`,
+  gabbar_mustache: `<svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="3" fill="#F43F5E"/><circle cx="17" cy="8" r="3" fill="#F43F5E"/><path fill="#FFFFFF" d="M10 8h4v1h-4z"/><path fill="#F43F5E" d="M12 14c-2.5-3-7-3-9 0 2.5 3 7 1 9 0zm0 0c2.5-3 7-3 9 0-2.5 3-7 1-9 0z"/></svg>`,
+  desi_alien: `<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="10" fill="#A855F7"/><circle cx="8" cy="11" r="2" fill="#000"/><circle cx="16" cy="11" r="2" fill="#000"/><circle cx="12" cy="7" r="1.5" fill="#F43F5E"/><path fill="none" stroke="#FFFFFF" stroke-width="2" d="M9 16c1.5 1.5 4.5 1.5 6 0"/></svg>`,
+  samosa_ninja: `<svg viewBox="0 0 24 24"><path fill="#EA580C" d="M12 3L2 19h20L12 3zm0 4.5L18.5 17H5.5L12 7.5z"/><rect x="6" y="11" width="12" height="3" fill="#1E293B"/><circle cx="9" cy="12.5" r="1" fill="#FFFFFF"/><circle cx="15" cy="12.5" r="1" fill="#FFFFFF"/></svg>`,
+  babu_rao: `<svg viewBox="0 0 24 24"><circle cx="7" cy="10" r="4" fill="none" stroke="#38BDF8" stroke-width="2.5"/><circle cx="17" cy="10" r="4" fill="none" stroke="#38BDF8" stroke-width="2.5"/><path fill="#38BDF8" d="M11 10h2M12 14v4M9 19h6"/><path fill="#FFFFFF" d="M10 15h4v1.5h-4z"/></svg>`
+};
+
+/* ==========================================================================
+   SECTION 2: FUNNY DESI TAUNTS & BRAIN IQ TITLES (ZERO EMOJIS)
+   ========================================================================== */
+const DESI_TAUNTS = [
+  "Arey Sharma ji ke ladke ko dekho!",
+  "Full 200 IQ Baazigar mode on!",
+  "Dimag ghas charne toh nahi gaya?!",
+  "Beta tumse na ho payega!",
+  "Khel shuru, kursi ki peti baandh lo!",
+  "Bawaal cheez hai be tu!",
+  "Jalwa hai hamara yahan!",
+  "Moye Moye se bacho!",
+  "Ekdum jhakaas memory!"
+];
+
+function getBrainIQInfo(level, score) {
+  if (level >= 11) return { iq: 300, rank: "ALIEN BRAIN GOD" };
+  if (level >= 9)  return { iq: 220, rank: "SHARMA JI KA BETA" };
+  if (level >= 7)  return { iq: 175, rank: "DESI CHAD CODER" };
+  if (level >= 5)  return { iq: 130, rank: "BACKBENCHER PRO" };
+  if (level >= 3)  return { iq: 90,  rank: "CHINTU MEMORIZER" };
+  return { iq: 45, rank: "GADHA MODE" };
+}
+
+/* ==========================================================================
+   SECTION 3: DIFFICULTY PROGRESSION LADDER
+   ========================================================================== */
+function getLevelConfig(level) {
+  let rows = 3;
+  let cols = 3;
+  let totalTiles = 9;
+  let sequenceLength = 3;
+  let hasDecoy = false;
+  let isReverse = false;
+  let isGhost = false;
+  let timeLimitSec = 3.5;
+
+  if (level >= 14) {
+    // TIER 7: GOD MATRIX MODE (60 BLOCKS!)
+    rows = 6;
+    cols = 10;
+    totalTiles = 60;
+    sequenceLength = Math.min(12, 10 + Math.floor((level - 14) / 2));
+    hasDecoy = true;
+    isReverse = Math.random() < 0.5;
+    isGhost = true;
+    timeLimitSec = Math.max(1.1, 1.5 - (level - 14) * 0.05);
+  } else if (level >= 11) {
+    // TIER 6: ULTRA REFLEX ARENA (40 BLOCKS!)
+    rows = 5;
+    cols = 8;
+    totalTiles = 40;
+    sequenceLength = level === 11 ? 8 : (level === 12 ? 9 : 10);
+    hasDecoy = true;
+    isReverse = level >= 12;
+    isGhost = level >= 13;
+    timeLimitSec = Math.max(1.4, 1.8 - (level - 11) * 0.1);
+  } else if (level >= 9) {
+    // TIER 5: PRO MEMORIZER SECTOR (30 BLOCKS!)
+    rows = 5;
+    cols = 6;
+    totalTiles = 30;
+    sequenceLength = level === 9 ? 7 : 8;
+    hasDecoy = true;
+    isReverse = level >= 10;
+    isGhost = level >= 10;
+    timeLimitSec = 1.9;
+  } else if (level >= 7) {
+    // TIER 4: EXPANDED MATRIX (20 BLOCKS!)
+    rows = 4;
+    cols = 5;
+    totalTiles = 20;
+    sequenceLength = level === 7 ? 6 : 7;
+    hasDecoy = true;
+    isReverse = level >= 8;
+    isGhost = level >= 8;
+    timeLimitSec = 2.1;
+  } else if (level >= 5) {
+    // TIER 3: TACTICAL RECTANGLE (15 BLOCKS!)
+    rows = 3;
+    cols = 5;
+    totalTiles = 15;
+    sequenceLength = level === 5 ? 5 : 6;
+    hasDecoy = true;
+    isReverse = level >= 6;
+    isGhost = level >= 6;
+    timeLimitSec = 2.4;
+  } else if (level >= 3) {
+    // TIER 2: ADVANCED GRID (12 BLOCKS!)
+    rows = 3;
+    cols = 4;
+    totalTiles = 12;
+    sequenceLength = level === 3 ? 4 : 5;
+    hasDecoy = true;
+    isReverse = level >= 4;
+    isGhost = false;
+    timeLimitSec = 2.7;
+  } else if (level === 2) {
+    // TIER 1B: 9 BLOCKS
+    rows = 3;
+    cols = 3;
+    totalTiles = 9;
+    sequenceLength = 4;
+    hasDecoy = false;
+    isReverse = false;
+    isGhost = false;
+    timeLimitSec = 3.0;
+  } else {
+    // TIER 1A: 9 BLOCKS (LEVEL 1 INTRO)
+    rows = 3;
+    cols = 3;
+    totalTiles = 9;
+    sequenceLength = 3;
+    hasDecoy = false;
+    isReverse = false;
+    isGhost = false;
+    timeLimitSec = 3.5;
+  }
+
+  return { rows, cols, totalTiles, sequenceLength, hasDecoy, isReverse, isGhost, timeLimitSec };
+}
+
+/* ==========================================================================
+   SECTION 4: FUNNY HINDI SPEECH & SYNTHESIZED COMICAL AUDIO
+   Zero external .mp3 dependencies. Pure Web Speech API & Web Audio API
+   ========================================================================== */
+class AudioAndVoiceEngine {
+  constructor() {
+    this.ctx = null;
+    this.isMuted = false;
+    this.isSpeechMuted = false;
+    this.setupUnlock();
+
+    this.phrasesStart = [
+      "Khel shuru! Kursi ki peti bandh lo!",
+      "Aao beta, dikhao apna dimag!",
+      "Sharma ji ke bete ko aaj harana hai!",
+      "Bina kisi bakwas ke, game start!"
+    ];
+
+    this.phrasesCombos = [
+      "Arre bawaal! Sharma ji ka beta ro raha hai!",
+      "Cheetah hi kehde! Gazab dimag hai bhai!",
+      "Bhai kya reflex hai, supersonic speed!",
+      "Ye baburao ka style hai re baba!",
+      "NASA wale bhi hairan hain tumhari memory dekh ke!"
+    ];
+
+    this.phrasesShieldLoss = [
+      "Arre mori maiyya! Ye kya dabaya?!",
+      "Galti se mistake ho gaya bhidu!",
+      "Aayein?! Baingan!",
+      "Ek shield gaya, dhyan kidhar hai hero?!",
+      "Dimag ghas charne gaya hai kya?!"
+    ];
+
+    this.phrasesThink = [
+      "Arre dimag ki batti jal gayi re baba!",
+      "Mentos khao, dimag ki batti jalao!",
+      "Focus mode on! Ab dekh jalwa!"
+    ];
+
+    this.phrasesChai = [
+      "Garam cutting chai piyo, thand rakho!",
+      "Ek cutting chai, dimag ekdum tight!"
+    ];
+
+    this.phrasesPeek = [
+      "4K chashma on! Ab sab saaf dikhega!",
+      "Eagle eye active, ab dekh kaise pelte hain!"
+    ];
+
+    this.phrasesFail = [
+      "Khatam, Tata, Bye-Bye, Goodnight, gaya!",
+      "Moye Moye... Moye Moye!",
+      "Beta tumse na ho payega, jaake Ludo khelo!",
+      "Gaya do sau rupaye paani mein!",
+      "Arey koi baat nahi, ek aur baar try maar!"
+    ];
+
+    this.phrasesWin = [
+      "Shabaash cheetah!",
+      "Gazab dimag hai bhai!",
+      "Toofan express chal rahi hai!",
+      "Ek number baabu, kya baat hai!"
+    ];
+  }
+
+  setupUnlock() {
+    const unlock = () => {
+      if (!this.ctx) {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        this.ctx = new AudioClass();
+      }
+      if (this.ctx && this.ctx.state === 'suspended') {
+        this.ctx.resume();
+      }
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+    window.addEventListener('pointerdown', unlock, { once: true });
+    window.addEventListener('keydown', unlock, { once: true });
+  }
+
+  speakHindi(phraseList) {
+    if (this.isMuted || this.isSpeechMuted || !window.speechSynthesis) return;
+    try {
+      window.speechSynthesis.cancel();
+      const phrase = phraseList[Math.floor(Math.random() * phraseList.length)];
+      const utter = new SpeechSynthesisUtterance(phrase);
+
+      utter.pitch = 1.35;
+      utter.rate = 1.18;
+      utter.lang = 'hi-IN';
+
+      window.speechSynthesis.speak(utter);
+    } catch (e) {
+      console.warn("Speech error:", e);
+    }
+  }
+
+  playPop() {
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(450, now);
+      osc.frequency.exponentialRampToValueAtTime(920, now + 0.08);
+
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.09);
+    } catch (e) { }
+  }
+
+  playBoing() {
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(300, now);
+      osc.frequency.exponentialRampToValueAtTime(700, now + 0.14);
+      osc.frequency.linearRampToValueAtTime(400, now + 0.28);
+
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.31);
+    } catch (e) { }
+  }
+
+  playMoyeMoyeTune() {
+    if (this.isMuted || !this.ctx) return;
+    const notes = [329.63, 311.13, 277.18, 246.94];
+    notes.forEach((freq, idx) => {
+      setTimeout(() => {
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+
+          gain.gain.setValueAtTime(0.32, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.26);
+        } catch (e) { }
+      }, idx * 160);
+    });
+  }
+
+  playDholakBeat() {
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(160, now);
+      osc.frequency.exponentialRampToValueAtTime(45, now + 0.2);
+
+      gain.gain.setValueAtTime(0.42, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.21);
+    } catch (e) { }
+  }
+
+  playFlashNote(step) {
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440 + step * 75, now);
+
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.13);
+    } catch (e) { }
+  }
+
+  playBulbChime() {
+    if (this.isMuted || !this.ctx) return;
+    const freqs = [659.25, 830.61, 987.77, 1318.51];
+    freqs.forEach((freq, idx) => {
+      setTimeout(() => {
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+
+          gain.gain.setValueAtTime(0.28, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.36);
+        } catch (e) { }
+      }, idx * 70);
+    });
+  }
+
+  playBhangraFanfare() {
+    if (this.isMuted || !this.ctx) return;
+    const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+    notes.forEach((freq, idx) => {
+      setTimeout(() => {
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.19);
+        } catch (e) { }
+      }, idx * 80);
+    });
+  }
+}
+
+const audioVoice = new AudioAndVoiceEngine();
+
+/* ==========================================================================
+   SECTION 4B: RETRO HACKER / HINDI LO-FI CHILL RADIO SYNTHESIZER
+   Synthesizes 6 Peaceful & Soulful Hindi Melodies (Arijit Singh / Soulful style)
+   Zero external audio files. Pure Web Audio API Polyphony & Lo-Fi Beats
+   ========================================================================== */
+class LofiRadioEngine {
+  constructor(audioEngine) {
+    this.audioEngine = audioEngine;
+    this.ctx = null;
+    this.masterGain = null;
+    this.analyser = null;
+    this.isPlaying = false;
+    this.currentTrack = 0;
+    this.volume = 0.70;
+    this.timerId = null;
+    this.currentStep = 0;
+    this.vizAnimId = null;
+
+    // 6 Iconic Peaceful Soulful Hindi Melodies
+    this.tracks = [
+      {
+        id: 0,
+        name: "TUM HI HO",
+        movie: "Aashiqui 2 (Arijit Singh)",
+        desc: "Soulful Piano Lo-Fi in E Minor",
+        bpm: 72,
+        chords: [
+          [164.81, 196.00, 246.94, 329.63], // Em (E3, G3, B3, E4)
+          [130.81, 164.81, 196.00, 261.63], // C  (C3, E3, G3, C4)
+          [146.83, 185.00, 220.00, 293.66], // D  (D3, F#3, A3, D4)
+          [123.47, 146.83, 185.00, 246.94], // Bm (B2, D3, F#3, B3)
+          [164.81, 196.00, 246.94, 329.63], // Em
+          [110.00, 130.81, 164.81, 220.00], // Am (A2, C3, E3, A3)
+          [146.83, 185.00, 220.00, 293.66], // D
+          [164.81, 196.00, 246.94, 329.63]  // Em
+        ],
+        bass: [82.41, 65.41, 73.42, 61.74, 82.41, 55.00, 73.42, 82.41],
+        melody: [
+          493.88, 523.25, 493.88, 440.00, 392.00, 440.00, 493.88, 392.00,
+          369.99, 329.63, 392.00, 369.99, 329.63, 293.66, 329.63, 329.63
+        ]
+      },
+      {
+        id: 1,
+        name: "KESARIYA",
+        movie: "Brahmastra (Arijit Singh)",
+        desc: "Warm Saffron Sunrise Melodic Ambient",
+        bpm: 78,
+        chords: [
+          [146.83, 185.00, 220.00, 293.66], // D  (D3, F#3, A3, D4)
+          [110.00, 138.59, 164.81, 220.00], // A  (A2, C#3, E3, A3)
+          [123.47, 146.83, 185.00, 246.94], // Bm (B2, D3, F#3, B3)
+          [98.00,  123.47, 146.83, 196.00], // G  (G2, B2, D3, G3)
+          [146.83, 185.00, 220.00, 293.66], // D
+          [110.00, 138.59, 164.81, 220.00], // A
+          [98.00,  123.47, 146.83, 196.00], // G
+          [146.83, 185.00, 220.00, 293.66]  // D
+        ],
+        bass: [73.42, 55.00, 61.74, 49.00, 73.42, 55.00, 49.00, 73.42],
+        melody: [
+          369.99, 392.00, 440.00, 440.00, 493.88, 440.00, 369.99, 329.63,
+          293.66, 329.63, 369.99, 392.00, 369.99, 329.63, 293.66, 293.66
+        ]
+      },
+      {
+        id: 2,
+        name: "CHANNA MEREYA",
+        movie: "Ae Dil Hai Mushkil (Arijit Singh)",
+        desc: "Calming Acoustic Minor Pad & Melancholy",
+        bpm: 72,
+        chords: [
+          [98.00,  116.54, 146.83, 196.00], // Gm (G2, Bb2, D3, G3)
+          [87.31,  110.00, 130.81, 174.61], // F  (F2, A2, C3, F3)
+          [77.78,  98.00,  116.54, 155.56], // Eb (Eb2, G2, Bb2, Eb3)
+          [116.54, 146.83, 174.61, 233.08], // Bb (Bb2, D3, F3, Bb3)
+          [98.00,  116.54, 146.83, 196.00], // Gm
+          [87.31,  110.00, 130.81, 174.61], // F
+          [77.78,  98.00,  116.54, 155.56], // Eb
+          [98.00,  116.54, 146.83, 196.00]  // Gm
+        ],
+        bass: [49.00, 43.65, 38.89, 58.27, 49.00, 43.65, 38.89, 49.00],
+        melody: [
+          293.66, 293.66, 293.66, 261.63, 233.08, 261.63, 293.66, 233.08,
+          196.00, 233.08, 261.63, 293.66, 261.63, 233.08, 220.00, 196.00
+        ]
+      },
+      {
+        id: 3,
+        name: "RAABTA",
+        movie: "Agent Vinod (Arijit Singh)",
+        desc: "Serene Midnight Acoustic Lo-Fi Groove",
+        bpm: 76,
+        chords: [
+          [130.81, 164.81, 196.00, 261.63], // C  (C3, E3, G3, C4)
+          [110.00, 130.81, 164.81, 220.00], // Am (A2, C3, E3, A3)
+          [87.31,  110.00, 130.81, 174.61], // F  (F2, A2, C3, F3)
+          [98.00,  123.47, 146.83, 196.00], // G  (G2, B2, D3, G3)
+          [130.81, 164.81, 196.00, 261.63], // C
+          [110.00, 130.81, 164.81, 220.00], // Am
+          [87.31,  110.00, 130.81, 174.61], // F
+          [98.00,  123.47, 146.83, 196.00]  // G
+        ],
+        bass: [65.41, 55.00, 43.65, 49.00, 65.41, 55.00, 43.65, 49.00],
+        melody: [
+          329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 261.63, 293.66,
+          329.63, 392.00, 440.00, 523.25, 493.88, 440.00, 392.00, 329.63
+        ]
+      },
+      {
+        id: 4,
+        name: "KAL HO NAA HO",
+        movie: "Nostalgia (Sonu Nigam)",
+        desc: "Peaceful Heartfelt Chord Reflection",
+        bpm: 72,
+        chords: [
+          [130.81, 164.81, 196.00, 261.63], // C
+          [98.00,  123.47, 146.83, 196.00], // G
+          [110.00, 130.81, 164.81, 220.00], // Am
+          [87.31,  110.00, 130.81, 174.61], // F
+          [130.81, 164.81, 196.00, 261.63], // C
+          [98.00,  123.47, 146.83, 196.00], // G
+          [87.31,  110.00, 130.81, 174.61], // F
+          [130.81, 164.81, 196.00, 261.63]  // C
+        ],
+        bass: [65.41, 49.00, 55.00, 43.65, 65.41, 49.00, 43.65, 65.41],
+        melody: [
+          392.00, 440.00, 392.00, 329.63, 293.66, 261.63, 329.63, 392.00,
+          440.00, 493.88, 523.25, 493.88, 440.00, 392.00, 329.63, 261.63
+        ]
+      },
+      {
+        id: 5,
+        name: "APNA BANA LE",
+        movie: "Bhediya (Arijit Singh)",
+        desc: "Dreamy Romantic Modern Ambient Lo-Fi",
+        bpm: 74,
+        chords: [
+          [110.00, 130.81, 164.81, 220.00], // Am
+          [87.31,  110.00, 130.81, 174.61], // F
+          [130.81, 164.81, 196.00, 261.63], // C
+          [98.00,  123.47, 146.83, 196.00], // G
+          [110.00, 130.81, 164.81, 220.00], // Am
+          [87.31,  110.00, 130.81, 174.61], // F
+          [98.00,  123.47, 146.83, 196.00], // G
+          [130.81, 164.81, 196.00, 261.63]  // C
+        ],
+        bass: [55.00, 43.65, 65.41, 49.00, 55.00, 43.65, 49.00, 65.41],
+        melody: [
+          261.63, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 261.63,
+          293.66, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 261.63
+        ]
+      }
+    ];
+  }
+
+  ensureContext() {
+    if (!this.ctx) {
+      if (this.audioEngine.ctx) {
+        this.ctx = this.audioEngine.ctx;
+      } else {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        this.ctx = new AudioClass();
+        this.audioEngine.ctx = this.ctx;
+      }
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+    if (!this.masterGain && this.ctx) {
+      this.masterGain = this.ctx.createGain();
+      this.masterGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
+
+      this.analyser = this.ctx.createAnalyser();
+      this.analyser.fftSize = 64;
+
+      this.masterGain.connect(this.analyser);
+      this.analyser.connect(this.ctx.destination);
+    }
+  }
+
+  playTrack(index) {
+    this.ensureContext();
+    if (index >= 0 && index < this.tracks.length) {
+      this.currentTrack = index;
+    }
+    this.stopPlayback();
+    this.isPlaying = true;
+    this.currentStep = 0;
+
+    // AUTOMATIC SPEECH DIALOGUE MUTE
+    this.audioEngine.isSpeechMuted = true;
+    if (window.speechSynthesis) {
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+    }
+
+    this.updateRadioUI();
+    this.startSequencer();
+    this.startVisualizer();
+  }
+
+  pauseTrack() {
+    this.stopPlayback();
+    this.isPlaying = false;
+
+    // RESTORE SPEECH DIALOGUE
+    this.audioEngine.isSpeechMuted = false;
+
+    this.updateRadioUI();
+  }
+
+  togglePlay() {
+    if (this.isPlaying) {
+      this.pauseTrack();
+    } else {
+      this.playTrack(this.currentTrack);
+    }
+  }
+
+  nextTrack() {
+    const next = (this.currentTrack + 1) % this.tracks.length;
+    this.playTrack(next);
+  }
+
+  prevTrack() {
+    const prev = (this.currentTrack - 1 + this.tracks.length) % this.tracks.length;
+    this.playTrack(prev);
+  }
+
+  setVolume(val) {
+    this.volume = Math.max(0, Math.min(1, val));
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
+    }
+  }
+
+  stopPlayback() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+      this.timerId = null;
+    }
+    if (this.vizAnimId) {
+      cancelAnimationFrame(this.vizAnimId);
+      this.vizAnimId = null;
+    }
+  }
+
+  startSequencer() {
+    const track = this.tracks[this.currentTrack];
+    const stepDurationMs = (60 / track.bpm) * 500;
+
+    const tick = () => {
+      if (!this.isPlaying || !this.ctx) return;
+      this.playStep(track, this.currentStep);
+      this.currentStep = (this.currentStep + 1) % 16;
+    };
+
+    tick();
+    this.timerId = setInterval(tick, stepDurationMs);
+  }
+
+  playStep(track, step) {
+    if (!this.ctx || this.ctx.state === 'suspended') return;
+    const now = this.ctx.currentTime;
+    const chordIndex = Math.floor(step / 2) % track.chords.length;
+
+    // 1. Warm Lo-Fi Pad Chords
+    if (step % 2 === 0) {
+      const chord = track.chords[chordIndex];
+      chord.forEach((freq, idx) => {
+        try {
+          const osc = this.ctx.createOscillator();
+          const filter = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(850 + idx * 70, now);
+
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.065, now + 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.masterGain);
+
+          osc.start(now);
+          osc.stop(now + 1.0);
+        } catch (e) {}
+      });
+
+      // Warm Sub-Bass note
+      try {
+        const bassFreq = track.bass[chordIndex];
+        const bOsc = this.ctx.createOscillator();
+        const bGain = this.ctx.createGain();
+        bOsc.type = 'sine';
+        bOsc.frequency.setValueAtTime(bassFreq, now);
+
+        bGain.gain.setValueAtTime(0.12, now);
+        bGain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+
+        bOsc.connect(bGain);
+        bGain.connect(this.masterGain);
+
+        bOsc.start(now);
+        bOsc.stop(now + 0.88);
+      } catch (e) {}
+    }
+
+    // 2. Melodic Lead Synth Note
+    const melodyNote = track.melody[step % track.melody.length];
+    if (melodyNote) {
+      try {
+        const mOsc = this.ctx.createOscillator();
+        const mFilter = this.ctx.createBiquadFilter();
+        const mGain = this.ctx.createGain();
+
+        mOsc.type = 'sine';
+        mOsc.frequency.setValueAtTime(melodyNote, now);
+
+        mFilter.type = 'lowpass';
+        mFilter.frequency.setValueAtTime(1400, now);
+
+        mGain.gain.setValueAtTime(0.001, now);
+        mGain.gain.linearRampToValueAtTime(0.08, now + 0.04);
+        mGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+        mOsc.connect(mFilter);
+        mFilter.connect(mGain);
+        mGain.connect(this.masterGain);
+
+        mOsc.start(now);
+        mOsc.stop(now + 0.48);
+      } catch (e) {}
+    }
+
+    // 3. Gentle Lo-Fi Vinyl / Rim Beat
+    if (step % 4 === 2) {
+      try {
+        const snOsc = this.ctx.createOscillator();
+        const snGain = this.ctx.createGain();
+        snOsc.type = 'triangle';
+        snOsc.frequency.setValueAtTime(160, now);
+        snOsc.frequency.exponentialRampToValueAtTime(50, now + 0.08);
+
+        snGain.gain.setValueAtTime(0.04, now);
+        snGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+        snOsc.connect(snGain);
+        snGain.connect(this.masterGain);
+
+        snOsc.start(now);
+        snOsc.stop(now + 0.1);
+      } catch (e) {}
+    }
+  }
+
+  updateRadioUI() {
+    const btnToggle = document.getElementById('btnRadioToggle');
+    const txtStatus = document.getElementById('radioStatusText');
+    const playPauseBtn = document.getElementById('btnRadioPlayPause');
+    const curTrack = this.tracks[this.currentTrack];
+
+    if (this.isPlaying) {
+      if (btnToggle) btnToggle.classList.add('radio-playing');
+      if (txtStatus) txtStatus.textContent = `[RADIO] ${curTrack.name}`;
+      if (playPauseBtn) {
+        playPauseBtn.textContent = '[ PAUSE ]';
+        playPauseBtn.classList.add('active');
+      }
+    } else {
+      if (btnToggle) btnToggle.classList.remove('radio-playing');
+      if (txtStatus) txtStatus.textContent = `LO-FI RADIO`;
+      if (playPauseBtn) {
+        playPauseBtn.textContent = '[ PLAY ]';
+        playPauseBtn.classList.remove('active');
+      }
+    }
+
+    document.querySelectorAll('.term-track-row').forEach(row => {
+      const tIdx = parseInt(row.getAttribute('data-track'), 10);
+      const isCurrent = tIdx === this.currentTrack;
+      row.classList.toggle('playing', isCurrent && this.isPlaying);
+      const pBtn = row.querySelector('.track-play-btn');
+      if (pBtn) {
+        pBtn.textContent = (isCurrent && this.isPlaying) ? 'PAUSE' : 'PLAY';
+      }
+    });
+
+    const sysLog = document.getElementById('terminalSysLog');
+    if (sysLog) {
+      if (this.isPlaying) {
+        sysLog.innerHTML = `> NOW STREAMING: [TRACK 0${this.currentTrack + 1}] ${curTrack.name}<br>> ALBUM: ${curTrack.movie} // ${curTrack.desc}<br>> SPEECH OVERRIDE: DIALOGUES MUTED FOR PEACEFUL RELAXED FOCUS`;
+      } else {
+        sysLog.innerHTML = `> RADIO STATION: PAUSED // READY TO BROADCAST<br>> CLICK ANY TRACK OR [ PLAY ] TO ENJOY BACKGROUND CHILLWAVE`;
+      }
+    }
+  }
+
+  startVisualizer() {
+    const canvas = document.getElementById('terminalVisualizerCanvas');
+    if (!canvas || !this.analyser) return;
+    const ctx = canvas.getContext('2d');
+    const bufferLength = this.analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const draw = () => {
+      if (!this.isPlaying) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+      this.vizAnimId = requestAnimationFrame(draw);
+      this.analyser.getByteFrequencyData(dataArray);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const barWidth = (canvas.width / bufferLength) * 1.5;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = (dataArray[i] / 255) * canvas.height * 0.9;
+        ctx.fillStyle = `rgba(5, 217, 232, ${0.4 + (dataArray[i] / 255) * 0.6})`;
+        ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+        x += barWidth;
+      }
+    };
+    draw();
+  }
+}
+
+const lofiRadio = new LofiRadioEngine(audioVoice);
+
+function triggerHaptic(pattern) {
+  if (navigator.vibrate) {
+    try { navigator.vibrate(pattern); } catch (e) { }
+  }
+}
+
+/* ==========================================================================
+   SECTION 5: INTERACTIVE AMBIENT PARTICLES (FUNKY FLOATING DOODADS)
+   ========================================================================== */
+function initAmbientCanvas() {
+  const canvas = document.getElementById('ambientCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const shapes = [];
+  const COUNT = 32;
+  const shapeTypes = ['circle', 'ring', 'star', 'diamond'];
+
+  for (let i = 0; i < COUNT; i++) {
+    shapes.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      size: Math.random() * 8 + 4,
+      rotation: Math.random() * Math.PI * 2,
+      vRot: (Math.random() - 0.5) * 0.02,
+      type: shapeTypes[Math.floor(Math.random() * shapeTypes.length)],
+      alpha: Math.random() * 0.25 + 0.1
+    });
+  }
+
+  function drawStar(cx, cy, spikes, outerRadius, innerRadius) {
+    let rot = (Math.PI / 2) * 3;
+    let x = cx;
+    let y = cy;
+    const step = Math.PI / spikes;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerRadius);
+    for (let i = 0; i < spikes; i++) {
+      x = cx + Math.cos(rot) * outerRadius;
+      y = cy + Math.sin(rot) * outerRadius;
+      ctx.lineTo(x, y);
+      rot += step;
+
+      x = cx + Math.cos(rot) * innerRadius;
+      y = cy + Math.sin(rot) * innerRadius;
+      ctx.lineTo(x, y);
+      rot += step;
+    }
+    ctx.lineTo(cx, cy - outerRadius);
+    ctx.closePath();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    for (let i = 0; i < COUNT; i++) {
+      const s = shapes[i];
+      s.x += s.vx;
+      s.y += s.vy;
+      s.rotation += s.vRot;
+
+      if (s.x < -20) s.x = width + 20;
+      if (s.x > width + 20) s.x = -20;
+      if (s.y < -20) s.y = height + 20;
+      if (s.y > height + 20) s.y = -20;
+
+      ctx.save();
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.rotation);
+      ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+      ctx.strokeStyle = `rgba(255, 255, 255, ${s.alpha * 1.5})`;
+      ctx.lineWidth = 1.5;
+
+      if (s.type === 'circle') {
+        ctx.beginPath();
+        ctx.arc(0, 0, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (s.type === 'ring') {
+        ctx.beginPath();
+        ctx.arc(0, 0, s.size, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (s.type === 'star') {
+        drawStar(0, 0, 4, s.size, s.size * 0.45);
+        ctx.fill();
+      } else if (s.type === 'diamond') {
+        ctx.beginPath();
+        ctx.moveTo(0, -s.size);
+        ctx.lineTo(s.size * 0.7, 0);
+        ctx.lineTo(0, s.size);
+        ctx.lineTo(-s.size * 0.7, 0);
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+/* ==========================================================================
+   SECTION 6: GLOBAL STATE MANAGEMENT
+   ========================================================================== */
+const APP_STATE = {
+  currentView: 'view-menu',
+  playerHandle: localStorage.getItem('bm_player_handle') || 'CHINTU_' + Math.floor(100 + Math.random() * 900),
+  playerAvatar: localStorage.getItem('bm_player_avatar') || 'cutting_chai',
+  currentTheme: localStorage.getItem('bm_theme') || 'mango',
+  highScore: parseInt(localStorage.getItem('bm_high_score') || '0', 10),
+  maxLevel: parseInt(localStorage.getItem('bm_max_level') || '1', 10),
+
+  // Native WebSocket Realtime Multiplayer Client
+  ws: null,
+  isWsConnected: false,
+
+  // Supabase Realtime Client
+  supabaseUrl: localStorage.getItem('bm_supa_url') || '',
+  supabaseKey: localStorage.getItem('bm_supa_key') || '',
+  supabaseClient: null,
+
+  // Single Player State
+  singlePlay: {
+    active: false,
+    level: 1,
+    score: 0,
+    streak: 0,
+    maxStreak: 0,
+    shields: 3,
+    targetSequence: [],
+    playerTapIndex: 0,
+    phase: 'IDLE',
+    isReverse: false,
+    timeLimitSec: 3.0,
+    remainingTimeSec: 3.0,
+    animFrameId: null,
+    isInputLocked: true,
+    isTimerFrozen: false,
+    chaiPowerUsed: false,
+    chashmaPowerUsed: false,
+    thinkPowerUsed: false,
+    isFeverActive: false
+  },
+
+  // 1v1 Room Duel State
+  duel: {
+    active: false,
+    roomCode: 'MIND',
+    playerNumber: 1,
+    targetScore: 10,
+    p1Score: 0,
+    p2Score: 0,
+    p1Progress: 0,
+    p2Progress: 0,
+    p1StunnedUntil: 0,
+    p2StunnedUntil: 0,
+    targetSequence: [],
+    phase: 'IDLE',
+    isVsBot: false,
+    botInterval: null,
+    animFrameId: null
+  }
+};
+
+/* ==========================================================================
+   SECTION 7: VIEW & THEME SWITCHERS
+   ========================================================================== */
+function switchView(viewId) {
+  document.querySelectorAll('.screen-view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById(viewId);
+  if (target) {
+    target.classList.add('active');
+    APP_STATE.currentView = viewId;
+  }
+
+  const navBtn = document.getElementById('btnNavMenu');
+  if (viewId === 'view-menu') {
+    navBtn.style.display = 'none';
+    updateFunkyCapsule("READY TO RUN", "");
+  } else {
+    navBtn.style.display = 'inline-flex';
+  }
+
+  if (viewId !== 'view-singleplay' && APP_STATE.singlePlay.animFrameId) {
+    cancelAnimationFrame(APP_STATE.singlePlay.animFrameId);
+    APP_STATE.singlePlay.active = false;
+  }
+  if (viewId !== 'view-duel-room' && APP_STATE.duel.animFrameId) {
+    cancelAnimationFrame(APP_STATE.duel.animFrameId);
+    APP_STATE.duel.active = false;
+    if (APP_STATE.duel.botInterval) clearInterval(APP_STATE.duel.botInterval);
+  }
+}
+
+function updateFunkyCapsule(text, styleClass) {
+  const capsule = document.getElementById('funkyStatusCapsule');
+  if (!capsule) return;
+  capsule.className = `funky-status-capsule ${styleClass || ''}`;
+  const txt = capsule.querySelector('.capsule-text');
+  if (txt) txt.textContent = text;
+}
+
+function applyTheme(themeName) {
+  const allowed = ['mango', 'bubblegum', 'carnival', 'arcade'];
+  if (!allowed.includes(themeName)) themeName = 'mango';
+
+  APP_STATE.currentTheme = themeName;
+  localStorage.setItem('bm_theme', themeName);
+
+  if (themeName === 'mango') {
+    document.body.removeAttribute('data-theme');
+  } else {
+    document.body.setAttribute('data-theme', themeName);
+  }
+
+  document.querySelectorAll('.theme-pill-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
+  });
+}
+
+/* ==========================================================================
+   DYNAMIC ROUND NEON PALETTES (UNIQUE COLOR COMBINATIONS PER ROUND)
+   ========================================================================== */
+const ROUND_PALETTES = [
+  {
+    name: "MANGO SUNSET",
+    primary: "#FFB703",
+    primaryGlow: "rgba(255, 183, 3, 0.50)",
+    secondary: "#FF2A6D",
+    secondaryGlow: "rgba(255, 42, 109, 0.50)",
+    accent: "#05D9E8",
+    accentGlow: "rgba(5, 217, 232, 0.50)"
+  },
+  {
+    name: "ELECTRIC CYBERPUNK",
+    primary: "#00F0FF",
+    primaryGlow: "rgba(0, 240, 255, 0.50)",
+    secondary: "#FF007F",
+    secondaryGlow: "rgba(255, 0, 127, 0.50)",
+    accent: "#7000FF",
+    accentGlow: "rgba(112, 0, 255, 0.50)"
+  },
+  {
+    name: "TOXIC MATRIX",
+    primary: "#00FF66",
+    primaryGlow: "rgba(0, 255, 102, 0.50)",
+    secondary: "#00E5FF",
+    secondaryGlow: "rgba(0, 229, 255, 0.50)",
+    accent: "#FFE600",
+    accentGlow: "rgba(255, 230, 0, 0.50)"
+  },
+  {
+    name: "HYPER TANGERINE",
+    primary: "#FF5E00",
+    primaryGlow: "rgba(255, 94, 0, 0.50)",
+    secondary: "#FFD000",
+    secondaryGlow: "rgba(255, 208, 0, 0.50)",
+    accent: "#FF0055",
+    accentGlow: "rgba(255, 0, 85, 0.50)"
+  },
+  {
+    name: "ULTRAVIOLET AURORA",
+    primary: "#B026FF",
+    primaryGlow: "rgba(176, 38, 255, 0.50)",
+    secondary: "#00F5D4",
+    secondaryGlow: "rgba(0, 245, 212, 0.50)",
+    accent: "#FF1493",
+    accentGlow: "rgba(255, 20, 147, 0.50)"
+  },
+  {
+    name: "OCEAN CYAN",
+    primary: "#05D9E8",
+    primaryGlow: "rgba(5, 217, 232, 0.50)",
+    secondary: "#38BDF8",
+    secondaryGlow: "rgba(56, 189, 248, 0.50)",
+    accent: "#FF2A6D",
+    accentGlow: "rgba(255, 42, 109, 0.50)"
+  },
+  {
+    name: "EMERALD PRISM",
+    primary: "#10B981",
+    primaryGlow: "rgba(16, 185, 129, 0.50)",
+    secondary: "#F59E0B",
+    secondaryGlow: "rgba(245, 158, 11, 0.50)",
+    accent: "#06B6D4",
+    accentGlow: "rgba(6, 182, 212, 0.50)"
+  },
+  {
+    name: "COSMIC ORCHID",
+    primary: "#E040FB",
+    primaryGlow: "rgba(224, 64, 251, 0.50)",
+    secondary: "#00E676",
+    secondaryGlow: "rgba(0, 230, 118, 0.50)",
+    accent: "#FFD600",
+    accentGlow: "rgba(255, 214, 0, 0.50)"
+  },
+  {
+    name: "SOLAR AMBER",
+    primary: "#FACC15",
+    primaryGlow: "rgba(250, 204, 21, 0.50)",
+    secondary: "#F97316",
+    secondaryGlow: "rgba(249, 115, 22, 0.50)",
+    accent: "#EF4444",
+    accentGlow: "rgba(239, 68, 68, 0.50)"
+  },
+  {
+    name: "LASER CRIMSON",
+    primary: "#FF0055",
+    primaryGlow: "rgba(255, 0, 85, 0.50)",
+    secondary: "#00E5FF",
+    secondaryGlow: "rgba(0, 229, 255, 0.50)",
+    accent: "#FFE600",
+    accentGlow: "rgba(255, 230, 0, 0.50)"
+  }
+];
+
+function applyRoundDynamicPalette(level) {
+  const paletteIndex = ((level - 1) % ROUND_PALETTES.length + ROUND_PALETTES.length) % ROUND_PALETTES.length;
+  const p = ROUND_PALETTES[paletteIndex];
+
+  const root = document.documentElement;
+  root.style.setProperty('--color-primary', p.primary);
+  root.style.setProperty('--color-primary-glow', p.primaryGlow);
+  root.style.setProperty('--color-secondary', p.secondary);
+  root.style.setProperty('--color-secondary-glow', p.secondaryGlow);
+  root.style.setProperty('--color-accent', p.accent);
+  root.style.setProperty('--color-accent-glow', p.accentGlow);
+
+  const arena = document.getElementById('singleMatrixCard');
+  if (arena) {
+    arena.style.boxShadow = `0 10px 30px -4px ${p.primaryGlow}, 0 0 20px ${p.secondaryGlow}`;
+  }
+
+  const roundTag = document.getElementById('spLevel');
+  if (roundTag) {
+    roundTag.style.color = p.primary;
+    roundTag.style.textShadow = `0 0 12px ${p.primaryGlow}`;
+  }
+
+  return p;
+}
+
+function updateDesiTaunt() {
+  const randomTaunt = DESI_TAUNTS[Math.floor(Math.random() * DESI_TAUNTS.length)];
+  const tauntEl = document.getElementById('lblDesiTaunt');
+  if (tauntEl) {
+    tauntEl.textContent = randomTaunt;
+  }
+  const dtTaunt = document.getElementById('dtLiveTaunt');
+  if (dtTaunt) {
+    dtTaunt.textContent = `"${randomTaunt}"`;
+  }
+}
+
+function updateAudioToggleButton() {
+  const btn = document.getElementById('btnSoundToggle');
+  const txt = document.getElementById('soundStatusText');
+  if (!btn || !txt) return;
+
+  if (audioVoice.isMuted) {
+    btn.classList.remove('audio-active');
+    btn.classList.add('audio-muted');
+    txt.textContent = 'AUDIO: OFF';
+  } else {
+    btn.classList.remove('audio-muted');
+    btn.classList.add('audio-active');
+    txt.textContent = 'AUDIO: ON';
+  }
+}
+
+/* ==========================================================================
+   SECTION 8: PATTERN GENERATOR & DOM HELPERS
+   ========================================================================== */
+function generatePattern(length, totalTiles = 9) {
+  const sequence = [];
+  const available = [];
+  for (let i = 0; i < totalTiles; i++) available.push(i);
+  for (let i = 0; i < length && available.length > 0; i++) {
+    const idx = Math.floor(Math.random() * available.length);
+    sequence.push(available[idx]);
+    available.splice(idx, 1);
+  }
+  return sequence;
+}
+
+function triggerRecoilShake() {
+  const arena = document.getElementById('singleMatrixCard');
+  if (arena) {
+    arena.classList.remove('shake-recoil');
+    void arena.offsetWidth;
+    arena.classList.add('shake-recoil');
+  }
+}
+
+function setupSinglePlayerGrid(rows, cols) {
+  const container = document.getElementById('singleMatrixGrid');
+  if (!container) return;
+  const total = rows * cols;
+
+  const currentTotal = parseInt(container.getAttribute('data-total-tiles') || '0', 10);
+  if (currentTotal === total && container.children.length === total) {
+    resetTilesUI(total);
+    return;
+  }
+
+  container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+  container.setAttribute('data-total-tiles', total);
+
+  container.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < total; i++) {
+    const tile = document.createElement('div');
+    tile.id = `tile-${i}`;
+    tile.className = 'glass-tile';
+    tile.setAttribute('data-index', i);
+
+    if (total === 9) {
+      const hint = document.createElement('span');
+      hint.className = 'numpad-hint';
+      hint.textContent = i + 1;
+      tile.appendChild(hint);
+    }
+
+    const badge = document.createElement('span');
+    badge.className = 'order-badge';
+    tile.appendChild(badge);
+
+    tile.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      handleTileClick(i);
+    });
+
+    frag.appendChild(tile);
+  }
+  container.appendChild(frag);
+}
+
+function resetTilesUI(totalTiles = 9) {
+  const container = document.getElementById('singleMatrixGrid');
+  const count = container ? (container.children.length || totalTiles) : totalTiles;
+  for (let i = 0; i < count; i++) {
+    const tile = document.getElementById(`tile-${i}`);
+    if (tile) {
+      tile.className = 'glass-tile';
+      tile.style.animationDelay = '';
+      const badge = tile.querySelector('.order-badge');
+      if (badge) badge.textContent = '';
+    }
+  }
+}
+
+function showFloatingScore(tileIndex, text) {
+  const tile = document.getElementById(`tile-${tileIndex}`);
+  if (!tile) return;
+
+  const rect = tile.getBoundingClientRect();
+  const tag = document.createElement('div');
+  tag.className = 'floating-score-tag';
+  tag.textContent = text;
+  tag.style.left = `${rect.left + rect.width / 2 - 35}px`;
+  tag.style.top = `${rect.top}px`;
+
+  document.body.appendChild(tag);
+  setTimeout(() => tag.remove(), 750);
+}
+
+/* ==========================================================================
+   SECTION 9: SINGLE PLAYER GAMEPLAY LOOP (WITH 3 SHIELDS & FEVER MODE)
+   ========================================================================== */
+function startSinglePlayerGame() {
+  APP_STATE.singlePlay = {
+    active: true,
+    level: 1,
+    score: 0,
+    streak: 0,
+    maxStreak: 0,
+    shields: 3,
+    targetSequence: [],
+    playerTapIndex: 0,
+    phase: 'IDLE',
+    isReverse: false,
+    timeLimitSec: 3.0,
+    remainingTimeSec: 3.0,
+    animFrameId: null,
+    isInputLocked: true,
+    isTimerFrozen: false,
+    chaiPowerUsed: false,
+    chashmaPowerUsed: false,
+    thinkPowerUsed: false,
+    isFeverActive: false
+  };
+
+  const arena = document.getElementById('singleMatrixCard');
+  if (arena) arena.classList.remove('fever-mode');
+
+  applyRoundDynamicPalette(1);
+
+  audioVoice.playDholakBeat();
+  audioVoice.speakHindi(audioVoice.phrasesStart);
+
+  resetPowerBtnsUI();
+  updateSinglePlayerHUD();
+  switchView('view-singleplay');
+  startNewRound();
+}
+
+function resetPowerBtnsUI() {
+  const btnChai = document.getElementById('btnPowerChai');
+  const btnChashma = document.getElementById('btnPowerChashma');
+  const btnThink = document.getElementById('btnPowerThink');
+  if (btnChai) btnChai.classList.remove('disabled');
+  if (btnChashma) btnChashma.classList.remove('disabled');
+  if (btnThink) btnThink.classList.remove('disabled');
+}
+
+function startNewRound() {
+  const sp = APP_STATE.singlePlay;
+  const config = getLevelConfig(sp.level);
+
+  // Set up the dynamic grid (rows x cols) for current level
+  setupSinglePlayerGrid(config.rows, config.cols);
+
+  sp.targetSequence = generatePattern(config.sequenceLength, config.totalTiles);
+  sp.isReverse = config.isReverse;
+  sp.playerTapIndex = 0;
+  sp.timeLimitSec = config.timeLimitSec;
+  sp.remainingTimeSec = config.timeLimitSec;
+  sp.isInputLocked = true;
+  sp.phase = 'MEMORIZE';
+  sp.isTimerFrozen = false;
+
+  resetTilesUI(config.totalTiles);
+  updateSinglePlayerHUD();
+  updateDesiTaunt();
+
+  // Ghost grid mode
+  const arena = document.getElementById('singleMatrixCard');
+  if (config.isGhost) {
+    arena.classList.add('ghost-mode');
+  } else {
+    arena.classList.remove('ghost-mode');
+  }
+
+  // Phase Banner & Capsule
+  const phasePill = document.getElementById('spPhasePill');
+  if (sp.isReverse) {
+    phasePill.textContent = 'REVERSE RECALL: MEMORIZE!';
+    phasePill.className = 'phase-pill-badge reverse';
+    updateFunkyCapsule(`REVERSE: ${config.sequenceLength}/${config.totalTiles} BLOCKS`, "pulse-memorize");
+  } else {
+    phasePill.textContent = `MEMORIZE ${config.sequenceLength} OF ${config.totalTiles} BLOCKS`;
+    phasePill.className = 'phase-pill-badge memorize';
+    updateFunkyCapsule(`MEMORIZE: ${config.sequenceLength}/${config.totalTiles} BLOCKS`, "pulse-memorize");
+  }
+
+  flashTilesSequence(sp.targetSequence, config.hasDecoy, config.totalTiles, () => {
+    sp.phase = 'RECALL';
+    sp.isInputLocked = false;
+
+    if (sp.isReverse) {
+      phasePill.textContent = 'ENTER IN REVERSE ORDER!';
+      phasePill.className = 'phase-pill-badge reverse';
+    } else {
+      phasePill.textContent = 'RECALL PATTERN NOW!';
+      phasePill.className = 'phase-pill-badge recall';
+    }
+
+    if (sp.streak >= 3) {
+      updateFunkyCapsule(`${sp.streak}X FEVER SURGE!`, "pulse-combo");
+    } else if (sp.streak >= 2) {
+      updateFunkyCapsule(`${sp.streak}X COMBO SURGE!`, "pulse-combo");
+    } else {
+      updateFunkyCapsule("RECALL NOW!", "pulse-recall");
+    }
+
+    startSpeedTimer();
+  });
+}
+
+function flashTilesSequence(sequence, hasDecoy, totalTiles, onComplete) {
+  let step = 0;
+  function showNext() {
+    if (step < sequence.length) {
+      const tileIndex = sequence[step];
+      const tileEl = document.getElementById(`tile-${tileIndex}`);
+
+      if (tileEl) {
+        tileEl.classList.add('flash-active');
+        const badge = tileEl.querySelector('.order-badge');
+        if (badge) badge.textContent = step + 1;
+        audioVoice.playFlashNote(step);
+      }
+
+      setTimeout(() => {
+        if (tileEl) {
+          tileEl.classList.remove('flash-active');
+          const badge = tileEl.querySelector('.order-badge');
+          if (badge) badge.textContent = '';
+        }
+        step++;
+        setTimeout(showNext, 140);
+      }, 430);
+    } else {
+      if (hasDecoy && Math.random() < 0.75) {
+        triggerDecoyFlicker(sequence, totalTiles, onComplete);
+      } else {
+        setTimeout(onComplete, 180);
+      }
+    }
+  }
+  setTimeout(showNext, 300);
+}
+
+function triggerDecoyFlicker(targetSequence, totalTiles = 9, onComplete) {
+  const allIndices = [];
+  for (let i = 0; i < totalTiles; i++) allIndices.push(i);
+  const nonTargets = allIndices.filter(i => !targetSequence.includes(i));
+  if (nonTargets.length === 0) {
+    onComplete();
+    return;
+  }
+
+  const decoyIdx = nonTargets[Math.floor(Math.random() * nonTargets.length)];
+  const decoyEl = document.getElementById(`tile-${decoyIdx}`);
+
+  setTimeout(() => {
+    if (decoyEl) {
+      decoyEl.classList.add('decoy-flicker');
+      setTimeout(() => {
+        decoyEl.classList.remove('decoy-flicker');
+        setTimeout(onComplete, 180);
+      }, 200);
+    } else {
+      onComplete();
+    }
+  }, 100);
+}
+
+function startSpeedTimer() {
+  const sp = APP_STATE.singlePlay;
+  let lastTime = performance.now();
+
+  function timerLoop(now) {
+    if (!sp.active || sp.phase !== 'RECALL') return;
+
+    const deltaSec = (now - lastTime) / 1000;
+    lastTime = now;
+
+    if (!sp.isTimerFrozen) {
+      sp.remainingTimeSec -= deltaSec;
+    }
+
+    const pct = Math.max(0, (sp.remainingTimeSec / sp.timeLimitSec) * 100);
+    const fill = document.getElementById('spTimerFill');
+    fill.style.width = pct + '%';
+
+    if (sp.isTimerFrozen) {
+      fill.classList.add('frozen');
+    } else {
+      fill.classList.remove('frozen');
+      if (pct <= 30) {
+        fill.classList.add('urgent');
+      } else {
+        fill.classList.remove('urgent');
+      }
+    }
+
+    if (sp.remainingTimeSec <= 0) {
+      handleMistake("TIME EXPIRED: NEURAL SPEED COLLAPSED");
+      return;
+    }
+
+    sp.animFrameId = requestAnimationFrame(timerLoop);
+  }
+
+  sp.animFrameId = requestAnimationFrame(timerLoop);
+}
+
+function handleTileClick(tileIndex) {
+  const sp = APP_STATE.singlePlay;
+  if (!sp.active || sp.isInputLocked || sp.phase !== 'RECALL') return;
+
+  const targetSeq = sp.isReverse ? [...sp.targetSequence].reverse() : sp.targetSequence;
+  const expectedTile = targetSeq[sp.playerTapIndex];
+  const tileEl = document.getElementById(`tile-${tileIndex}`);
+
+  if (tileIndex === expectedTile) {
+    audioVoice.playPop();
+    triggerHaptic([30]);
+    sp.playerTapIndex++;
+
+    if (tileEl) {
+      tileEl.classList.add('correct-tap');
+      const badge = tileEl.querySelector('.order-badge');
+      if (badge) badge.textContent = sp.playerTapIndex;
+    }
+
+    const basePts = 100 * sp.level;
+    showFloatingScore(tileIndex, `+${basePts}`);
+
+    // All tiles cleared!
+    if (sp.playerTapIndex === targetSeq.length) {
+      sp.phase = 'ROUND_OVER';
+      sp.isInputLocked = true;
+      if (sp.animFrameId) cancelAnimationFrame(sp.animFrameId);
+
+      sp.streak++;
+      if (sp.streak > sp.maxStreak) sp.maxStreak = sp.streak;
+
+      // Fever Mode activation
+      const arena = document.getElementById('singleMatrixCard');
+      if (sp.streak >= 3) {
+        sp.isFeverActive = true;
+        if (arena) arena.classList.add('fever-mode');
+      }
+
+      // Combo bonus logic (Doubled during Fever Mode!)
+      let comboBonus = 0;
+      if (sp.streak === 2) comboBonus = 150;
+      else if (sp.streak === 3) comboBonus = 350;
+      else if (sp.streak >= 4) comboBonus = 600;
+
+      if (sp.isFeverActive) {
+        comboBonus *= 2;
+      }
+
+      const timeBonus = Math.round(sp.remainingTimeSec * 150);
+      const levelBonus = sp.level * 120;
+      const totalRoundPts = levelBonus + timeBonus + comboBonus;
+      sp.score += totalRoundPts;
+
+      if (sp.streak >= 2) {
+        const bonusTag = sp.isFeverActive ? `[${sp.streak}X FEVER!]` : `[${sp.streak}X COMBO]`;
+        showFloatingScore(tileIndex, `+${comboBonus} ${bonusTag}`);
+        audioVoice.playBhangraFanfare();
+        audioVoice.speakHindi(audioVoice.phrasesCombos);
+        triggerHaptic([40, 30, 40]);
+      } else {
+        audioVoice.playBoing();
+      }
+
+      // CELEBRATION WAVE: Glow all blind blocks in a rhythmic ripple
+      const tiles = document.querySelectorAll('#singleMatrixGrid .glass-tile');
+      tiles.forEach((t, idx) => {
+        t.classList.add('victory-wave');
+        t.style.animationDelay = `${(idx % 10) * 35}ms`;
+      });
+
+      const nextLevel = sp.level + 1;
+      const nextPalette = applyRoundDynamicPalette(nextLevel);
+      updateFunkyCapsule(`ROUND ${sp.level} CLEAR! PALETTE: ${nextPalette.name}`, "pulse-combo");
+
+      sp.level = nextLevel;
+      if (sp.level > APP_STATE.maxLevel) {
+        APP_STATE.maxLevel = sp.level;
+        localStorage.setItem('bm_max_level', sp.level);
+      }
+
+      // Recharge powers at Level 5 and Level 9
+      if (sp.level === 5 || sp.level === 9) {
+        sp.chaiPowerUsed = false;
+        sp.chashmaPowerUsed = false;
+        sp.thinkPowerUsed = false;
+        resetPowerBtnsUI();
+        audioVoice.speakHindi(["Jugaad power recharge ho gaya!"]);
+      }
+
+      updateSinglePlayerHUD();
+
+      // Hold victory celebration wave & unique palette transition for 1.25s
+      setTimeout(() => {
+        if (sp.active) startNewRound();
+      }, 1250);
+    }
+
+  } else {
+    // Incorrect tile tapped
+    if (tileEl) tileEl.classList.add('wrong-tap');
+    handleMistake("INCORRECT TILE: MEMORY SEQUENCE BROKEN");
+  }
+}
+
+function handleMistake(reason) {
+  const sp = APP_STATE.singlePlay;
+  triggerRecoilShake();
+  triggerHaptic([100, 50, 150]);
+
+  sp.streak = 0;
+  sp.isFeverActive = false;
+  const arena = document.getElementById('singleMatrixCard');
+  if (arena) arena.classList.remove('fever-mode');
+
+  sp.shields--;
+  updateShieldsUI();
+  updateSinglePlayerHUD();
+
+  sp.isInputLocked = true;
+  if (sp.animFrameId) cancelAnimationFrame(sp.animFrameId);
+
+  if (sp.shields > 0) {
+    audioVoice.playBoing();
+    audioVoice.speakHindi(audioVoice.phrasesShieldLoss);
+    updateFunkyCapsule("SHIELD LOST!", "pulse-recall");
+    setTimeout(() => {
+      if (sp.active) startNewRound();
+    }, 750);
+  } else {
+    // True Game Over -> Moye Moye!
+    audioVoice.playMoyeMoyeTune();
+    audioVoice.speakHindi(audioVoice.phrasesFail);
+    updateFunkyCapsule("MOYE MOYE!", "");
+    setTimeout(() => {
+      endSinglePlayerGame(reason);
+    }, 800);
+  }
+}
+
+function updateShieldsUI() {
+  const shields = APP_STATE.singlePlay.shields;
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById(`shield-${i}`);
+    if (el) {
+      el.classList.toggle('lost', i > shields);
+    }
+  }
+
+  // Mirror shields into Desktop Left Wing Cockpit
+  const dtContainer = document.getElementById('dtShieldsContainer');
+  if (dtContainer) {
+    let shieldsSvg = '';
+    for (let i = 1; i <= 3; i++) {
+      shieldsSvg += `<svg class="shield-icon ${i > shields ? 'lost' : ''}" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>`;
+    }
+    dtContainer.innerHTML = shieldsSvg;
+  }
+}
+
+function updateSinglePlayerHUD() {
+  const sp = APP_STATE.singlePlay;
+  document.getElementById('spLevel').textContent = `LVL ${sp.level}`;
+  document.getElementById('spScore').textContent = sp.score;
+  updateShieldsUI();
+
+  const streakLbl = document.getElementById('spStreakLabel');
+  const streakBonus = document.getElementById('spStreakBonusTag');
+  if (streakLbl && streakBonus) {
+    if (sp.streak >= 3) {
+      streakLbl.textContent = `${sp.streak}X FEVER SURGE!`;
+      streakBonus.textContent = `+${sp.streak >= 4 ? 1200 : 700} PTS BONUS`;
+    } else if (sp.streak === 2) {
+      streakLbl.textContent = `2X COMBO SURGE!`;
+      streakBonus.textContent = `+150 PTS BONUS`;
+    } else {
+      streakLbl.textContent = `1X STREAK`;
+      streakBonus.textContent = `+0 PTS BONUS`;
+    }
+  }
+
+  const brain = getBrainIQInfo(sp.level, sp.score);
+  const iqBadge = document.getElementById('spBrainIQ');
+  if (iqBadge) {
+    iqBadge.textContent = `${brain.rank} (IQ ${brain.iq})`;
+  }
+
+  // Desktop Cockpit Telemetry Mirroring
+  const dtDiff = document.getElementById('dtDiffLevel');
+  if (dtDiff) {
+    const cfg = getLevelConfig(sp.level);
+    let desc = `${cfg.totalTiles} BLOCKS (${cfg.sequenceLength}-SEQ)`;
+    if (cfg.isReverse && cfg.hasDecoy) desc += ' [REV+DEC]';
+    else if (cfg.isReverse) desc += ' [REVERSE]';
+    else if (cfg.hasDecoy) desc += ' [DECOY]';
+    else if (cfg.isGhost) desc += ' [GHOST]';
+    dtDiff.textContent = desc;
+  }
+
+  const dtHighScore = document.getElementById('dtHighScoreVal');
+  if (dtHighScore) {
+    dtHighScore.textContent = APP_STATE.highScore;
+  }
+}
+
+// Jugaad Power 1: Chai Break
+function useChaiPower() {
+  const sp = APP_STATE.singlePlay;
+  if (!sp.active || sp.isInputLocked || sp.chaiPowerUsed || sp.phase !== 'RECALL') return;
+
+  sp.chaiPowerUsed = true;
+  sp.isTimerFrozen = true;
+  document.getElementById('btnPowerChai').classList.add('disabled');
+
+  audioVoice.speakHindi(audioVoice.phrasesChai);
+  triggerHaptic([40, 20, 40]);
+
+  setTimeout(() => {
+    if (sp.active) {
+      sp.isTimerFrozen = false;
+    }
+  }, 2500);
+}
+
+// Jugaad Power 2: Chashma 4K
+function useChashmaPower() {
+  const sp = APP_STATE.singlePlay;
+  if (!sp.active || sp.isInputLocked || sp.chashmaPowerUsed || sp.phase !== 'RECALL') return;
+
+  sp.chashmaPowerUsed = true;
+  document.getElementById('btnPowerChashma').classList.add('disabled');
+
+  audioVoice.speakHindi(audioVoice.phrasesPeek);
+  triggerHaptic([50]);
+
+  const targetSeq = sp.isReverse ? [...sp.targetSequence].reverse() : sp.targetSequence;
+  const nextTileIndex = targetSeq[sp.playerTapIndex];
+  const tileEl = document.getElementById(`tile-${nextTileIndex}`);
+
+  if (tileEl) {
+    tileEl.classList.add('flash-active');
+    setTimeout(() => {
+      tileEl.classList.remove('flash-active');
+    }, 450);
+  }
+}
+
+// Jugaad Power 3: Dimag Ki Batti (Think Feature)
+function useThinkFeature() {
+  const sp = APP_STATE.singlePlay;
+  if (!sp.active || sp.isInputLocked || sp.thinkPowerUsed || sp.phase !== 'RECALL') return;
+
+  sp.thinkPowerUsed = true;
+  sp.isTimerFrozen = true;
+  document.getElementById('btnPowerThink').classList.add('disabled');
+
+  audioVoice.playBulbChime();
+  audioVoice.speakHindi(audioVoice.phrasesThink);
+  triggerHaptic([30, 20, 30, 20, 60]);
+  updateFunkyCapsule("DIMAG KI BATTI ON!", "pulse-memorize");
+
+  const targetSeq = sp.isReverse ? [...sp.targetSequence].reverse() : sp.targetSequence;
+  const nextTileIndex = targetSeq[sp.playerTapIndex];
+  const tileEl = document.getElementById(`tile-${nextTileIndex}`);
+
+  if (tileEl) {
+    tileEl.classList.add('think-highlight');
+    setTimeout(() => {
+      tileEl.classList.remove('think-highlight');
+    }, 850);
+  }
+
+  setTimeout(() => {
+    if (sp.active) {
+      sp.isTimerFrozen = false;
+      if (sp.streak >= 2) {
+        updateFunkyCapsule(`${sp.streak}X COMBO SURGE!`, "pulse-combo");
+      } else {
+        updateFunkyCapsule("RECALL NOW!", "pulse-recall");
+      }
+    }
+  }, 1500);
+}
+
+function endSinglePlayerGame(reason) {
+  const sp = APP_STATE.singlePlay;
+  sp.active = false;
+  if (sp.animFrameId) cancelAnimationFrame(sp.animFrameId);
+
+  if (sp.score > APP_STATE.highScore) {
+    APP_STATE.highScore = sp.score;
+    localStorage.setItem('bm_high_score', sp.score);
+  }
+
+  document.getElementById('goReason').textContent = reason;
+  document.getElementById('goFinalScore').textContent = sp.score;
+  document.getElementById('goMaxLevel').textContent = sp.level;
+  document.getElementById('goStreak').textContent = `${sp.maxStreak}X`;
+  document.getElementById('goHighScore').textContent = APP_STATE.highScore;
+  const dtHighScore = document.getElementById('dtHighScoreVal');
+  if (dtHighScore) dtHighScore.textContent = APP_STATE.highScore;
+
+  upsertScoreToLeaderboard(APP_STATE.playerHandle, APP_STATE.playerAvatar, sp.score, sp.level);
+  switchView('view-gameover');
+}
+
+/* ==========================================================================
+   SECTION 10: REAL-TIME WEBSOCKET 1V1 ROOM DUEL & BOT SPARRING
+   ========================================================================== */
+function initWebSocket() {
+  if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) return;
+
+  try {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const host = window.location.host || 'localhost:3000';
+    const ws = new WebSocket(`${protocol}//${host}`);
+
+    ws.onopen = () => {
+      APP_STATE.isWsConnected = true;
+      APP_STATE.ws = ws;
+      console.log("WebSocket connected to live game server.");
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const msg = JSON.parse(event.data);
+        handleServerWebSocketMessage(msg);
+      } catch (e) {
+        console.warn("WS Parse Error:", e);
+      }
+    };
+
+    ws.onclose = () => {
+      APP_STATE.isWsConnected = false;
+      setTimeout(initWebSocket, 3000);
+    };
+
+    ws.onerror = () => {
+      APP_STATE.isWsConnected = false;
+    };
+  } catch (e) {
+    console.warn("WebSocket init failed:", e);
+  }
+}
+
+function handleServerWebSocketMessage(msg) {
+  const duel = APP_STATE.duel;
+
+  switch (msg.type) {
+    case 'room_joined': {
+      duel.playerNumber = msg.playerNumber;
+      const statusText = document.getElementById('roomStatusText');
+      if (msg.status === 'WAITING_FOR_OPPONENT') {
+        if (statusText) statusText.textContent = "WAITING FOR OPPONENT TO JOIN...";
+      } else if (msg.status === 'OPPONENT_CONNECTED') {
+        if (statusText) statusText.textContent = `CONNECTED WITH ${msg.opponentHandle || 'OPPONENT'}!`;
+        startOnlineDuelMatch(false);
+      }
+      break;
+    }
+
+    case 'opponent_joined': {
+      const statusText = document.getElementById('roomStatusText');
+      if (statusText) statusText.textContent = `OPPONENT ${msg.opponentHandle} JOINED!`;
+      audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
+      startOnlineDuelMatch(false);
+      break;
+    }
+
+    case 'round_started': {
+      if (duel.active && !duel.isVsBot) {
+        duel.targetSequence = msg.targetSequence;
+        startSynchronizedDuelRound();
+      }
+      break;
+    }
+
+    case 'opponent_progress': {
+      if (duel.active) {
+        duel.p2Progress = msg.progress;
+        duel.p2Score = msg.score;
+        updateDuelHUD();
+      }
+      break;
+    }
+
+    case 'opponent_stunned': {
+      if (duel.active) {
+        duel.p2StunnedUntil = performance.now() + 1500;
+      }
+      break;
+    }
+
+    case 'match_over': {
+      if (duel.active) {
+        if (msg.winner === duel.playerNumber) {
+          audioVoice.playBhangraFanfare();
+          audioVoice.speakHindi(["Bawaal macha diya! You won the duel!"]);
+        } else {
+          audioVoice.playMoyeMoyeTune();
+          audioVoice.speakHindi(["Moye Moye! Opponent won the duel!"]);
+        }
+        setTimeout(() => switchView('view-menu'), 1500);
+      }
+      break;
+    }
+
+    case 'leaderboard_sync': {
+      // Live leaderboard update from another player!
+      if (msg.record) {
+        let localData = getLocalLeaderboard();
+        const existingIdx = localData.findIndex(r => r.username === msg.record.username);
+        if (existingIdx >= 0) {
+          if (msg.record.high_score > localData[existingIdx].high_score) {
+            localData[existingIdx] = msg.record;
+          }
+        } else {
+          localData.push(msg.record);
+        }
+        saveLocalLeaderboard(localData);
+        if (APP_STATE.currentView === 'view-leaderboard') {
+          loadLeaderboard();
+        }
+      }
+      break;
+    }
+  }
+}
+
+function initDuelRoomLobby() {
+  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let code = '';
+  for (let i = 0; i < 4; i++) {
+    code += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  APP_STATE.duel.roomCode = code;
+  document.getElementById('lblRoomCode').textContent = code;
+
+  // Join this room on the server
+  if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+    APP_STATE.ws.send(JSON.stringify({
+      action: 'join_room',
+      roomCode: code,
+      handle: APP_STATE.playerHandle,
+      avatar: APP_STATE.playerAvatar
+    }));
+  }
+
+  switchView('view-online-lobby');
+}
+
+function startOnlineDuelMatch(isVsBot = false) {
+  APP_STATE.duel = {
+    active: true,
+    roomCode: APP_STATE.duel.roomCode,
+    playerNumber: APP_STATE.duel.playerNumber || 1,
+    targetScore: 10,
+    p1Score: 0,
+    p2Score: 0,
+    p1Progress: 0,
+    p2Progress: 0,
+    p1StunnedUntil: 0,
+    p2StunnedUntil: 0,
+    targetSequence: [],
+    phase: 'IDLE',
+    isVsBot: isVsBot,
+    botInterval: null,
+    animFrameId: null
+  };
+
+  updateDuelHUD();
+  switchView('view-duel-room');
+
+  if (isVsBot) {
+    document.getElementById('duelP2Label').textContent = 'SHARMA JI KA ROBOT';
+    startNewDuelRound();
+    startBotBehavior();
+  } else {
+    document.getElementById('duelP2Label').textContent = 'LIVE OPPONENT';
+    // If player 1, generate and sync round
+    if (APP_STATE.duel.playerNumber === 1 && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+      const seq = generatePattern(4);
+      APP_STATE.ws.send(JSON.stringify({
+        action: 'sync_round',
+        roundSeq: seq
+      }));
+    }
+  }
+
+  function duelLoop(now) {
+    if (!APP_STATE.duel.active) return;
+    const duel = APP_STATE.duel;
+
+    const p1Card = document.getElementById('duelP1Card');
+    p1Card.classList.toggle('is-stunned', now < duel.p1StunnedUntil);
+
+    const p2Card = document.getElementById('duelP2Card');
+    p2Card.classList.toggle('is-stunned', now < duel.p2StunnedUntil);
+
+    duel.animFrameId = requestAnimationFrame(duelLoop);
+  }
+  duel.animFrameId = requestAnimationFrame(duelLoop);
+}
+
+function startNewDuelRound() {
+  const duel = APP_STATE.duel;
+  duel.targetSequence = generatePattern(4);
+  startSynchronizedDuelRound();
+}
+
+function startSynchronizedDuelRound() {
+  const duel = APP_STATE.duel;
+  duel.p1Progress = 0;
+  duel.p2Progress = 0;
+  duel.phase = 'MEMORIZE';
+
+  resetDuelTilesUI();
+  updateDuelHUD();
+
+  flashDuelSequence(duel.targetSequence, () => {
+    duel.phase = 'RECALL';
+    document.getElementById('duelPhaseStatus').textContent = 'FASTEST RECALL WINS ROUND!';
+  });
+}
+
+function resetDuelTilesUI() {
+  for (let i = 0; i < 9; i++) {
+    const tile = document.getElementById(`dtile-${i}`);
+    if (tile) {
+      tile.className = 'glass-tile';
+      const badge = tile.querySelector('.order-badge');
+      if (badge) badge.textContent = '';
+    }
+  }
+}
+
+function flashDuelSequence(sequence, onComplete) {
+  let step = 0;
+  document.getElementById('duelPhaseStatus').textContent = 'MEMORIZE DUEL PATTERN';
+
+  function stepFlash() {
+    if (step < sequence.length) {
+      const tileIndex = sequence[step];
+      const tileEl = document.getElementById(`dtile-${tileIndex}`);
+      if (tileEl) {
+        tileEl.classList.add('flash-active');
+        const badge = tileEl.querySelector('.order-badge');
+        if (badge) badge.textContent = step + 1;
+        audioVoice.playFlashNote(step);
+      }
+
+      setTimeout(() => {
+        if (tileEl) {
+          tileEl.classList.remove('flash-active');
+          const badge = tileEl.querySelector('.order-badge');
+          if (badge) badge.textContent = '';
+        }
+        step++;
+        setTimeout(stepFlash, 150);
+      }, 450);
+    } else {
+      setTimeout(onComplete, 200);
+    }
+  }
+  setTimeout(stepFlash, 300);
+}
+
+function handleDuelTileClick(playerNum, tileIndex) {
+  const duel = APP_STATE.duel;
+  if (!duel.active || duel.phase !== 'RECALL') return;
+  const now = performance.now();
+
+  if (playerNum === 1 && now < duel.p1StunnedUntil) return;
+  if (playerNum === 2 && now < duel.p2StunnedUntil) return;
+
+  const currentProgress = playerNum === 1 ? duel.p1Progress : duel.p2Progress;
+  const expectedTile = duel.targetSequence[currentProgress];
+  const tileEl = document.getElementById(`dtile-${tileIndex}`);
+
+  if (tileIndex === expectedTile) {
+    audioVoice.playPop();
+    triggerHaptic([30]);
+
+    if (playerNum === 1) {
+      duel.p1Progress++;
+      if (tileEl) tileEl.classList.add('correct-tap');
+
+      // Broadcast progress over WebSocket
+      if (!duel.isVsBot && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+        APP_STATE.ws.send(JSON.stringify({
+          action: 'tap_progress',
+          tileIndex,
+          progress: duel.p1Progress,
+          score: duel.p1Score
+        }));
+      }
+    } else {
+      duel.p2Progress++;
+    }
+
+    updateDuelHUD();
+
+    if (playerNum === 1 && duel.p1Progress === duel.targetSequence.length) {
+      duel.p1Score += 2;
+      audioVoice.playBoing();
+      audioVoice.speakHindi(audioVoice.phrasesWin);
+      checkDuelVictory();
+    } else if (playerNum === 2 && duel.p2Progress === duel.targetSequence.length) {
+      duel.p2Score += 2;
+      audioVoice.playBoing();
+      checkDuelVictory();
+    }
+
+  } else {
+    // 1.5s freeze penalty
+    audioVoice.playMoyeMoyeTune();
+    triggerHaptic([100, 50, 100]);
+    if (playerNum === 1) {
+      duel.p1StunnedUntil = now + 1500;
+      if (!duel.isVsBot && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+        APP_STATE.ws.send(JSON.stringify({ action: 'player_stun' }));
+      }
+    } else {
+      duel.p2StunnedUntil = now + 1500;
+    }
+  }
+}
+
+function checkDuelVictory() {
+  const duel = APP_STATE.duel;
+  updateDuelHUD();
+
+  if (duel.p1Score >= duel.targetScore) {
+    audioVoice.playBhangraFanfare();
+    audioVoice.speakHindi(["Bawaal macha diya! You won the duel!"]);
+    if (!duel.isVsBot && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+      APP_STATE.ws.send(JSON.stringify({ action: 'duel_victory' }));
+    }
+    setTimeout(() => switchView('view-menu'), 1500);
+    return;
+  } else if (duel.p2Score >= duel.targetScore) {
+    audioVoice.playMoyeMoyeTune();
+    audioVoice.speakHindi(["Moye Moye! Opponent won the duel!"]);
+    setTimeout(() => switchView('view-menu'), 1500);
+    return;
+  }
+
+  setTimeout(() => {
+    if (duel.active) {
+      if (duel.isVsBot) {
+        startNewDuelRound();
+      } else if (duel.playerNumber === 1 && APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+        const seq = generatePattern(4);
+        APP_STATE.ws.send(JSON.stringify({
+          action: 'sync_round',
+          roundSeq: seq
+        }));
+      }
+    }
+  }, 700);
+}
+
+function updateDuelHUD() {
+  const duel = APP_STATE.duel;
+  document.getElementById('duelP1Score').textContent = `${duel.p1Score} / ${duel.targetScore}`;
+  document.getElementById('duelP2Score').textContent = `${duel.p2Score} / ${duel.targetScore}`;
+}
+
+function startBotBehavior() {
+  const duel = APP_STATE.duel;
+  duel.botInterval = setInterval(() => {
+    if (!duel.active || duel.phase !== 'RECALL') return;
+    const now = performance.now();
+    if (now < duel.p2StunnedUntil) return;
+
+    const isCorrect = Math.random() < 0.80;
+    const choice = isCorrect 
+      ? duel.targetSequence[duel.p2Progress] 
+      : Math.floor(Math.random() * 9);
+
+    handleDuelTileClick(2, choice);
+  }, 750 + Math.random() * 400);
+}
+
+/* ==========================================================================
+   SECTION 11: LEADERBOARD & REALTIME BROADCAST
+   ========================================================================== */
+const DEFAULT_LEADERBOARD = [
+  { username: 'SHARMA_PRO',   avatar: 'sharma_beta',    high_score: 3600, max_level: 12 },
+  { username: 'CHAI_WALA',    avatar: 'cutting_chai',   high_score: 3100, max_level: 10 },
+  { username: 'GABBAR_SINGH', avatar: 'gabbar_mustache',high_score: 2600, max_level: 8 },
+  { username: 'BABU_RAO',     avatar: 'babu_rao',       high_score: 2150, max_level: 7 },
+  { username: 'SAMOSA_BOY',   avatar: 'samosa_ninja',   high_score: 1800, max_level: 6 }
+];
+
+function getLocalLeaderboard() {
+  const stored = localStorage.getItem('bm_local_leaderboard');
+  if (stored) {
+    try { return JSON.parse(stored); } catch (e) { }
+  }
+  return DEFAULT_LEADERBOARD;
+}
+
+function saveLocalLeaderboard(data) {
+  localStorage.setItem('bm_local_leaderboard', JSON.stringify(data));
+}
+
+function initSupabase() {
+  if (APP_STATE.supabaseUrl && APP_STATE.supabaseKey && window.supabase) {
+    try {
+      APP_STATE.supabaseClient = window.supabase.createClient(
+        APP_STATE.supabaseUrl,
+        APP_STATE.supabaseKey
+      );
+
+      APP_STATE.supabaseClient
+        .channel('public:blind_matrix_leaderboard')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'blind_matrix_leaderboard' }, () => {
+          loadLeaderboard();
+        })
+        .subscribe();
+
+      console.log("Supabase Realtime connected.");
+    } catch (e) {
+      console.warn("Supabase init error:", e);
+    }
+  }
+}
+
+async function loadLeaderboard() {
+  const listEl = document.getElementById('leaderboardList');
+  if (!listEl) return;
+  listEl.innerHTML = '<li style="font-family: var(--font-main); font-size: 0.88rem; padding: 10px;">CONNECTING TO CLOUD...</li>';
+
+  let records = [];
+
+  if (APP_STATE.supabaseClient) {
+    try {
+      const { data, error } = await APP_STATE.supabaseClient
+        .from('blind_matrix_leaderboard')
+        .select('*')
+        .order('high_score', { ascending: false })
+        .limit(10);
+
+      if (!error && data && data.length > 0) {
+        records = data;
+      }
+    } catch (e) {
+      console.warn("Supabase fetch failed, fallback to local:", e);
+    }
+  }
+
+  if (records.length === 0) {
+    records = getLocalLeaderboard();
+  }
+
+  records.sort((a, b) => b.high_score - a.high_score);
+
+  listEl.innerHTML = '';
+  records.forEach((row, index) => {
+    const isMe = row.username === APP_STATE.playerHandle;
+    const avatarSvg = AVATARS[row.avatar] || AVATARS.cutting_chai;
+
+    const li = document.createElement('li');
+    li.className = `lb-row-item rank-${index + 1} ${isMe ? 'current-player' : ''}`;
+    li.innerHTML = `
+      <span class="lb-rank-badge">#${index + 1}</span>
+      <div class="lb-user-block">
+        <div class="lb-avatar-box">${avatarSvg}</div>
+        <span style="font-weight: 800;">${row.username}</span>
+      </div>
+      <div style="text-align: right;">
+        <div class="lb-score-val">${row.high_score} PTS</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">LVL ${row.max_level || 1}</div>
+      </div>
+    `;
+    listEl.appendChild(li);
+  });
+}
+
+async function upsertScoreToLeaderboard(username, avatar, score, level) {
+  let localData = getLocalLeaderboard();
+  const existingIdx = localData.findIndex(r => r.username === username);
+  const record = { username, avatar, high_score: score, max_level: level };
+
+  if (existingIdx >= 0) {
+    if (score > localData[existingIdx].high_score) {
+      localData[existingIdx].high_score = score;
+      localData[existingIdx].max_level = level;
+      localData[existingIdx].avatar = avatar;
+    }
+  } else {
+    localData.push(record);
+  }
+  saveLocalLeaderboard(localData);
+
+  // Broadcast to all connected clients over WebSocket
+  if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+    APP_STATE.ws.send(JSON.stringify({
+      action: 'leaderboard_update',
+      record
+    }));
+  }
+
+  if (APP_STATE.supabaseClient) {
+    try {
+      await APP_STATE.supabaseClient
+        .from('blind_matrix_leaderboard')
+        .upsert({
+          username: username,
+          avatar: avatar,
+          high_score: score,
+          max_level: level,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'username' });
+    } catch (e) {
+      console.warn("Supabase upsert error:", e);
+    }
+  }
+}
+
+/* ==========================================================================
+   SECTION 12: EVENT LISTENERS & SETUP
+   ========================================================================== */
+function setupEventListeners() {
+  document.getElementById('btnNavMenu').addEventListener('click', () => switchView('view-menu'));
+  document.getElementById('btnStartSolo').addEventListener('click', startSinglePlayerGame);
+  document.getElementById('btnStartOnline').addEventListener('click', initDuelRoomLobby);
+  document.getElementById('btnRestartGame').addEventListener('click', startSinglePlayerGame);
+  document.getElementById('btnGameOverMenu').addEventListener('click', () => switchView('view-menu'));
+
+  document.getElementById('btnOpenLeaderboard').addEventListener('click', () => {
+    loadLeaderboard();
+    switchView('view-leaderboard');
+  });
+  document.getElementById('btnLeaderboardBack').addEventListener('click', () => switchView('view-menu'));
+
+  // Animated Motion-Based Audio Toggle
+  document.getElementById('btnSoundToggle').addEventListener('click', () => {
+    audioVoice.isMuted = !audioVoice.isMuted;
+    updateAudioToggleButton();
+    if (!audioVoice.isMuted) {
+      audioVoice.playPop();
+    }
+  });
+
+  // Retro-Terminal Lo-Fi Radio Controls
+  const btnRadioToggle = document.getElementById('btnRadioToggle');
+  const modalRadio = document.getElementById('modalRadioTerminal');
+  const btnCloseRadio = document.getElementById('btnCloseRadioTerminal');
+  const btnMinimizeRadio = document.getElementById('btnMinimizeRadio');
+
+  if (btnRadioToggle && modalRadio) {
+    btnRadioToggle.addEventListener('click', () => {
+      modalRadio.classList.add('open');
+      lofiRadio.ensureContext();
+      if (!lofiRadio.isPlaying) {
+        lofiRadio.playTrack(lofiRadio.currentTrack);
+      }
+    });
+  }
+
+  if (btnCloseRadio && modalRadio) {
+    btnCloseRadio.addEventListener('click', () => {
+      modalRadio.classList.remove('open');
+    });
+  }
+
+  if (btnMinimizeRadio && modalRadio) {
+    btnMinimizeRadio.addEventListener('click', () => {
+      modalRadio.classList.remove('open');
+      if (!lofiRadio.isPlaying) {
+        lofiRadio.playTrack(lofiRadio.currentTrack);
+      }
+    });
+  }
+
+  const btnPlayPause = document.getElementById('btnRadioPlayPause');
+  if (btnPlayPause) {
+    btnPlayPause.addEventListener('click', () => {
+      lofiRadio.togglePlay();
+    });
+  }
+
+  const btnRadioNext = document.getElementById('btnRadioNext');
+  if (btnRadioNext) {
+    btnRadioNext.addEventListener('click', () => {
+      lofiRadio.nextTrack();
+    });
+  }
+
+  const btnRadioPrev = document.getElementById('btnRadioPrev');
+  if (btnRadioPrev) {
+    btnRadioPrev.addEventListener('click', () => {
+      lofiRadio.prevTrack();
+    });
+  }
+
+  const volSlider = document.getElementById('radioVolumeSlider');
+  if (volSlider) {
+    volSlider.addEventListener('input', (e) => {
+      lofiRadio.setVolume(parseFloat(e.target.value) / 100);
+    });
+  }
+
+  // Radio Track Selection Clicks
+  document.querySelectorAll('.term-track-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const trackIdx = parseInt(row.getAttribute('data-track'), 10);
+      if (lofiRadio.isPlaying && lofiRadio.currentTrack === trackIdx) {
+        lofiRadio.pauseTrack();
+      } else {
+        lofiRadio.playTrack(trackIdx);
+      }
+    });
+  });
+
+  // Duel Tile Clicks
+  for (let i = 0; i < 9; i++) {
+    const tile = document.getElementById(`dtile-${i}`);
+    if (tile) {
+      tile.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        handleDuelTileClick(1, i);
+      });
+    }
+  }
+
+  // 3 Jugaad Power-Up Buttons
+  const btnChai = document.getElementById('btnPowerChai');
+  if (btnChai) btnChai.addEventListener('click', useChaiPower);
+
+  const btnChashma = document.getElementById('btnPowerChashma');
+  if (btnChashma) btnChashma.addEventListener('click', useChashmaPower);
+
+  const btnThink = document.getElementById('btnPowerThink');
+  if (btnThink) btnThink.addEventListener('click', useThinkFeature);
+
+  // Copy Room Code Button
+  const btnCopy = document.getElementById('btnCopyRoomCode');
+  if (btnCopy) {
+    btnCopy.addEventListener('click', () => {
+      navigator.clipboard.writeText(APP_STATE.duel.roomCode);
+      btnCopy.textContent = 'COPIED!';
+      setTimeout(() => btnCopy.textContent = 'COPY', 1500);
+    });
+  }
+
+  // Duel Helpers
+  document.getElementById('btnPlayBot').addEventListener('click', () => startOnlineDuelMatch(true));
+  document.getElementById('btnJoinRoomSubmit').addEventListener('click', () => {
+    const code = document.getElementById('inputJoinRoom').value.trim().toUpperCase();
+    if (code.length === 4) {
+      APP_STATE.duel.roomCode = code;
+      if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
+        APP_STATE.ws.send(JSON.stringify({
+          action: 'join_room',
+          roomCode: code,
+          handle: APP_STATE.playerHandle,
+          avatar: APP_STATE.playerAvatar
+        }));
+      } else {
+        // Fallback to bot match if no server connection
+        startOnlineDuelMatch(true);
+      }
+    }
+  });
+
+  // Theme Switcher Pills
+  document.querySelectorAll('.theme-pill-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.getAttribute('data-theme');
+      applyTheme(theme);
+    });
+  });
+
+  // Profile Modal
+  renderAvatarOptions();
+  updateProfileUI();
+
+  document.getElementById('btnEditProfile').addEventListener('click', () => {
+    document.getElementById('inputPlayerHandle').value = APP_STATE.playerHandle;
+    document.getElementById('modalProfile').classList.add('open');
+  });
+
+  document.getElementById('btnSaveProfile').addEventListener('click', () => {
+    const val = document.getElementById('inputPlayerHandle').value.trim().toUpperCase();
+    if (val.length >= 3) {
+      APP_STATE.playerHandle = val;
+      localStorage.setItem('bm_player_handle', val);
+      localStorage.setItem('bm_player_avatar', APP_STATE.playerAvatar);
+      updateProfileUI();
+      document.getElementById('modalProfile').classList.remove('open');
+    }
+  });
+
+  // Cloud Settings Modal
+  document.getElementById('btnOpenSettings').addEventListener('click', () => {
+    document.getElementById('inputSupaUrl').value = APP_STATE.supabaseUrl;
+    document.getElementById('inputSupaKey').value = APP_STATE.supabaseKey;
+    document.getElementById('modalSettings').classList.add('open');
+  });
+  document.getElementById('btnCloseSettings').addEventListener('click', () => {
+    document.getElementById('modalSettings').classList.remove('open');
+  });
+  document.getElementById('btnSaveSettings').addEventListener('click', () => {
+    const url = document.getElementById('inputSupaUrl').value.trim();
+    const key = document.getElementById('inputSupaKey').value.trim();
+    APP_STATE.supabaseUrl = url;
+    APP_STATE.supabaseKey = key;
+    localStorage.setItem('bm_supa_url', url);
+    localStorage.setItem('bm_supa_key', key);
+    initSupabase();
+    document.getElementById('modalSettings').classList.remove('open');
+  });
+
+  // Keyboard Numpad & Digits (1-9) + Powers (C, V, T)
+  window.addEventListener('keydown', (e) => {
+    if (APP_STATE.currentView === 'view-singleplay' && APP_STATE.singlePlay.active) {
+      // Physical Desktop Numpad orientation:
+      // [7] [8] [9] -> Row 1 (0, 1, 2)
+      // [4] [5] [6] -> Row 2 (3, 4, 5)
+      // [1] [2] [3] -> Row 3 (6, 7, 8)
+      const numpadCodeMap = {
+        'Numpad7': 0, 'Numpad8': 1, 'Numpad9': 2,
+        'Numpad4': 3, 'Numpad5': 4, 'Numpad6': 5,
+        'Numpad1': 6, 'Numpad2': 7, 'Numpad3': 8
+      };
+      // Standard Top-Row Digit Keys:
+      const digitKeyMap = {
+        '1': 0, '2': 1, '3': 2,
+        '4': 3, '5': 4, '6': 5,
+        '7': 6, '8': 7, '9': 8
+      };
+
+      if (numpadCodeMap[e.code] !== undefined) {
+        handleTileClick(numpadCodeMap[e.code]);
+      } else if (digitKeyMap[e.key] !== undefined) {
+        handleTileClick(digitKeyMap[e.key]);
+      } else if (e.key.toUpperCase() === 'C') {
+        useChaiPower();
+      } else if (e.key.toUpperCase() === 'V') {
+        useChashmaPower();
+      } else if (e.key.toUpperCase() === 'T') {
+        useThinkFeature();
+      }
+    }
+  });
+}
+
+function renderAvatarOptions() {
+  const container = document.getElementById('avatarGrid');
+  if (!container) return;
+
+  container.innerHTML = '';
+  Object.keys(AVATARS).forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = `avatar-opt-btn ${APP_STATE.playerAvatar === key ? 'selected' : ''}`;
+    btn.innerHTML = AVATARS[key];
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.avatar-opt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      APP_STATE.playerAvatar = key;
+    });
+    container.appendChild(btn);
+  });
+}
+
+function updateProfileUI() {
+  const handleEl = document.getElementById('lblPlayerHandle');
+  if (handleEl) handleEl.textContent = APP_STATE.playerHandle;
+  const dtHandle = document.getElementById('dtPlayerHandle');
+  if (dtHandle) dtHandle.textContent = APP_STATE.playerHandle;
+
+  const svgContent = AVATARS[APP_STATE.playerAvatar] || AVATARS.cutting_chai;
+  const preview = document.getElementById('lblPlayerAvatarPreview');
+  if (preview) {
+    preview.innerHTML = svgContent;
+  }
+  const dtPreview = document.getElementById('dtAvatarPreview');
+  if (dtPreview) {
+    dtPreview.innerHTML = svgContent;
+  }
+}
+
+/* ==========================================================================
+   SECTION 13: ENGINE BOOTSTRAP
+   ========================================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+  initAmbientCanvas();
+  applyTheme(APP_STATE.currentTheme);
+  updateDesiTaunt();
+  updateAudioToggleButton();
+  setupEventListeners();
+  initWebSocket();
+  initSupabase();
+  console.log("BLIND MATRIX: MEMORY RUN 2.0 (Ultra Funky Live Edition) Bootstrapped.");
+});
