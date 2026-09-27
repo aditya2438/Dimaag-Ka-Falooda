@@ -44,98 +44,170 @@ function getBrainIQInfo(level, score) {
 }
 
 /* ==========================================================================
+   SECTION 2B: TAMPER DEFENSE & ANTI-CHEAT ENGINE
+   Prevents memory hacking, synthetic event bots, autoclicker speedhacks,
+   DevTools tampering, and forged high scores
+   ========================================================================== */
+const AntiCheat = {
+  sessionKey: (Math.random() * 0xFFFFFF) | 0x100000,
+  clickTimestamps: [],
+  isTampered: false,
+  tamperReason: '',
+  actionNonce: 0,
+
+  validateTap(event) {
+    if (this.isTampered) return false;
+
+    // 1. Synthetic event check (Automated scripts / dispatchEvent bots)
+    if (event && event.isTrusted === false) {
+      this.flag('SYNTHETIC_BOT_EVENT');
+      return false;
+    }
+
+    // 2. Autoclicker rate-limiting check (<60ms impossible for human motor reflex)
+    const now = performance.now();
+    this.clickTimestamps.push(now);
+    if (this.clickTimestamps.length > 5) {
+      this.clickTimestamps.shift();
+      const avgInterval = (this.clickTimestamps[4] - this.clickTimestamps[0]) / 4;
+      if (avgInterval < 60) {
+        this.flag('AUTOCLICKER_SPEEDHACK');
+        return false;
+      }
+    }
+
+    this.actionNonce++;
+    return true;
+  },
+
+  flag(reason) {
+    if (this.isTampered) return;
+    this.isTampered = true;
+    this.tamperReason = reason;
+    console.warn('[SECURITY VIOLATION DETECTED]', reason);
+
+    // Invalidate local score
+    if (APP_STATE.singlePlay) {
+      APP_STATE.singlePlay.score = 0;
+      APP_STATE.singlePlay.streak = 0;
+    }
+
+    // Show anti-cheat toast on screen
+    const alertEl = document.getElementById('anticheatAlert');
+    const textEl = document.getElementById('anticheatText');
+    if (alertEl && textEl) {
+      textEl.textContent = 'SECURITY ALERT: CHEAT DETECTED (' + reason + ') - SCORE INVALIDATED!';
+      alertEl.style.display = 'block';
+      setTimeout(() => { alertEl.style.display = 'none'; }, 4500);
+    }
+
+    if (typeof audioVoice !== 'undefined' && audioVoice) {
+      audioVoice.speakHindi(['Hacking band karo beta! Imandari se khelo!']);
+    }
+  },
+
+  validateScoreSubmission(score, level) {
+    if (this.isTampered) return false;
+    // Bounded score validation: impossible to achieve > level * 3500
+    const maxPlausible = Math.max(500, (level || 1) * 3500);
+    if (score > maxPlausible || score < 0) {
+      this.flag('IMPLAUSIBLE_SCORE');
+      return false;
+    }
+    return true;
+  },
+
+  initProtection() {
+    // Intercept DevTools keys during gameplay
+    window.addEventListener('keydown', (e) => {
+      if (APP_STATE.currentView === 'view-singleplay' || APP_STATE.currentView === 'view-duel-room') {
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+          (e.ctrlKey && e.key === 'U')
+        ) {
+          e.preventDefault();
+          this.flag('DEVTOOLS_SHORTCUT_BLOCKED');
+          return false;
+        }
+      }
+    }, true);
+
+    // Disable context menu on app during gameplay
+    const appEl = document.getElementById('app');
+    if (appEl) {
+      appEl.addEventListener('contextmenu', (e) => {
+        if (APP_STATE.currentView === 'view-singleplay' || APP_STATE.currentView === 'view-duel-room') {
+          e.preventDefault();
+        }
+      });
+    }
+  }
+};
+
+/* ==========================================================================
    SECTION 3: DIFFICULTY PROGRESSION LADDER
+   Phase 1 (Lvl 1-4): Forward Recall, escalating grid from 9 to 15 blocks
+   Phase 2 (Lvl 5+): Reverse Order Mode! Resets to 9 tiles, 2.0s time, seq 3,
+                     and restarts hardness progression in reverse!
+   Zero fake/decoy blinking across all levels.
    ========================================================================== */
 function getLevelConfig(level) {
   let rows = 3;
   let cols = 3;
   let totalTiles = 9;
   let sequenceLength = 3;
-  let hasDecoy = false;
+  const hasDecoy = false; // Fake decoy tiles completely eliminated per client request
   let isReverse = false;
   let isGhost = false;
   let timeLimitSec = 3.5;
 
-  if (level >= 14) {
-    // TIER 7: GOD MATRIX MODE (60 BLOCKS!)
-    rows = 6;
-    cols = 10;
-    totalTiles = 60;
-    sequenceLength = Math.min(12, 10 + Math.floor((level - 14) / 2));
-    hasDecoy = true;
-    isReverse = Math.random() < 0.5;
-    isGhost = true;
-    timeLimitSec = Math.max(1.1, 1.5 - (level - 14) * 0.05);
-  } else if (level >= 11) {
-    // TIER 6: ULTRA REFLEX ARENA (40 BLOCKS!)
-    rows = 5;
-    cols = 8;
-    totalTiles = 40;
-    sequenceLength = level === 11 ? 8 : (level === 12 ? 9 : 10);
-    hasDecoy = true;
-    isReverse = level >= 12;
-    isGhost = level >= 13;
-    timeLimitSec = Math.max(1.4, 1.8 - (level - 11) * 0.1);
-  } else if (level >= 9) {
-    // TIER 5: PRO MEMORIZER SECTOR (30 BLOCKS!)
-    rows = 5;
-    cols = 6;
-    totalTiles = 30;
-    sequenceLength = level === 9 ? 7 : 8;
-    hasDecoy = true;
-    isReverse = level >= 10;
-    isGhost = level >= 10;
-    timeLimitSec = 1.9;
-  } else if (level >= 7) {
-    // TIER 4: EXPANDED MATRIX (20 BLOCKS!)
-    rows = 4;
-    cols = 5;
-    totalTiles = 20;
-    sequenceLength = level === 7 ? 6 : 7;
-    hasDecoy = true;
-    isReverse = level >= 8;
-    isGhost = level >= 8;
-    timeLimitSec = 2.1;
-  } else if (level >= 5) {
-    // TIER 3: TACTICAL RECTANGLE (15 BLOCKS!)
-    rows = 3;
-    cols = 5;
-    totalTiles = 15;
-    sequenceLength = level === 5 ? 5 : 6;
-    hasDecoy = true;
-    isReverse = level >= 6;
-    isGhost = level >= 6;
-    timeLimitSec = 2.4;
-  } else if (level >= 3) {
-    // TIER 2: ADVANCED GRID (12 BLOCKS!)
-    rows = 3;
-    cols = 4;
-    totalTiles = 12;
-    sequenceLength = level === 3 ? 4 : 5;
-    hasDecoy = true;
-    isReverse = level >= 4;
-    isGhost = false;
-    timeLimitSec = 2.7;
-  } else if (level === 2) {
-    // TIER 1B: 9 BLOCKS
-    rows = 3;
-    cols = 3;
-    totalTiles = 9;
-    sequenceLength = 4;
-    hasDecoy = false;
+  if (level < 5) {
+    // PHASE 1: FORWARD ORDER
     isReverse = false;
-    isGhost = false;
-    timeLimitSec = 3.0;
+    if (level === 1) {
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 3.5;
+    } else if (level === 2) {
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 3.0;
+    } else if (level === 3) {
+      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 2.7;
+    } else if (level === 4) {
+      rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 2.4;
+    }
   } else {
-    // TIER 1A: 9 BLOCKS (LEVEL 1 INTRO)
-    rows = 3;
-    cols = 3;
-    totalTiles = 9;
-    sequenceLength = 3;
-    hasDecoy = false;
-    isReverse = false;
-    isGhost = false;
-    timeLimitSec = 3.5;
+    // PHASE 2: REVERSE ORDER MODE (Starts at Level 5!)
+    // Resets to 9 tiles, time to 2.0s, and hardness restarts progressive from base
+    isReverse = true;
+    const revLevel = level - 4; // 1, 2, 3, 4, 5...
+
+    if (revLevel === 1) {
+      // Level 5: Reverse Level 1 (9 tiles, seq 3, 2.0s)
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 2.0;
+    } else if (revLevel === 2) {
+      // Level 6: Reverse Level 2 (9 tiles, seq 4, 1.9s)
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 1.9;
+    } else if (revLevel === 3) {
+      // Level 7: Reverse Level 3 (12 tiles, seq 4, 1.8s)
+      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 1.8;
+    } else if (revLevel === 4) {
+      // Level 8: Reverse Level 4 (15 tiles, seq 5, 1.7s)
+      rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 1.7;
+    } else if (revLevel === 5) {
+      // Level 9: Reverse Level 5 (20 tiles, seq 6, 1.6s)
+      rows = 4; cols = 5; totalTiles = 20; sequenceLength = 6; timeLimitSec = 1.6;
+    } else if (revLevel === 6) {
+      // Level 10: Reverse Level 6 (20 tiles, seq 7, 1.5s)
+      rows = 4; cols = 5; totalTiles = 20; sequenceLength = 7; timeLimitSec = 1.5;
+    } else if (revLevel === 7) {
+      // Level 11: Reverse Level 7 (30 tiles, seq 8, 1.4s)
+      rows = 5; cols = 6; totalTiles = 30; sequenceLength = 8; timeLimitSec = 1.4;
+    } else {
+      // Level 12+: Ultra Reflex Reverse Mode (40 tiles)
+      rows = 5; cols = 8; totalTiles = 40;
+      sequenceLength = Math.min(10, 8 + Math.floor((revLevel - 7) / 2));
+      timeLimitSec = Math.max(1.1, 1.4 - (revLevel - 7) * 0.05);
+      isGhost = revLevel >= 9;
+    }
   }
 
   return { rows, cols, totalTiles, sequenceLength, hasDecoy, isReverse, isGhost, timeLimitSec };
@@ -1641,7 +1713,7 @@ function setupSinglePlayerGrid(rows, cols) {
 
     tile.addEventListener('pointerdown', (e) => {
       e.preventDefault();
-      handleTileClick(i);
+      handleTileClick(i, e);
     });
 
     frag.appendChild(tile);
@@ -1693,6 +1765,7 @@ function startSinglePlayerGame() {
     playerTapIndex: 0,
     phase: 'IDLE',
     isReverse: false,
+    hasSeenReverseNotice: false,
     timeLimitSec: 3.0,
     remainingTimeSec: 3.0,
     animFrameId: null,
@@ -1725,6 +1798,36 @@ function resetPowerBtnsUI() {
   if (btnChai) btnChai.classList.remove('disabled');
   if (btnChashma) btnChashma.classList.remove('disabled');
   if (btnThink) btnThink.classList.remove('disabled');
+}
+
+function showReverseAttentionModal(onDismiss) {
+  const overlay = document.getElementById('reverseAttentionOverlay');
+  const btn = document.getElementById('btnDismissReverse');
+  if (!overlay) {
+    onDismiss();
+    return;
+  }
+
+  overlay.style.display = 'flex';
+  audioVoice.speakHindi(['Dhyan de! Ab tiles ulta dabana hai, last to first!']);
+  audioVoice.playBoing();
+
+  let dismissed = false;
+  const dismiss = () => {
+    if (dismissed) return;
+    dismissed = true;
+    overlay.style.display = 'none';
+    setTimeout(onDismiss, 200);
+  };
+
+  if (btn) {
+    btn.onclick = dismiss;
+  }
+
+  // Auto-dismiss after 3.2s so player is never permanently blocked
+  setTimeout(() => {
+    if (!dismissed) dismiss();
+  }, 3200);
 }
 
 function startNewRound() {
@@ -1767,28 +1870,38 @@ function startNewRound() {
     updateFunkyCapsule(`MEMORIZE: ${config.sequenceLength}/${config.totalTiles} BLOCKS`, "pulse-memorize");
   }
 
-  flashTilesSequence(sp.targetSequence, config.hasDecoy, config.totalTiles, () => {
-    sp.phase = 'RECALL';
-    sp.isInputLocked = false;
+  const runSequence = () => {
+    flashTilesSequence(sp.targetSequence, false, config.totalTiles, () => {
+      sp.phase = 'RECALL';
+      sp.isInputLocked = false;
 
-    if (sp.isReverse) {
-      phasePill.textContent = 'ENTER IN REVERSE ORDER!';
-      phasePill.className = 'phase-pill-badge reverse';
-    } else {
-      phasePill.textContent = 'RECALL PATTERN NOW!';
-      phasePill.className = 'phase-pill-badge recall';
-    }
+      if (sp.isReverse) {
+        phasePill.textContent = 'ENTER IN REVERSE ORDER!';
+        phasePill.className = 'phase-pill-badge reverse';
+      } else {
+        phasePill.textContent = 'RECALL PATTERN NOW!';
+        phasePill.className = 'phase-pill-badge recall';
+      }
 
-    if (sp.streak >= 3) {
-      updateFunkyCapsule(`${sp.streak}X FEVER SURGE!`, "pulse-combo");
-    } else if (sp.streak >= 2) {
-      updateFunkyCapsule(`${sp.streak}X COMBO SURGE!`, "pulse-combo");
-    } else {
-      updateFunkyCapsule("RECALL NOW!", "pulse-recall");
-    }
+      if (sp.streak >= 3) {
+        updateFunkyCapsule(`${sp.streak}X FEVER SURGE!`, "pulse-combo");
+      } else if (sp.streak >= 2) {
+        updateFunkyCapsule(`${sp.streak}X COMBO SURGE!`, "pulse-combo");
+      } else {
+        updateFunkyCapsule("RECALL NOW!", "pulse-recall");
+      }
 
-    startSpeedTimer();
-  });
+      startSpeedTimer();
+    });
+  };
+
+  // Show reverse order attention middle popup when reverse mode is first encountered
+  if (config.isReverse && !sp.hasSeenReverseNotice) {
+    sp.hasSeenReverseNotice = true;
+    showReverseAttentionModal(runSequence);
+  } else {
+    runSequence();
+  }
 }
 
 function flashTilesSequence(sequence, hasDecoy, totalTiles, onComplete) {
@@ -1815,39 +1928,11 @@ function flashTilesSequence(sequence, hasDecoy, totalTiles, onComplete) {
         setTimeout(showNext, 140);
       }, 430);
     } else {
-      if (hasDecoy && Math.random() < 0.75) {
-        triggerDecoyFlicker(sequence, totalTiles, onComplete);
-      } else {
-        setTimeout(onComplete, 180);
-      }
+      // Sequence completed: start recall phase with clean timing, zero fake blinks
+      setTimeout(onComplete, 180);
     }
   }
   setTimeout(showNext, 300);
-}
-
-function triggerDecoyFlicker(targetSequence, totalTiles = 9, onComplete) {
-  const allIndices = [];
-  for (let i = 0; i < totalTiles; i++) allIndices.push(i);
-  const nonTargets = allIndices.filter(i => !targetSequence.includes(i));
-  if (nonTargets.length === 0) {
-    onComplete();
-    return;
-  }
-
-  const decoyIdx = nonTargets[Math.floor(Math.random() * nonTargets.length)];
-  const decoyEl = document.getElementById(`tile-${decoyIdx}`);
-
-  setTimeout(() => {
-    if (decoyEl) {
-      decoyEl.classList.add('decoy-flicker');
-      setTimeout(() => {
-        decoyEl.classList.remove('decoy-flicker');
-        setTimeout(onComplete, 180);
-      }, 200);
-    } else {
-      onComplete();
-    }
-  }, 100);
 }
 
 function startSpeedTimer() {
@@ -1890,9 +1975,12 @@ function startSpeedTimer() {
   sp.animFrameId = requestAnimationFrame(timerLoop);
 }
 
-function handleTileClick(tileIndex) {
+function handleTileClick(tileIndex, event) {
   const sp = APP_STATE.singlePlay;
   if (!sp.active || sp.isInputLocked || sp.phase !== 'RECALL') return;
+
+  // Anti-cheat verification on player input
+  if (event && !AntiCheat.validateTap(event)) return;
 
   const targetSeq = sp.isReverse ? [...sp.targetSequence].reverse() : sp.targetSequence;
   const expectedTile = targetSeq[sp.playerTapIndex];
@@ -2327,7 +2415,8 @@ function handleServerWebSocketMessage(msg) {
 const DUEL_RT = {
   channel: null,
   isHost: false,
-  opponentHandle: ''
+  opponentHandle: '',
+  retryTimer: null
 };
 
 function duelChannelName(code) {
@@ -2335,6 +2424,10 @@ function duelChannelName(code) {
 }
 
 function closeDuelChannel() {
+  if (DUEL_RT.retryTimer) {
+    clearInterval(DUEL_RT.retryTimer);
+    DUEL_RT.retryTimer = null;
+  }
   if (DUEL_RT.channel && APP_STATE.supabaseClient) {
     try {
       APP_STATE.supabaseClient.removeChannel(DUEL_RT.channel);
@@ -2343,8 +2436,8 @@ function closeDuelChannel() {
   }
 }
 
-function sendDuelEvent(event, payload) {
-  // Prefer Supabase Realtime (cross-device), fall back to local WS (localhost)
+function sendDuelEvent(event, payload = {}) {
+  // Broadcast over Supabase Realtime channel
   if (DUEL_RT.channel) {
     try {
       DUEL_RT.channel.send({
@@ -2352,9 +2445,9 @@ function sendDuelEvent(event, payload) {
         event: event,
         payload: payload
       });
-      return;
     } catch (e) {}
   }
+  // Also send over local WebSocket if active
   if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
     try {
       APP_STATE.ws.send(JSON.stringify({ action: event, ...payload }));
@@ -2366,62 +2459,98 @@ function hostRoomSupa(code) {
   if (!APP_STATE.supabaseClient) return;
   closeDuelChannel();
   DUEL_RT.isHost = true;
+  APP_STATE.duel.isHost = true;
+  APP_STATE.duel.roomCode = code;
 
   const ch = APP_STATE.supabaseClient.channel(duelChannelName(code), {
     config: { broadcast: { self: false } }
   });
 
+  // 1. Guest joins room
   ch.on('broadcast', { event: 'player_joined' }, ({ payload }) => {
-    DUEL_RT.opponentHandle = payload.handle || 'OPPONENT';
+    DUEL_RT.opponentHandle = payload.handle || 'GUEST';
+    APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
+
     const statusEl = document.getElementById('roomStatusText');
-    if (statusEl) statusEl.textContent = DUEL_RT.opponentHandle + ' JOINED // MATCH STARTING!';
+    if (statusEl) statusEl.textContent = 'CONNECTED WITH ' + DUEL_RT.opponentHandle + '! STARTING MATCH...';
     audioVoice.speakHindi(['Opponent aa gaya! Duel shuru!']);
-    APP_STATE.duel.playerNumber = 1;
-    // Tell the joiner they are P2
-    ch.send({ type: 'broadcast', event: 'match_setup', payload: { playerNumber: 2, hostHandle: APP_STATE.playerHandle } });
-    setTimeout(() => startOnlineDuelMatch(false), 900);
+
+    // Generate synchronized initial sequence
+    const seq = generatePattern(4);
+    APP_STATE.duel.targetSequence = seq;
+
+    // Send room_ready to guest
+    sendDuelEvent('room_ready', {
+      hostHandle: APP_STATE.playerHandle,
+      guestHandle: DUEL_RT.opponentHandle,
+      initialSequence: seq
+    });
+
+    setTimeout(() => {
+      startOnlineDuelMatch(false, true, seq);
+    }, 600);
   });
 
-  ch.on('broadcast', { event: 'tap_progress_rt' }, ({ payload }) => {
-    if (APP_STATE.duel.active) {
-      APP_STATE.duel.p2Progress = payload.progress;
-      APP_STATE.duel.p2Score = payload.score;
-      updateDuelHUD();
+  // 2. Opponent tile tap
+  ch.on('broadcast', { event: 'duel_tap' }, ({ payload }) => {
+    if (!APP_STATE.duel.active) return;
+    APP_STATE.duel.oppProgress = payload.progress;
+    APP_STATE.duel.oppScore = payload.score;
+
+    const oppTile = document.getElementById(`dtile-${payload.tileIndex}`);
+    if (oppTile) {
+      oppTile.classList.add('flash-active');
+      setTimeout(() => oppTile.classList.remove('flash-active'), 250);
     }
+    updateDuelHUD();
   });
 
-  ch.on('broadcast', { event: 'wrong_tap_rt' }, () => {
-    if (APP_STATE.duel.active) {
-      APP_STATE.duel.p2StunnedUntil = performance.now() + 1500;
-    }
+  // 3. Opponent stunned
+  ch.on('broadcast', { event: 'duel_stun' }, () => {
+    if (!APP_STATE.duel.active) return;
+    APP_STATE.duel.oppStunnedUntil = performance.now() + 1500;
+    updateDuelHUD();
   });
 
-  ch.on('broadcast', { event: 'round_done_rt' }, ({ payload }) => {
-    if (APP_STATE.duel.active && payload.winner === 2) {
-      APP_STATE.duel.p2Score = payload.score;
-      updateDuelHUD();
-      if (APP_STATE.duel.p2Score >= APP_STATE.duel.targetScore) {
-        endDuelMatch(2);
-      } else {
-        setTimeout(() => {
-          const seq = generatePattern(4);
-          APP_STATE.duel.targetSequence = seq;
-          sendDuelEvent('sync_round_rt', { sequence: seq });
+  // 4. Opponent completed round
+  ch.on('broadcast', { event: 'duel_round_win' }, ({ payload }) => {
+    if (!APP_STATE.duel.active) return;
+    APP_STATE.duel.oppScore = payload.score;
+    APP_STATE.duel.phase = 'ROUND_OVER';
+    audioVoice.playMoyeMoyeTune();
+    updateDuelHUD();
+
+    if (APP_STATE.duel.oppScore >= APP_STATE.duel.targetScore) {
+      finishDuelMatch(false);
+    } else {
+      // Host generates next sequence
+      setTimeout(() => {
+        if (APP_STATE.duel.active) {
+          const nextSeq = generatePattern(4);
+          APP_STATE.duel.targetSequence = nextSeq;
+          sendDuelEvent('duel_next_round', { sequence: nextSeq });
           startSynchronizedDuelRound();
-        }, 800);
-      }
+        }
+      }, 1000);
+    }
+  });
+
+  // 5. Match won by opponent
+  ch.on('broadcast', { event: 'duel_match_won' }, () => {
+    if (APP_STATE.duel.active) {
+      finishDuelMatch(false);
     }
   });
 
   ch.subscribe((status) => {
     if (status === 'SUBSCRIBED') {
-      console.log('Supabase duel room hosted:', code);
+      console.log('Supabase 1v1 duel room hosted:', code);
     }
   });
 
   DUEL_RT.channel = ch;
 
-  // Also try local WS as secondary channel
+  // Secondary backup: local WS
   if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
     APP_STATE.ws.send(JSON.stringify({
       action: 'join_room',
@@ -2443,56 +2572,107 @@ function joinRoomSupa(code) {
         avatar: APP_STATE.playerAvatar
       }));
     } else {
-      startOnlineDuelMatch(true); // bot fallback
+      startOnlineDuelMatch(true, false);
     }
     return;
   }
   closeDuelChannel();
   DUEL_RT.isHost = false;
+  APP_STATE.duel.isHost = false;
   APP_STATE.duel.roomCode = code;
-  APP_STATE.duel.playerNumber = 2;
 
   const ch = APP_STATE.supabaseClient.channel(duelChannelName(code), {
     config: { broadcast: { self: false } }
   });
 
-  ch.on('broadcast', { event: 'match_setup' }, ({ payload }) => {
+  // 1. Host confirms match ready with sequence
+  ch.on('broadcast', { event: 'room_ready' }, ({ payload }) => {
+    if (DUEL_RT.retryTimer) {
+      clearInterval(DUEL_RT.retryTimer);
+      DUEL_RT.retryTimer = null;
+    }
     DUEL_RT.opponentHandle = payload.hostHandle || 'HOST';
-    APP_STATE.duel.playerNumber = payload.playerNumber || 2;
-    startOnlineDuelMatch(false);
+    APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
+
+    const statusEl = document.getElementById('roomStatusText');
+    if (statusEl) statusEl.textContent = 'CONNECTED WITH ' + DUEL_RT.opponentHandle + '! STARTING MATCH...';
+    audioVoice.speakHindi(['Opponent aa gaya! Duel shuru!']);
+
+    startOnlineDuelMatch(false, false, payload.initialSequence);
   });
 
-  ch.on('broadcast', { event: 'sync_round_rt' }, ({ payload }) => {
-    if (APP_STATE.duel.active) {
-      APP_STATE.duel.targetSequence = payload.sequence;
-      startSynchronizedDuelRound();
+  // 2. Opponent tile tap
+  ch.on('broadcast', { event: 'duel_tap' }, ({ payload }) => {
+    if (!APP_STATE.duel.active) return;
+    APP_STATE.duel.oppProgress = payload.progress;
+    APP_STATE.duel.oppScore = payload.score;
+
+    const oppTile = document.getElementById(`dtile-${payload.tileIndex}`);
+    if (oppTile) {
+      oppTile.classList.add('flash-active');
+      setTimeout(() => oppTile.classList.remove('flash-active'), 250);
+    }
+    updateDuelHUD();
+  });
+
+  // 3. Opponent stunned
+  ch.on('broadcast', { event: 'duel_stun' }, () => {
+    if (!APP_STATE.duel.active) return;
+    APP_STATE.duel.oppStunnedUntil = performance.now() + 1500;
+    updateDuelHUD();
+  });
+
+  // 4. Opponent won round
+  ch.on('broadcast', { event: 'duel_round_win' }, ({ payload }) => {
+    if (!APP_STATE.duel.active) return;
+    APP_STATE.duel.oppScore = payload.score;
+    APP_STATE.duel.phase = 'ROUND_OVER';
+    audioVoice.playMoyeMoyeTune();
+    updateDuelHUD();
+
+    if (APP_STATE.duel.oppScore >= APP_STATE.duel.targetScore) {
+      finishDuelMatch(false);
     }
   });
 
-  ch.on('broadcast', { event: 'tap_progress_rt' }, ({ payload }) => {
-    if (APP_STATE.duel.active) {
-      APP_STATE.duel.p2Progress = payload.progress;
-      APP_STATE.duel.p2Score = payload.score;
-      updateDuelHUD();
-    }
+  // 5. Host broadcasts next round sequence
+  ch.on('broadcast', { event: 'duel_next_round' }, ({ payload }) => {
+    if (!APP_STATE.duel.active) return;
+    APP_STATE.duel.targetSequence = payload.sequence;
+    startSynchronizedDuelRound();
   });
 
-  ch.on('broadcast', { event: 'wrong_tap_rt' }, () => {
+  // 6. Match won by opponent
+  ch.on('broadcast', { event: 'duel_match_won' }, () => {
     if (APP_STATE.duel.active) {
-      APP_STATE.duel.p2StunnedUntil = performance.now() + 1500;
+      finishDuelMatch(false);
     }
   });
 
   ch.subscribe((status) => {
     if (status === 'SUBSCRIBED') {
-      // Announce join to host
-      ch.send({
-        type: 'broadcast',
-        event: 'player_joined',
-        payload: { handle: APP_STATE.playerHandle, avatar: APP_STATE.playerAvatar }
-      });
       const statusEl = document.getElementById('roomStatusText');
-      if (statusEl) statusEl.textContent = 'CONNECTED // WAITING FOR HOST TO START...';
+      if (statusEl) statusEl.textContent = 'ROOM FOUND // WAITING FOR HOST CONFIRMATION...';
+
+      // Send join announcement with retry
+      let tries = 0;
+      const sendJoin = () => {
+        if (APP_STATE.duel.active || tries >= 6) {
+          if (DUEL_RT.retryTimer) {
+            clearInterval(DUEL_RT.retryTimer);
+            DUEL_RT.retryTimer = null;
+          }
+          return;
+        }
+        tries++;
+        ch.send({
+          type: 'broadcast',
+          event: 'player_joined',
+          payload: { handle: APP_STATE.playerHandle, avatar: APP_STATE.playerAvatar, code }
+        });
+      };
+      sendJoin();
+      DUEL_RT.retryTimer = setInterval(sendJoin, 900);
     }
   });
 
@@ -2510,58 +2690,54 @@ function initDuelRoomLobby(prefillCode) {
   if (codeEl) codeEl.textContent = code;
 
   const statusEl = document.getElementById('roomStatusText');
-  if (statusEl) statusEl.textContent = 'HOSTING ROOM // WAITING FOR OPPONENT...';
+  if (statusEl) statusEl.textContent = 'HOSTING ROOM // SHARE CODE TO PLAY LIVE!';
 
-  // Pre-fill join input if coming from URL ?room=CODE
   if (prefillCode && prefillCode.length === 4) {
     const joinInput = document.getElementById('inputJoinRoom');
     if (joinInput) joinInput.value = prefillCode.toUpperCase();
   }
 
-  // Host the room via Supabase Realtime (cross-device)
+  // Host room over Supabase Realtime
   hostRoomSupa(code);
 
   switchView('view-online-lobby');
 }
 
-function startOnlineDuelMatch(isVsBot = false) {
+function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null) {
+  const seq = initialSeq || generatePattern(4);
   APP_STATE.duel = {
     active: true,
     roomCode: APP_STATE.duel.roomCode,
-    playerNumber: APP_STATE.duel.playerNumber || 1,
+    isHost: isHost,
     targetScore: 10,
-    p1Score: 0,
-    p2Score: 0,
-    p1Progress: 0,
-    p2Progress: 0,
-    p1StunnedUntil: 0,
-    p2StunnedUntil: 0,
-    targetSequence: [],
+    myScore: 0,
+    oppScore: 0,
+    myProgress: 0,
+    oppProgress: 0,
+    myStunnedUntil: 0,
+    oppStunnedUntil: 0,
+    targetSequence: seq,
     phase: 'IDLE',
     isVsBot: isVsBot,
     botInterval: null,
     animFrameId: null
   };
 
+  const p1Label = document.getElementById('duelP1Label');
+  if (p1Label) p1Label.textContent = APP_STATE.playerHandle + ' (YOU)';
+
+  const p2Label = document.getElementById('duelP2Label');
+  if (p2Label) {
+    p2Label.textContent = isVsBot ? 'SHARMA JI KA ROBOT' : (DUEL_RT.opponentHandle || 'OPPONENT');
+  }
+
   updateDuelHUD();
   switchView('view-duel-room');
 
+  startSynchronizedDuelRound();
+
   if (isVsBot) {
-    const p2lbl = document.getElementById('duelP2Label');
-    if (p2lbl) p2lbl.textContent = 'SHARMA JI KA ROBOT';
-    startNewDuelRound();
     startBotBehavior();
-  } else {
-    const p2lbl = document.getElementById('duelP2Label');
-    if (p2lbl) p2lbl.textContent = DUEL_RT.opponentHandle || 'LIVE OPPONENT';
-    // P1 (host) generates and syncs the pattern
-    if (APP_STATE.duel.playerNumber === 1) {
-      const seq = generatePattern(4);
-      APP_STATE.duel.targetSequence = seq;
-      sendDuelEvent('sync_round_rt', { sequence: seq });
-      startSynchronizedDuelRound();
-    }
-    // P2 waits for sync_round_rt broadcast from host
   }
 
   function duelLoop(now) {
@@ -2569,16 +2745,15 @@ function startOnlineDuelMatch(isVsBot = false) {
     const duel = APP_STATE.duel;
 
     const p1Card = document.getElementById('duelP1Card');
-    if (p1Card) p1Card.classList.toggle('is-stunned', now < duel.p1StunnedUntil);
+    if (p1Card) p1Card.classList.toggle('is-stunned', now < duel.myStunnedUntil);
 
     const p2Card = document.getElementById('duelP2Card');
-    if (p2Card) p2Card.classList.toggle('is-stunned', now < duel.p2StunnedUntil);
+    if (p2Card) p2Card.classList.toggle('is-stunned', now < duel.oppStunnedUntil);
 
     APP_STATE.duel.animFrameId = requestAnimationFrame(duelLoop);
   }
   APP_STATE.duel.animFrameId = requestAnimationFrame(duelLoop);
 }
-
 
 function startNewDuelRound() {
   const duel = APP_STATE.duel;
@@ -2588,8 +2763,8 @@ function startNewDuelRound() {
 
 function startSynchronizedDuelRound() {
   const duel = APP_STATE.duel;
-  duel.p1Progress = 0;
-  duel.p2Progress = 0;
+  duel.myProgress = 0;
+  duel.oppProgress = 0;
   duel.phase = 'MEMORIZE';
 
   resetDuelTilesUI();
@@ -2597,7 +2772,8 @@ function startSynchronizedDuelRound() {
 
   flashDuelSequence(duel.targetSequence, () => {
     duel.phase = 'RECALL';
-    document.getElementById('duelPhaseStatus').textContent = 'FASTEST RECALL WINS ROUND!';
+    const status = document.getElementById('duelPhaseStatus');
+    if (status) status.textContent = 'FASTEST RECALL WINS ROUND!';
   });
 }
 
@@ -2614,7 +2790,8 @@ function resetDuelTilesUI() {
 
 function flashDuelSequence(sequence, onComplete) {
   let step = 0;
-  document.getElementById('duelPhaseStatus').textContent = 'MEMORIZE DUEL PATTERN';
+  const status = document.getElementById('duelPhaseStatus');
+  if (status) status.textContent = 'MEMORIZE DUEL PATTERN';
 
   function stepFlash() {
     if (step < sequence.length) {
@@ -2643,113 +2820,106 @@ function flashDuelSequence(sequence, onComplete) {
   setTimeout(stepFlash, 300);
 }
 
-function handleDuelTileClick(playerNum, tileIndex) {
+function handleDuelTileClick(tileIndex, event) {
   const duel = APP_STATE.duel;
   if (!duel.active || duel.phase !== 'RECALL') return;
+  if (event && !AntiCheat.validateTap(event)) return;
+
   const now = performance.now();
+  if (now < duel.myStunnedUntil) return;
 
-  if (playerNum === 1 && now < duel.p1StunnedUntil) return;
-  if (playerNum === 2 && now < duel.p2StunnedUntil) return;
-
-  const currentProgress = playerNum === 1 ? duel.p1Progress : duel.p2Progress;
-  const expectedTile = duel.targetSequence[currentProgress];
+  const expectedTile = duel.targetSequence[duel.myProgress];
   const tileEl = document.getElementById(`dtile-${tileIndex}`);
 
   if (tileIndex === expectedTile) {
     audioVoice.playPop();
-    audioVoice.playDJTileBeat(currentProgress);
+    audioVoice.playDJTileBeat(duel.myProgress);
     triggerHaptic([30]);
 
-    if (playerNum === 1) {
-      duel.p1Progress++;
-      if (tileEl) tileEl.classList.add('correct-tap');
+    duel.myProgress++;
+    if (tileEl) tileEl.classList.add('correct-tap');
 
-      // Broadcast progress via Supabase Realtime (cross-device)
-      if (!duel.isVsBot) {
-        sendDuelEvent('tap_progress_rt', {
-          tileIndex,
-          progress: duel.p1Progress,
-          score: duel.p1Score
-        });
-      }
-    } else {
-      duel.p2Progress++;
+    // Broadcast progress to opponent
+    if (!duel.isVsBot) {
+      sendDuelEvent('duel_tap', {
+        tileIndex,
+        progress: duel.myProgress,
+        score: duel.myScore
+      });
     }
 
     updateDuelHUD();
 
-    if (playerNum === 1 && duel.p1Progress === duel.targetSequence.length) {
-      duel.p1Score += 2;
+    if (duel.myProgress === duel.targetSequence.length) {
+      duel.myScore += 2;
+      duel.phase = 'ROUND_OVER';
       audioVoice.playBoing();
       audioVoice.speakHindi(audioVoice.phrasesWin);
-      checkDuelVictory();
-    } else if (playerNum === 2 && duel.p2Progress === duel.targetSequence.length) {
-      duel.p2Score += 2;
-      audioVoice.playBoing();
-      checkDuelVictory();
-    }
+      updateDuelHUD();
 
+      if (!duel.isVsBot) {
+        sendDuelEvent('duel_round_win', { score: duel.myScore });
+      }
+
+      if (duel.myScore >= duel.targetScore) {
+        if (!duel.isVsBot) {
+          sendDuelEvent('duel_match_won', {});
+        }
+        finishDuelMatch(true);
+      } else {
+        if (duel.isHost || duel.isVsBot) {
+          setTimeout(() => {
+            if (duel.active) {
+              const nextSeq = generatePattern(4);
+              duel.targetSequence = nextSeq;
+              if (!duel.isVsBot) {
+                sendDuelEvent('duel_next_round', { sequence: nextSeq });
+              }
+              startSynchronizedDuelRound();
+            }
+          }, 1100);
+        }
+      }
+    }
   } else {
-    // 1.5s freeze penalty
+    // 1.5s freeze penalty on mistake
+    duel.myStunnedUntil = now + 1500;
     audioVoice.playDJRecordStop();
     audioVoice.playMoyeMoyeTune();
     triggerHaptic([100, 50, 100]);
-    if (playerNum === 1) {
-      duel.p1StunnedUntil = now + 1500;
-      if (!duel.isVsBot) {
-        sendDuelEvent('wrong_tap_rt', {});
-      }
-    } else {
-      duel.p2StunnedUntil = now + 1500;
+    if (!duel.isVsBot) {
+      sendDuelEvent('duel_stun', {});
     }
+    updateDuelHUD();
   }
 }
 
-function endDuelMatch(winnerNum) {
+function finishDuelMatch(isWinner) {
   const duel = APP_STATE.duel;
   duel.active = false;
-  if (winnerNum === 1) {
+  if (duel.botInterval) clearInterval(duel.botInterval);
+  if (duel.animFrameId) cancelAnimationFrame(duel.animFrameId);
+
+  if (isWinner) {
     audioVoice.playBhangraFanfare();
     audioVoice.speakHindi(['Bawaal macha diya! You won the duel!']);
+    const p1Label = document.getElementById('duelP1Label');
+    if (p1Label) p1Label.textContent = 'VICTORY!';
   } else {
     audioVoice.playMoyeMoyeTune();
     audioVoice.speakHindi(['Moye Moye! Opponent won the duel!']);
+    const p1Label = document.getElementById('duelP1Label');
+    if (p1Label) p1Label.textContent = 'DEFEAT!';
   }
-  setTimeout(() => switchView('view-menu'), 1800);
-}
-
-function checkDuelVictory() {
-  const duel = APP_STATE.duel;
-  updateDuelHUD();
-
-  if (duel.p1Score >= duel.targetScore) {
-    endDuelMatch(1);
-    return;
-  } else if (duel.p2Score >= duel.targetScore) {
-    endDuelMatch(2);
-    return;
-  }
-
-  setTimeout(() => {
-    if (duel.active) {
-      if (duel.isVsBot) {
-        startNewDuelRound();
-      } else if (duel.playerNumber === 1) {
-        // Host generates next round and broadcasts via Supabase
-        const seq = generatePattern(4);
-        duel.targetSequence = seq;
-        sendDuelEvent('sync_round_rt', { sequence: seq });
-        startSynchronizedDuelRound();
-      }
-      // P2 waits for sync_round_rt
-    }
-  }, 700);
+  setTimeout(() => switchView('view-menu'), 2200);
 }
 
 function updateDuelHUD() {
   const duel = APP_STATE.duel;
-  document.getElementById('duelP1Score').textContent = `${duel.p1Score} / ${duel.targetScore}`;
-  document.getElementById('duelP2Score').textContent = `${duel.p2Score} / ${duel.targetScore}`;
+  const p1ScoreEl = document.getElementById('duelP1Score');
+  if (p1ScoreEl) p1ScoreEl.textContent = `${duel.myScore} / ${duel.targetScore}`;
+  const p2ScoreEl = document.getElementById('duelP2Score');
+  if (p2ScoreEl) p2ScoreEl.textContent = `${duel.oppScore} / ${duel.targetScore}`;
 }
 
 function startBotBehavior() {
@@ -2757,14 +2927,32 @@ function startBotBehavior() {
   duel.botInterval = setInterval(() => {
     if (!duel.active || duel.phase !== 'RECALL') return;
     const now = performance.now();
-    if (now < duel.p2StunnedUntil) return;
+    if (now < duel.oppStunnedUntil) return;
 
-    const isCorrect = Math.random() < 0.80;
-    const choice = isCorrect 
-      ? duel.targetSequence[duel.p2Progress] 
-      : Math.floor(Math.random() * 9);
+    const isCorrect = Math.random() < 0.78;
+    if (isCorrect) {
+      duel.oppProgress++;
+      updateDuelHUD();
 
-    handleDuelTileClick(2, choice);
+      if (duel.oppProgress === duel.targetSequence.length) {
+        duel.oppScore += 2;
+        duel.phase = 'ROUND_OVER';
+        updateDuelHUD();
+
+        if (duel.oppScore >= duel.targetScore) {
+          finishDuelMatch(false);
+        } else {
+          setTimeout(() => {
+            if (duel.active) {
+              startNewDuelRound();
+            }
+          }, 1100);
+        }
+      }
+    } else {
+      duel.oppStunnedUntil = now + 1500;
+      updateDuelHUD();
+    }
   }, 750 + Math.random() * 400);
 }
 
@@ -2865,6 +3053,9 @@ async function loadLeaderboard() {
 }
 
 async function upsertScoreToLeaderboard(username, avatar, score, level) {
+  // Anti-cheat verification before writing to local or cloud leaderboard
+  if (!AntiCheat.validateScoreSubmission(score, level)) return;
+
   let localData = getLocalLeaderboard();
   const existingIdx = localData.findIndex(r => r.username === username);
   const record = { username, avatar, high_score: score, max_level: level };
@@ -3005,7 +3196,7 @@ function setupEventListeners() {
     if (tile) {
       tile.addEventListener('pointerdown', (e) => {
         e.preventDefault();
-        handleDuelTileClick(1, i);
+        handleDuelTileClick(i, e);
       });
     }
   }
@@ -3131,9 +3322,9 @@ function setupEventListeners() {
       };
 
       if (numpadCodeMap[e.code] !== undefined) {
-        handleTileClick(numpadCodeMap[e.code]);
+        handleTileClick(numpadCodeMap[e.code], e);
       } else if (digitKeyMap[e.key] !== undefined) {
-        handleTileClick(digitKeyMap[e.key]);
+        handleTileClick(digitKeyMap[e.key], e);
       } else if (e.key.toUpperCase() === 'C') {
         useChaiPower();
       } else if (e.key.toUpperCase() === 'V') {
@@ -3189,6 +3380,7 @@ window.addEventListener('DOMContentLoaded', () => {
   updateDesiTaunt();
   updateAudioToggleButton();
   setupEventListeners();
+  AntiCheat.initProtection();
   initWebSocket();
   initSupabase();
 

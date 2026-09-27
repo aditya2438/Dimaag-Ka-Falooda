@@ -287,6 +287,18 @@
           <!-- Escalating Dynamic Glass Matrix Arena (9 -> 12 -> 15 -> 20 -> 30 -> 40 -> 60 Blocks) -->
           <div id="singleMatrixCard" class="matrix-arena-card">
             <div class="fever-badge-pill">2X FEVER MODE!</div>
+
+            <!-- Reverse Order Attention Middle Popup -->
+            <div id="reverseAttentionOverlay" class="reverse-attention-overlay" style="display: none;">
+              <div class="reverse-modal-box">
+                <div class="reverse-alert-tag">ATTENTION!</div>
+                <h3 class="reverse-title kinetic-text">REVERSE ORDER MODE!</h3>
+                <p class="reverse-desc">DHYAN DE! NOW TAP TILES IN REVERSE ORDER (LAST TO FIRST)!</p>
+                <div class="reverse-rule-badge">TILES: 9 (3x3) // TIME: 2.0s</div>
+                <button id="btnDismissReverse" class="btn-funky primary reverse-action-btn">READY! LET'S GO</button>
+              </div>
+            </div>
+
             <div id="singleMatrixGrid" class="matrix-grid-dynamic">
               <!-- Dynamically populated via setupSinglePlayerGrid() in game.js -->
             </div>
@@ -584,6 +596,11 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- Anti-Cheat Security Notification Toast -->
+  <div id="anticheatAlert" class="anticheat-alert-toast" style="display: none;">
+    <span id="anticheatText">SECURITY ALERT: TAMPERING DETECTED! SCORE INVALIDATED.</span>
   </div>
 
   <!-- External Master Game Engine Script -->
