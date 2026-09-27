@@ -4,89 +4,108 @@
    Features: Kinetic Animated Text Gradients, 4 Top-Tier Funky Themes, Zero Emojis
    ========================================================================== */
 
-/* 1. 4 TOP-TIER REFINED FUNKY THEMES */
-:root {
-  /* Theme 1: MANGO SUNSET (Golden Saffron & Neon Flamingo Pink) */
-  --bg-deep: #080E21;
-  --bg-surface: #0E1B38;
+/* 1. 5 TOP-TIER REFINED FUNKY THEMES */
+:root, body[data-theme="desi-gold"] {
+  /* Theme 1 (Default): ROYAL DESI GOLD (24K Saffron Gold, Gulal Neon Magenta & Kashmiri Mint Ice) */
+  --bg-deep: #050713;
+  --bg-surface: #0B1126;
   --color-primary: #FFB703;
-  --color-primary-glow: rgba(255, 183, 3, 0.45);
-  --color-secondary: #FF2A6D;
-  --color-secondary-glow: rgba(255, 42, 109, 0.45);
-  --color-accent: #05D9E8;
-  --color-accent-glow: rgba(5, 217, 232, 0.45);
-  --color-coral: #FF6F59;
-  --color-danger: #FF3366;
-  --color-danger-glow: rgba(255, 51, 102, 0.50);
+  --color-primary-glow: rgba(255, 183, 3, 0.48);
+  --color-secondary: #FF006E;
+  --color-secondary-glow: rgba(255, 0, 110, 0.48);
+  --color-accent: #00F5D4;
+  --color-accent-glow: rgba(0, 245, 212, 0.45);
+  --color-coral: #8338EC;
+  --color-danger: #FF2A55;
+  --color-danger-glow: rgba(255, 42, 85, 0.55);
   --color-think: #FFE600;
-  --color-think-glow: rgba(255, 230, 0, 0.60);
+  --color-think-glow: rgba(255, 230, 0, 0.65);
 
-  /* Frosted Glass Tokens */
-  --glass-card: rgba(255, 255, 255, 0.06);
-  --glass-card-hover: rgba(255, 255, 255, 0.10);
-  --glass-card-active: rgba(255, 255, 255, 0.16);
-  --glass-border: 1.5px solid rgba(255, 255, 255, 0.15);
-  --glass-border-subtle: 1px solid rgba(255, 255, 255, 0.08);
-  --glass-rim: inset 0 1.5px 0 rgba(255, 255, 255, 0.32);
-  --glass-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.55);
-  --glass-shadow-lg: 0 18px 48px -6px rgba(0, 0, 0, 0.70);
+  /* Top-Notch Specular Frosted Glass Tokens */
+  --glass-card: rgba(14, 23, 48, 0.55);
+  --glass-card-hover: rgba(20, 32, 68, 0.70);
+  --glass-card-active: rgba(25, 40, 85, 0.85);
+  --glass-border: 1.5px solid rgba(255, 255, 255, 0.18);
+  --glass-border-subtle: 1px solid rgba(255, 255, 255, 0.10);
+  --glass-rim: inset 0 1.5px 0.5px rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.65);
+  --glass-shadow-lg: 0 20px 54px -6px rgba(0, 0, 0, 0.80);
 
-  /* Typography Colors */
+  /* High-Contrast Typography */
   --text-primary: #FFFFFF;
   --text-secondary: #E2E8F0;
   --text-muted: #94A3B8;
 
-  --font-display: 'Outfit', 'Inter', -apple-system, sans-serif;
-  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: 'Outfit', 'Space Grotesk', sans-serif;
+  --font-main: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, monospace;
 
   --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-jelly: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Theme 2: CYBER POP / BUBBLEGUM WAVE (Acid Magenta & Aqua Fizz) */
-body[data-theme="bubblegum"] {
-  --bg-deep: #0D0221;
-  --bg-surface: #1D0538;
-  --color-primary: #FF007F;
-  --color-primary-glow: rgba(255, 0, 127, 0.45);
-  --color-secondary: #00F5D4;
-  --color-secondary-glow: rgba(0, 245, 212, 0.45);
-  --color-accent: #7B2CBF;
-  --color-accent-glow: rgba(123, 44, 191, 0.45);
-  --color-coral: #FEE440;
-  --color-think: #FFF066;
-  --color-think-glow: rgba(255, 240, 102, 0.60);
+/* Theme 2: CYBERPUNK (Neo Tokyo Laser Cyan & Hyper Magenta) */
+body[data-theme="cyberpunk"], body[data-theme="bubblegum"] {
+  --bg-deep: #070214;
+  --bg-surface: #140529;
+  --color-primary: #00F0FF;
+  --color-primary-glow: rgba(0, 240, 255, 0.50);
+  --color-secondary: #FF007F;
+  --color-secondary-glow: rgba(255, 0, 127, 0.50);
+  --color-accent: #7928CA;
+  --color-accent-glow: rgba(121, 40, 202, 0.45);
+  --color-coral: #00FF87;
+  --color-think: #39FF14;
+  --color-think-glow: rgba(57, 255, 20, 0.65);
+  --glass-card: rgba(20, 7, 40, 0.60);
 }
 
-/* Theme 3: ACID CARNIVAL (Toxic Lime & Ultra Violet) */
-body[data-theme="carnival"] {
-  --bg-deep: #0B001A;
-  --bg-surface: #1B0038;
-  --color-primary: #70E000;
-  --color-primary-glow: rgba(112, 224, 0, 0.50);
-  --color-secondary: #9D4EDD;
-  --color-secondary-glow: rgba(157, 78, 221, 0.45);
-  --color-accent: #00B4D8;
-  --color-accent-glow: rgba(0, 180, 216, 0.45);
-  --color-coral: #FFD166;
-  --color-think: #38BDF8;
-  --color-think-glow: rgba(56, 189, 248, 0.60);
+/* Theme 3: MATRIX (Radioactive Emerald & Glacier Plasma) */
+body[data-theme="matrix"], body[data-theme="carnival"] {
+  --bg-deep: #020C07;
+  --bg-surface: #051F13;
+  --color-primary: #00FF87;
+  --color-primary-glow: rgba(0, 255, 135, 0.52);
+  --color-secondary: #60EFFF;
+  --color-secondary-glow: rgba(96, 239, 255, 0.48);
+  --color-accent: #FFE600;
+  --color-accent-glow: rgba(255, 230, 0, 0.48);
+  --color-coral: #FF1E56;
+  --color-think: #00FF87;
+  --color-think-glow: rgba(0, 255, 135, 0.65);
+  --glass-card: rgba(5, 28, 18, 0.60);
 }
 
-/* Theme 4: ARCADE 1999 (Galactic Teal & Hyper Tangerine) */
-body[data-theme="arcade"] {
-  --bg-deep: #031B24;
-  --bg-surface: #062E3D;
-  --color-primary: #FF5400;
-  --color-primary-glow: rgba(255, 84, 0, 0.50);
-  --color-secondary: #00F0FF;
-  --color-secondary-glow: rgba(0, 240, 255, 0.45);
-  --color-accent: #38B000;
-  --color-accent-glow: rgba(56, 176, 0, 0.45);
-  --color-coral: #E0AAFF;
+/* Theme 4: SUNSET (Vaporwave Solar Tangerine & Neon Rose) */
+body[data-theme="sunset"], body[data-theme="arcade"] {
+  --bg-deep: #10041C;
+  --bg-surface: #20083B;
+  --color-primary: #FF5E00;
+  --color-primary-glow: rgba(255, 94, 0, 0.52);
+  --color-secondary: #F72585;
+  --color-secondary-glow: rgba(247, 37, 133, 0.48);
+  --color-accent: #4CC9F0;
+  --color-accent-glow: rgba(76, 201, 240, 0.48);
+  --color-coral: #7209B7;
   --color-think: #FFD166;
-  --color-think-glow: rgba(255, 209, 102, 0.60);
+  --color-think-glow: rgba(255, 209, 102, 0.65);
+  --glass-card: rgba(30, 8, 55, 0.60);
+}
+
+/* Theme 5: AURORA (Cosmic Sapphire & Starlight Coral) */
+body[data-theme="aurora"] {
+  --bg-deep: #03071E;
+  --bg-surface: #091238;
+  --color-primary: #3A86FF;
+  --color-primary-glow: rgba(58, 134, 255, 0.52);
+  --color-secondary: #FF006E;
+  --color-secondary-glow: rgba(255, 0, 110, 0.48);
+  --color-accent: #8338EC;
+  --color-accent-glow: rgba(131, 56, 236, 0.45);
+  --color-coral: #FFBE0B;
+  --color-think: #FFBE0B;
+  --color-think-glow: rgba(255, 190, 11, 0.65);
+  --glass-card: rgba(10, 18, 55, 0.60);
 }
 
 /* 2. RESET & VIEWPORT LOCK */
@@ -591,26 +610,30 @@ header.funky-header {
 
 .theme-selector-box { margin-top: 6px; }
 .theme-label-header { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
-.theme-selector-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.theme-selector-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 .theme-pill-btn {
   background: rgba(255, 255, 255, 0.06);
   border: var(--glass-border-subtle);
   border-radius: 12px;
-  padding: 7px 4px;
-  font-size: 0.74rem;
+  padding: 8px 3px;
+  font-size: 0.68rem;
   font-weight: 800;
   color: var(--text-primary);
   cursor: pointer;
   text-align: center;
-  transition: transform 0.12s var(--ease-elastic);
+  transition: all 0.16s var(--ease-elastic);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.theme-pill-btn:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-1px); }
+.theme-pill-btn:hover { background: rgba(255, 255, 255, 0.14); transform: translateY(-1.5px); }
 .theme-pill-btn.active {
   border-color: var(--color-primary);
   background: var(--color-primary-glow);
   color: #FFFFFF;
-  box-shadow: 0 4px 12px var(--color-primary-glow);
-  transform: scale(1.04);
+  box-shadow: 0 4px 14px var(--color-primary-glow);
+  transform: scale(1.05);
 }
 
 .menu-bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
@@ -833,34 +856,83 @@ header.funky-header {
 }
 
 .glass-tile {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(255, 255, 255, 0.16);
-  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.28), 0 4px 14px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.35), 0 8px 20px -3px rgba(0, 0, 0, 0.45);
   border-radius: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: transform 0.14s var(--ease-elastic), background 0.12s ease, border-color 0.12s ease;
+  transition: transform 0.14s var(--ease-elastic), background 0.12s ease, border-color 0.12s ease, box-shadow 0.14s ease;
   overflow: hidden;
 }
-.glass-tile:hover { background: rgba(255, 255, 255, 0.10); border-color: rgba(255, 255, 255, 0.35); transform: translateY(-2px); }
-.glass-tile:active { transform: scale(0.91); }
+.glass-tile:hover {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 0 10px 26px -2px var(--color-primary-glow);
+  transform: translateY(-2.5px) scale(1.02);
+}
+.glass-tile:active { transform: scale(0.92); }
 
-.glass-tile .numpad-hint { position: absolute; top: 6px; left: 8px; font-family: var(--font-mono); font-size: 0.68rem; color: rgba(255, 255, 255, 0.35); font-weight: 800; pointer-events: none; }
+.glass-tile .numpad-hint {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 800;
+  pointer-events: none;
+}
 .ghost-mode .numpad-hint { opacity: 0 !important; }
 
-.glass-tile .order-badge { font-family: var(--font-display); font-size: 1.65rem; font-weight: 900; color: #FFFFFF; opacity: 0; transform: scale(0.3); transition: all 0.15s var(--ease-elastic); pointer-events: none; }
-.glass-tile.flash-active { background: var(--color-primary-glow); border-color: var(--color-primary); transform: scale(1.07); box-shadow: inset 0 0 20px var(--color-primary-glow), 0 0 26px var(--color-primary-glow); }
+.glass-tile .order-badge {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  opacity: 0;
+  transform: scale(0.3);
+  transition: all 0.16s var(--ease-elastic);
+  pointer-events: none;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 16px var(--color-primary-glow);
+}
+.glass-tile.flash-active {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%) !important;
+  border-color: #FFFFFF !important;
+  transform: scale(1.08);
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.7), 0 0 32px var(--color-primary-glow) !important;
+}
 .glass-tile.flash-active .order-badge { opacity: 1; transform: scale(1); }
-.glass-tile.think-highlight { background: var(--color-think-glow) !important; border-color: var(--color-think) !important; transform: scale(1.10) !important; box-shadow: inset 0 0 26px var(--color-think-glow), 0 0 32px var(--color-think-glow) !important; }
-.glass-tile.decoy-flicker { background: var(--color-danger-glow); border-color: var(--color-danger); transform: scale(1.05); }
-.glass-tile.correct-tap { background: var(--color-primary-glow); border-color: var(--color-primary); transform: scale(0.96); }
-.glass-tile.correct-tap .order-badge { opacity: 1; transform: scale(1); }
-.glass-tile.wrong-tap { background: var(--color-danger-glow); border-color: var(--color-danger); transform: scale(0.92); }
+.glass-tile.think-highlight {
+  background: linear-gradient(135deg, var(--color-think) 0%, var(--color-primary) 100%) !important;
+  border-color: #FFFFFF !important;
+  transform: scale(1.10) !important;
+  box-shadow: inset 0 0 24px rgba(255, 255, 255, 0.8), 0 0 36px var(--color-think-glow) !important;
+}
+.glass-tile.decoy-flicker {
+  background: linear-gradient(135deg, var(--color-danger) 0%, var(--color-secondary) 100%) !important;
+  border-color: #FFFFFF !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 24px var(--color-danger-glow) !important;
+}
+.glass-tile.correct-tap {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%) !important;
+  border-color: #FFFFFF !important;
+  transform: scale(0.96);
+  box-shadow: 0 0 24px var(--color-accent-glow), inset 0 0 12px rgba(255,255,255,0.6) !important;
+}
+.glass-tile.correct-tap .order-badge { opacity: 1; transform: scale(1); text-shadow: 0 0 14px #FFFFFF; }
+.glass-tile.wrong-tap {
+  background: var(--color-danger) !important;
+  border-color: #FFFFFF !important;
+  transform: scale(0.92);
+  box-shadow: 0 0 28px var(--color-danger-glow) !important;
+}
 
 /* Victory Wave Celebration Glow Across All Blind Blocks */
 @keyframes victoryWaveGlow {

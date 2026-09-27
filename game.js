@@ -619,116 +619,308 @@ class LofiRadioEngine {
     this.currentTrack = 0;
     this.volume = 0.70;
     this.vizAnimId = null;
-    this.analyser = null;
-    this.sourceConnected = false;
+    this.mode = 'AUTO'; // 'AUTO', 'STREAM', or 'SYNTH'
+    this.synthIntervalId = null;
+    this.synthMasterGain = null;
+    this.synthStep = 0;
 
-    // Top 10 Melodious, Romantic & Peaceful Hindi Songs (Verified Audio Streams)
+    // Top 10 Melodious, Romantic & Peaceful Hindi Songs (Real Audio Streams + Full Procedural Chords)
     this.tracks = [
       {
         id: 0,
         name: "KESARIYA",
         artist: "Arijit Singh",
         sub: "Brahmastra // Warm Saffron Love Song",
-        url: "https://archive.org/download/best-of-2022-bollywood-songs/Brahmastra%20%282022%29%20-%20Kesariya.mp3"
+        url: "https://archive.org/download/best-of-2022-bollywood-songs/Brahmastra%20%282022%29%20-%20Kesariya.mp3",
+        bpm: 78,
+        chords: [
+          [146.83, 185.00, 220.00, 293.66], // D Major
+          [110.00, 138.59, 164.81, 220.00], // A Major
+          [123.47, 146.83, 185.00, 246.94], // B Minor
+          [98.00,  123.47, 146.83, 196.00]  // G Major
+        ],
+        bass: [73.42, 55.00, 61.74, 49.00],
+        melody: [369.99, 392.00, 440.00, 440.00, 493.88, 440.00, 369.99, 329.63, 293.66, 329.63, 369.99, 293.66]
       },
       {
         id: 1,
         name: "APNA BANA LE",
         artist: "Arijit Singh",
         sub: "Bhediya // Soulful Romantic Melody",
-        url: "https://archive.org/download/best-of-2022-bollywood-songs/Bhediya%20%282022%29%20-%20Apna%20Bana%20Le.mp3"
+        url: "https://archive.org/download/best-of-2022-bollywood-songs/Bhediya%20%282022%29%20-%20Apna%20Bana%20Le.mp3",
+        bpm: 74,
+        chords: [
+          [174.61, 220.00, 261.63, 349.23], // F Major
+          [146.83, 174.61, 220.00, 293.66], // D Minor
+          [116.54, 146.83, 174.61, 233.08], // Bb Major
+          [130.81, 164.81, 196.00, 261.63]  // C Major
+        ],
+        bass: [87.31, 73.42, 58.27, 65.41],
+        melody: [349.23, 392.00, 440.00, 392.00, 349.23, 329.63, 293.66, 349.23, 329.63, 293.66, 261.63, 293.66]
       },
       {
         id: 2,
         name: "TUM HI HO",
         artist: "Arijit Singh",
         sub: "Aashiqui 2 // Iconic Love Anthem",
-        url: "https://archive.org/download/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Tum%20Hi%20Ho%20myfreemp3.vip%20.mp3"
+        url: "https://archive.org/download/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Tum%20Hi%20Ho%20myfreemp3.vip%20.mp3",
+        bpm: 72,
+        chords: [
+          [164.81, 196.00, 246.94, 329.63], // E Minor
+          [130.81, 164.81, 196.00, 261.63], // C Major
+          [146.83, 185.00, 220.00, 293.66], // D Major
+          [123.47, 146.83, 185.00, 246.94]  // B Minor
+        ],
+        bass: [82.41, 65.41, 73.42, 61.74],
+        melody: [493.88, 523.25, 493.88, 440.00, 392.00, 440.00, 493.88, 392.00, 369.99, 329.63, 293.66, 329.63]
       },
       {
         id: 3,
         name: "CHANNA MEREYA",
         artist: "Arijit Singh",
         sub: "ADHM // Melancholy Acoustic Soul",
-        url: "https://archive.org/download/07-channa-mereya-arijit-singh-320-kbps/07%20Channa%20Mereya%20-%20Arijit%20Singh%20320Kbps.mp3"
+        url: "https://archive.org/download/07-channa-mereya-arijit-singh-320-kbps/07%20Channa%20Mereya%20-%20Arijit%20Singh%20320Kbps.mp3",
+        bpm: 72,
+        chords: [
+          [98.00,  116.54, 146.83, 196.00], // G Minor
+          [87.31,  110.00, 130.81, 174.61], // F Major
+          [77.78,  98.00,  116.54, 155.56], // Eb Major
+          [116.54, 146.83, 174.61, 233.08]  // Bb Major
+        ],
+        bass: [49.00, 43.65, 38.89, 58.27],
+        melody: [293.66, 293.66, 293.66, 261.63, 233.08, 261.63, 293.66, 233.08, 196.00, 233.08, 261.63, 196.00]
       },
       {
         id: 4,
         name: "RAABTA",
         artist: "Arijit Singh",
         sub: "Agent Vinod // Serene Midnight Groove",
-        url: "https://archive.org/download/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Raabta%20myfreemp3.vip%20.mp3"
+        url: "https://archive.org/download/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Raabta%20myfreemp3.vip%20.mp3",
+        bpm: 76,
+        chords: [
+          [130.81, 164.81, 196.00, 261.63], // C Major
+          [110.00, 130.81, 164.81, 220.00], // A Minor
+          [87.31,  110.00, 130.81, 174.61], // F Major
+          [98.00,  123.47, 146.83, 196.00]  // G Major
+        ],
+        bass: [65.41, 55.00, 43.65, 49.00],
+        melody: [329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 261.63, 293.66, 329.63, 392.00, 440.00, 329.63]
       },
       {
         id: 5,
         name: "DHUNDHALA",
         artist: "Talwinder & Yashraj",
         sub: "Talwinder // Chill Hypnotic Vibes",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3"
+        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3",
+        bpm: 82,
+        chords: [
+          [110.00, 130.81, 164.81, 220.00], // Am
+          [87.31,  110.00, 130.81, 174.61], // F
+          [130.81, 164.81, 196.00, 261.63], // C
+          [98.00,  123.47, 146.83, 196.00]  // G
+        ],
+        bass: [55.00, 43.65, 65.41, 49.00],
+        melody: [220.00, 246.94, 261.63, 293.66, 261.63, 246.94, 220.00, 196.00, 220.00, 261.63, 220.00, 196.00]
       },
       {
         id: 6,
         name: "HASEEN",
         artist: "Talwinder",
         sub: "Talwinder // Smooth Romantic Lo-Fi",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3"
+        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3",
+        bpm: 75,
+        chords: [
+          [146.83, 174.61, 220.00, 293.66], // Dm
+          [116.54, 146.83, 174.61, 233.08], // Bb
+          [174.61, 220.00, 261.63, 349.23], // F
+          [130.81, 164.81, 196.00, 261.63]  // C
+        ],
+        bass: [73.42, 58.27, 87.31, 65.41],
+        melody: [293.66, 329.63, 349.23, 329.63, 293.66, 261.63, 233.08, 261.63, 293.66, 349.23, 329.63, 293.66]
       },
       {
         id: 7,
         name: "SAHIBA",
         artist: "Aditya Rikhari",
         sub: "Aditya Rikhari // Soulful Acoustic Love",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3"
+        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3",
+        bpm: 76,
+        chords: [
+          [98.00,  123.47, 146.83, 196.00], // G
+          [164.81, 196.00, 246.94, 329.63], // Em
+          [130.81, 164.81, 196.00, 261.63], // C
+          [146.83, 185.00, 220.00, 293.66]  // D
+        ],
+        bass: [49.00, 82.41, 65.41, 73.42],
+        melody: [392.00, 440.00, 493.88, 440.00, 392.00, 329.63, 293.66, 329.63, 392.00, 440.00, 392.00, 293.66]
       },
       {
         id: 8,
         name: "SAMJHO NA",
         artist: "Aditya Rikhari",
         sub: "Aditya Rikhari // Peaceful Melodious Flow",
-        url: "https://archive.org/download/aditya-rikhari-samjho-na-nasamajh-mp-3-160-k/Aditya%20Rikhari%20-%20SAMJHO%20NA%20%28%20NASAMAJH%20%29%28MP3_160K%29.mp3"
+        url: "https://archive.org/download/aditya-rikhari-samjho-na-nasamajh-mp-3-160-k/Aditya%20Rikhari%20-%20SAMJHO%20NA%20%28%20NASAMAJH%20%29%28MP3_160K%29.mp3",
+        bpm: 78,
+        chords: [
+          [164.81, 207.65, 246.94, 329.63], // E Major
+          [138.59, 164.81, 207.65, 277.18], // C#m
+          [110.00, 138.59, 164.81, 220.00], // A
+          [123.47, 155.56, 185.00, 246.94]  // B
+        ],
+        bass: [82.41, 69.30, 55.00, 61.74],
+        melody: [329.63, 369.99, 415.30, 369.99, 329.63, 277.18, 246.94, 277.18, 329.63, 415.30, 369.99, 329.63]
       },
       {
         id: 9,
         name: "FAASLE",
         artist: "Aditya Rikhari",
         sub: "Aditya Rikhari // Heartfelt Reflection",
-        url: "https://archive.org/download/aditya-rikhari-faasle/Aditya%20Rikhari%20-%20FAASLE.mp3"
+        url: "https://archive.org/download/aditya-rikhari-faasle/Aditya%20Rikhari%20-%20FAASLE.mp3",
+        bpm: 70,
+        chords: [
+          [123.47, 146.83, 185.00, 246.94], // Bm
+          [98.00,  123.47, 146.83, 196.00], // G
+          [146.83, 185.00, 220.00, 293.66], // D
+          [110.00, 138.59, 164.81, 220.00]  // A
+        ],
+        bass: [61.74, 49.00, 73.42, 55.00],
+        melody: [293.66, 329.63, 369.99, 329.63, 293.66, 246.94, 220.00, 246.94, 293.66, 369.99, 329.63, 293.66]
       }
     ];
 
-    // Native Audio Stream Element
+    // Native HTML5 Audio (Direct to hardware speakers, no CORS tainting)
     this.audioEl = new Audio();
-    this.audioEl.crossOrigin = "anonymous";
     this.audioEl.preload = "auto";
     this.audioEl.volume = this.volume;
+
+    this.audioEl.addEventListener('playing', () => {
+      // Real stream active! Fade out procedural synth bed
+      if (this.mode === 'AUTO') {
+        this.stopSynthPlayback();
+      }
+      this.updateRadioUI();
+    });
 
     this.audioEl.addEventListener('ended', () => {
       this.nextTrack();
     });
 
     this.audioEl.addEventListener('error', (err) => {
-      console.warn("Audio stream error on current track, advancing to next:", err);
-      setTimeout(() => this.nextTrack(), 1000);
+      console.warn("Real audio stream fallback: using procedural lo-fi synth", err);
+      if (this.isPlaying && this.mode !== 'STREAM') {
+        this.startSynthPlayback(this.currentTrack);
+      }
     });
   }
 
-  initVisualizerContext() {
-    if (this.sourceConnected || !this.audioEngine) return;
-    this.audioEngine.init();
-    const ctx = this.audioEngine.ctx;
-    if (!ctx) return;
+  ensureContext() {
+    if (this.audioEngine) {
+      this.audioEngine.init();
+      if (this.audioEngine.ctx && this.audioEngine.ctx.state === 'suspended') {
+        this.audioEngine.ctx.resume().catch(() => {});
+      }
+    }
+  }
 
-    try {
-      this.analyser = ctx.createAnalyser();
-      this.analyser.fftSize = 64;
-      const source = ctx.createMediaElementSource(this.audioEl);
-      source.connect(this.analyser);
-      this.analyser.connect(ctx.destination);
-      this.sourceConnected = true;
-    } catch (e) {
-      // CORS policy on some browsers restricts MediaElementSource capture
-      // Audio element still plays directly to speakers!
-      this.sourceConnected = false;
+  startSynthPlayback(trackIndex) {
+    this.ensureContext();
+    const ctx = this.audioEngine ? this.audioEngine.ctx : null;
+    if (!ctx) return;
+    this.stopSynthPlayback();
+
+    const track = this.tracks[trackIndex !== undefined ? trackIndex : this.currentTrack];
+    if (!track || !track.chords) return;
+
+    this.synthMasterGain = ctx.createGain();
+    this.synthMasterGain.gain.setValueAtTime(this.volume * 0.38, ctx.currentTime);
+    this.synthMasterGain.connect(ctx.destination);
+
+    this.synthStep = 0;
+    const stepDurationMs = Math.round((60 / (track.bpm || 75)) * 1000);
+
+    const playChordStep = () => {
+      if (!this.isPlaying || !this.synthMasterGain) return;
+      const now = ctx.currentTime;
+      const chordIndex = this.synthStep % track.chords.length;
+      const chordNotes = track.chords[chordIndex];
+      const bassNote = track.bass ? track.bass[chordIndex % track.bass.length] : 65.41;
+      const melNote = track.melody ? track.melody[this.synthStep % track.melody.length] : null;
+
+      // Warm Polyphonic Lo-Fi Chords
+      chordNotes.forEach((freq, idx) => {
+        try {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.035);
+
+          const dur = (stepDurationMs / 1000) * 1.8;
+          g.gain.setValueAtTime(0.001, now);
+          g.gain.linearRampToValueAtTime(0.12, now + 0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(1400, now);
+
+          osc.connect(filter);
+          filter.connect(g);
+          g.connect(this.synthMasterGain);
+
+          osc.start(now + idx * 0.035);
+          osc.stop(now + dur + 0.1);
+        } catch (e) {}
+      });
+
+      // Warm Acoustic Sub Bass
+      if (bassNote) {
+        try {
+          const bOsc = ctx.createOscillator();
+          const bGain = ctx.createGain();
+          bOsc.type = 'sine';
+          bOsc.frequency.setValueAtTime(bassNote, now);
+          bGain.gain.setValueAtTime(0.35, now);
+          bGain.gain.exponentialRampToValueAtTime(0.001, now + (stepDurationMs / 1000) * 1.5);
+          bOsc.connect(bGain);
+          bGain.connect(this.synthMasterGain);
+          bOsc.start(now);
+          bOsc.stop(now + (stepDurationMs / 1000) * 1.6);
+        } catch (e) {}
+      }
+
+      // Soulful Nylon Guitar / Piano Lead Melody Note
+      if (melNote) {
+        try {
+          const mOsc = ctx.createOscillator();
+          const mGain = ctx.createGain();
+          mOsc.type = 'sine';
+          mOsc.frequency.setValueAtTime(melNote, now + 0.12);
+          mGain.gain.setValueAtTime(0.001, now + 0.12);
+          mGain.gain.linearRampToValueAtTime(0.22, now + 0.16);
+          mGain.gain.exponentialRampToValueAtTime(0.001, now + (stepDurationMs / 1000));
+          mOsc.connect(mGain);
+          mGain.connect(this.synthMasterGain);
+          mOsc.start(now + 0.12);
+          mOsc.stop(now + (stepDurationMs / 1000) + 0.1);
+        } catch (e) {}
+      }
+
+      this.synthStep++;
+    };
+
+    playChordStep();
+    this.synthIntervalId = setInterval(playChordStep, stepDurationMs);
+  }
+
+  stopSynthPlayback() {
+    if (this.synthIntervalId) {
+      clearInterval(this.synthIntervalId);
+      this.synthIntervalId = null;
+    }
+    if (this.synthMasterGain && this.audioEngine && this.audioEngine.ctx) {
+      try {
+        this.synthMasterGain.gain.linearRampToValueAtTime(0.001, this.audioEngine.ctx.currentTime + 0.3);
+      } catch (e) {}
     }
   }
 
@@ -769,29 +961,42 @@ class LofiRadioEngine {
   }
 
   playTrack(index) {
+    this.ensureContext();
     if (index >= 0 && index < this.tracks.length) {
       this.currentTrack = index;
     }
     const track = this.tracks[this.currentTrack];
 
-    this.initVisualizerContext();
-
-    if (this.audioEl.src !== track.url) {
-      this.audioEl.src = track.url;
-      this.audioEl.load();
+    // 1. Immediately start instant procedural acoustic Lo-Fi bed (0ms latency, zero silence)
+    if (this.mode !== 'STREAM') {
+      this.startSynthPlayback(this.currentTrack);
     }
 
-    this.audioEl.volume = this.volume;
-    const playPromise = this.audioEl.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(err => {
-        console.warn("Audio play prevented:", err);
-      });
+    // 2. Play real audio stream
+    if (this.mode !== 'SYNTH' && this.audioEl) {
+      try {
+        if (this.audioEl.src !== track.url) {
+          this.audioEl.src = track.url;
+          this.audioEl.load();
+        }
+        this.audioEl.volume = this.volume;
+        const p = this.audioEl.play();
+        if (p !== undefined) {
+          p.then(() => {
+            if (this.mode === 'AUTO') {
+              this.stopSynthPlayback();
+            }
+            this.updateRadioUI();
+          }).catch(err => {
+            console.log("Stream buffering, acoustic synth active:", err);
+          });
+        }
+      } catch (e) {
+        console.warn("Audio element play error:", e);
+      }
     }
 
     this.isPlaying = true;
-
-    // AUTOMATIC SPEECH DIALOGUE MUTE DURING LO-FI SONGS
     this.audioEngine.isSpeechMuted = true;
     if (window.speechSynthesis) {
       try { window.speechSynthesis.cancel(); } catch (e) {}
@@ -803,13 +1008,11 @@ class LofiRadioEngine {
 
   pauseTrack() {
     if (this.audioEl) {
-      this.audioEl.pause();
+      try { this.audioEl.pause(); } catch (e) {}
     }
+    this.stopSynthPlayback();
     this.isPlaying = false;
-
-    // RESTORE SPEECH DIALOGUE
     this.audioEngine.isSpeechMuted = false;
-
     this.updateRadioUI();
     if (this.vizAnimId) {
       cancelAnimationFrame(this.vizAnimId);
@@ -840,13 +1043,39 @@ class LofiRadioEngine {
     if (this.audioEl) {
       this.audioEl.volume = this.volume;
     }
+    if (this.synthMasterGain && this.audioEngine && this.audioEngine.ctx) {
+      try {
+        this.synthMasterGain.gain.setValueAtTime(this.volume * 0.38, this.audioEngine.ctx.currentTime);
+      } catch (e) {}
+    }
+  }
+
+  toggleEngineMode() {
+    if (this.mode === 'AUTO') {
+      this.mode = 'STREAM';
+      this.stopSynthPlayback();
+      if (this.isPlaying && this.audioEl) this.audioEl.play().catch(() => {});
+    } else if (this.mode === 'STREAM') {
+      this.mode = 'SYNTH';
+      if (this.audioEl) this.audioEl.pause();
+      if (this.isPlaying) this.startSynthPlayback(this.currentTrack);
+    } else {
+      this.mode = 'AUTO';
+      if (this.isPlaying) this.playTrack(this.currentTrack);
+    }
+    this.updateRadioUI();
   }
 
   updateRadioUI() {
     const btnToggle = document.getElementById('btnRadioToggle');
     const txtStatus = document.getElementById('radioStatusText');
     const playPauseBtn = document.getElementById('btnRadioPlayPause');
+    const modeBtn = document.getElementById('btnRadioEngineMode');
     const curTrack = this.tracks[this.currentTrack];
+
+    if (modeBtn) {
+      modeBtn.textContent = `[ AUDIO: ${this.mode} ]`;
+    }
 
     if (this.isPlaying) {
       if (btnToggle) btnToggle.classList.add('radio-playing');
@@ -877,7 +1106,9 @@ class LofiRadioEngine {
     const sysLog = document.getElementById('terminalSysLog');
     if (sysLog) {
       if (this.isPlaying) {
-        sysLog.innerHTML = `> STREAMING: [TRACK ${(this.currentTrack + 1).toString().padStart(2, '0')}] ${curTrack.name}<br>> ARTIST: ${curTrack.artist} // ${curTrack.sub}`;
+        const isStreamPlaying = this.audioEl && !this.audioEl.paused && this.audioEl.currentTime > 0;
+        const engineLabel = isStreamPlaying ? 'DIRECT STREAM' : 'ACOUSTIC SYNTH';
+        sysLog.innerHTML = `> ACTIVE: [TRACK ${(this.currentTrack + 1).toString().padStart(2, '0')}] ${curTrack.name} (${engineLabel})<br>> ARTIST: ${curTrack.artist} // ${curTrack.sub}`;
       } else {
         sysLog.innerHTML = `> 108.4 FM: HINDI LO-FI STREAM (ARIJIT // TALWINDER // ADITYA RIKHARI)<br>> LIVE DJ BEAT SYNC ACTIVE ON TILE TAPS`;
       }
@@ -889,7 +1120,6 @@ class LofiRadioEngine {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const numBars = 32;
-    const dataArray = new Uint8Array(numBars);
 
     const draw = () => {
       if (!this.isPlaying) {
@@ -898,25 +1128,18 @@ class LofiRadioEngine {
       }
       this.vizAnimId = requestAnimationFrame(draw);
 
-      if (this.sourceConnected && this.analyser) {
-        this.analyser.getByteFrequencyData(dataArray);
-      } else {
-        // High fidelity audio-responsive frequency waveform
-        const t = performance.now() * 0.006;
-        for (let i = 0; i < numBars; i++) {
-          const wave = Math.sin(t * 1.5 + i * 0.35) * Math.cos(t * 0.8 + i * 0.2);
-          dataArray[i] = Math.floor(110 + 135 * Math.abs(wave));
-        }
-      }
-
+      const t = performance.now() * 0.007;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const barWidth = (canvas.width / numBars);
       let x = 0;
 
       for (let i = 0; i < numBars; i++) {
-        const barHeight = (dataArray[i] / 255) * canvas.height * 0.92;
-        const alpha = 0.45 + (dataArray[i] / 255) * 0.55;
-        ctx.fillStyle = `rgba(5, 217, 232, ${alpha})`;
+        const wave = Math.sin(t * 1.8 + i * 0.38) * Math.cos(t * 0.9 + i * 0.18);
+        const energy = Math.abs(wave);
+        const barHeight = Math.max(4, energy * canvas.height * 0.92);
+        const alpha = 0.45 + energy * 0.55;
+
+        ctx.fillStyle = `rgba(0, 245, 212, ${alpha})`;
         ctx.fillRect(x + 1, canvas.height - barHeight, barWidth - 2, barHeight);
         x += barWidth;
       }
@@ -1050,7 +1273,11 @@ const APP_STATE = {
   currentView: 'view-menu',
   playerHandle: localStorage.getItem('bm_player_handle') || 'CHINTU_' + Math.floor(100 + Math.random() * 900),
   playerAvatar: localStorage.getItem('bm_player_avatar') || 'cutting_chai',
-  currentTheme: localStorage.getItem('bm_theme') || 'mango',
+  currentTheme: (function() {
+    const saved = localStorage.getItem('bm_theme');
+    const legacyMap = { 'mango': 'desi-gold', 'bubblegum': 'cyberpunk', 'carnival': 'matrix', 'arcade': 'sunset' };
+    return legacyMap[saved] || saved || 'desi-gold';
+  })(),
   highScore: parseInt(localStorage.getItem('bm_high_score') || '0', 10),
   maxLevel: parseInt(localStorage.getItem('bm_max_level') || '1', 10),
 
@@ -1121,6 +1348,14 @@ function switchView(viewId) {
   if (viewId === 'view-menu') {
     navBtn.style.display = 'none';
     updateFunkyCapsule("READY TO RUN", "");
+    // Restore base theme colors on root
+    const root = document.documentElement;
+    root.style.removeProperty('--color-primary');
+    root.style.removeProperty('--color-primary-glow');
+    root.style.removeProperty('--color-secondary');
+    root.style.removeProperty('--color-secondary-glow');
+    root.style.removeProperty('--color-accent');
+    root.style.removeProperty('--color-accent-glow');
   } else {
     navBtn.style.display = 'inline-flex';
   }
@@ -1145,17 +1380,23 @@ function updateFunkyCapsule(text, styleClass) {
 }
 
 function applyTheme(themeName) {
-  const allowed = ['mango', 'bubblegum', 'carnival', 'arcade'];
-  if (!allowed.includes(themeName)) themeName = 'mango';
+  const legacyMap = {
+    'mango': 'desi-gold',
+    'bubblegum': 'cyberpunk',
+    'carnival': 'matrix',
+    'arcade': 'sunset'
+  };
+  if (legacyMap[themeName]) {
+    themeName = legacyMap[themeName];
+  }
+
+  const allowed = ['desi-gold', 'cyberpunk', 'matrix', 'sunset', 'aurora'];
+  if (!allowed.includes(themeName)) themeName = 'desi-gold';
 
   APP_STATE.currentTheme = themeName;
   localStorage.setItem('bm_theme', themeName);
 
-  if (themeName === 'mango') {
-    document.body.removeAttribute('data-theme');
-  } else {
-    document.body.setAttribute('data-theme', themeName);
-  }
+  document.body.setAttribute('data-theme', themeName);
 
   document.querySelectorAll('.theme-pill-btn').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
@@ -1167,94 +1408,94 @@ function applyTheme(themeName) {
    ========================================================================== */
 const ROUND_PALETTES = [
   {
-    name: "MANGO SUNSET",
+    name: "ROYAL DESI GOLD",
     primary: "#FFB703",
-    primaryGlow: "rgba(255, 183, 3, 0.50)",
-    secondary: "#FF2A6D",
-    secondaryGlow: "rgba(255, 42, 109, 0.50)",
-    accent: "#05D9E8",
-    accentGlow: "rgba(5, 217, 232, 0.50)"
+    primaryGlow: "rgba(255, 183, 3, 0.55)",
+    secondary: "#FF006E",
+    secondaryGlow: "rgba(255, 0, 110, 0.55)",
+    accent: "#00F5D4",
+    accentGlow: "rgba(0, 245, 212, 0.50)"
   },
   {
     name: "ELECTRIC CYBERPUNK",
     primary: "#00F0FF",
-    primaryGlow: "rgba(0, 240, 255, 0.50)",
+    primaryGlow: "rgba(0, 240, 255, 0.55)",
     secondary: "#FF007F",
-    secondaryGlow: "rgba(255, 0, 127, 0.50)",
-    accent: "#7000FF",
-    accentGlow: "rgba(112, 0, 255, 0.50)"
+    secondaryGlow: "rgba(255, 0, 127, 0.55)",
+    accent: "#7928CA",
+    accentGlow: "rgba(121, 40, 202, 0.50)"
   },
   {
-    name: "TOXIC MATRIX",
-    primary: "#00FF66",
-    primaryGlow: "rgba(0, 255, 102, 0.50)",
-    secondary: "#00E5FF",
-    secondaryGlow: "rgba(0, 229, 255, 0.50)",
+    name: "RADIOACTIVE MATRIX",
+    primary: "#00FF87",
+    primaryGlow: "rgba(0, 255, 135, 0.55)",
+    secondary: "#60EFFF",
+    secondaryGlow: "rgba(96, 239, 255, 0.50)",
     accent: "#FFE600",
     accentGlow: "rgba(255, 230, 0, 0.50)"
   },
   {
-    name: "HYPER TANGERINE",
+    name: "VAPORWAVE SUNSET",
     primary: "#FF5E00",
-    primaryGlow: "rgba(255, 94, 0, 0.50)",
-    secondary: "#FFD000",
-    secondaryGlow: "rgba(255, 208, 0, 0.50)",
-    accent: "#FF0055",
-    accentGlow: "rgba(255, 0, 85, 0.50)"
+    primaryGlow: "rgba(255, 94, 0, 0.55)",
+    secondary: "#F72585",
+    secondaryGlow: "rgba(247, 37, 133, 0.50)",
+    accent: "#4CC9F0",
+    accentGlow: "rgba(76, 201, 240, 0.50)"
   },
   {
-    name: "ULTRAVIOLET AURORA",
-    primary: "#B026FF",
-    primaryGlow: "rgba(176, 38, 255, 0.50)",
-    secondary: "#00F5D4",
-    secondaryGlow: "rgba(0, 245, 212, 0.50)",
-    accent: "#FF1493",
-    accentGlow: "rgba(255, 20, 147, 0.50)"
+    name: "COSMIC AURORA",
+    primary: "#3A86FF",
+    primaryGlow: "rgba(58, 134, 255, 0.55)",
+    secondary: "#FF006E",
+    secondaryGlow: "rgba(255, 0, 110, 0.50)",
+    accent: "#8338EC",
+    accentGlow: "rgba(131, 56, 236, 0.50)"
   },
   {
-    name: "OCEAN CYAN",
-    primary: "#05D9E8",
-    primaryGlow: "rgba(5, 217, 232, 0.50)",
-    secondary: "#38BDF8",
-    secondaryGlow: "rgba(56, 189, 248, 0.50)",
-    accent: "#FF2A6D",
-    accentGlow: "rgba(255, 42, 109, 0.50)"
-  },
-  {
-    name: "EMERALD PRISM",
-    primary: "#10B981",
-    primaryGlow: "rgba(16, 185, 129, 0.50)",
-    secondary: "#F59E0B",
-    secondaryGlow: "rgba(245, 158, 11, 0.50)",
-    accent: "#06B6D4",
-    accentGlow: "rgba(6, 182, 212, 0.50)"
-  },
-  {
-    name: "COSMIC ORCHID",
-    primary: "#E040FB",
-    primaryGlow: "rgba(224, 64, 251, 0.50)",
-    secondary: "#00E676",
-    secondaryGlow: "rgba(0, 230, 118, 0.50)",
-    accent: "#FFD600",
-    accentGlow: "rgba(255, 214, 0, 0.50)"
-  },
-  {
-    name: "SOLAR AMBER",
-    primary: "#FACC15",
-    primaryGlow: "rgba(250, 204, 21, 0.50)",
-    secondary: "#F97316",
-    secondaryGlow: "rgba(249, 115, 22, 0.50)",
-    accent: "#EF4444",
-    accentGlow: "rgba(239, 68, 68, 0.50)"
-  },
-  {
-    name: "LASER CRIMSON",
-    primary: "#FF0055",
-    primaryGlow: "rgba(255, 0, 85, 0.50)",
-    secondary: "#00E5FF",
-    secondaryGlow: "rgba(0, 229, 255, 0.50)",
+    name: "NEO TOKYO MINT",
+    primary: "#00F5D4",
+    primaryGlow: "rgba(0, 245, 212, 0.55)",
+    secondary: "#7928CA",
+    secondaryGlow: "rgba(121, 40, 202, 0.50)",
     accent: "#FFE600",
     accentGlow: "rgba(255, 230, 0, 0.50)"
+  },
+  {
+    name: "KINETIC CRIMSON",
+    primary: "#FF1E56",
+    primaryGlow: "rgba(255, 30, 86, 0.55)",
+    secondary: "#00F0FF",
+    secondaryGlow: "rgba(0, 240, 255, 0.50)",
+    accent: "#FFBE0B",
+    accentGlow: "rgba(255, 190, 11, 0.50)"
+  },
+  {
+    name: "DEEP OCEAN ABYSS",
+    primary: "#00D2FF",
+    primaryGlow: "rgba(0, 210, 255, 0.55)",
+    secondary: "#3A7BD5",
+    secondaryGlow: "rgba(58, 123, 213, 0.50)",
+    accent: "#00FF87",
+    accentGlow: "rgba(0, 255, 135, 0.50)"
+  },
+  {
+    name: "SOLAR HYPERNOVA",
+    primary: "#FFD000",
+    primaryGlow: "rgba(255, 208, 0, 0.55)",
+    secondary: "#FF4500",
+    secondaryGlow: "rgba(255, 69, 0, 0.50)",
+    accent: "#FF007F",
+    accentGlow: "rgba(255, 0, 127, 0.50)"
+  },
+  {
+    name: "ULTRAVIOLET VOID",
+    primary: "#B026FF",
+    primaryGlow: "rgba(176, 38, 255, 0.55)",
+    secondary: "#00F0FF",
+    secondaryGlow: "rgba(0, 240, 255, 0.50)",
+    accent: "#00FF87",
+    accentGlow: "rgba(0, 255, 135, 0.50)"
   }
 ];
 
@@ -2519,6 +2760,13 @@ function setupEventListeners() {
   if (btnRadioPrev) {
     btnRadioPrev.addEventListener('click', () => {
       lofiRadio.prevTrack();
+    });
+  }
+
+  const btnRadioEngineMode = document.getElementById('btnRadioEngineMode');
+  if (btnRadioEngineMode) {
+    btnRadioEngineMode.addEventListener('click', () => {
+      lofiRadio.toggleEngineMode();
     });
   }
 
