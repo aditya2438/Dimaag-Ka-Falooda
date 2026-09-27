@@ -1059,8 +1059,8 @@ const APP_STATE = {
   isWsConnected: false,
 
   // Supabase Realtime Client
-  supabaseUrl: localStorage.getItem('bm_supa_url') || '',
-  supabaseKey: localStorage.getItem('bm_supa_key') || '',
+  supabaseUrl: localStorage.getItem('bm_supa_url') || 'https://dfixypyqewrdofaufehg.supabase.co',
+  supabaseKey: localStorage.getItem('bm_supa_key') || 'sb_publishable_u-T2e51hbuuIp8cblLxkqQ_JMTpE90g',
   supabaseClient: null,
 
   // Single Player State
