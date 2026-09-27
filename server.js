@@ -203,6 +203,15 @@ server.on('upgrade', (req, socket, head) => {
   sendWsText(socket, JSON.stringify({ type: 'connected', clientsCount: activeClients.size }));
 });
 
+function generateServerPattern(length = 4) {
+  const seq = [];
+  while (seq.length < length) {
+    const r = Math.floor(Math.random() * 9);
+    if (!seq.includes(r)) seq.push(r);
+  }
+  return seq;
+}
+
 function handleWebSocketMessage(socket, data) {
   const { action, roomCode, handle, avatar, tileIndex, progress, score, roundSeq } = data;
 
@@ -233,6 +242,8 @@ function handleWebSocketMessage(socket, data) {
           room.players.push(socket);
           room.p2 = socket;
           socket.playerNumber = 2;
+          const initialSequence = generateServerPattern(4);
+          room.targetSequence = initialSequence;
 
           sendWsText(socket, JSON.stringify({
             type: 'room_joined',
@@ -240,7 +251,8 @@ function handleWebSocketMessage(socket, data) {
             playerNumber: 2,
             opponentHandle: room.p1.playerHandle,
             opponentAvatar: room.p1.playerAvatar,
-            status: 'OPPONENT_CONNECTED'
+            status: 'OPPONENT_CONNECTED',
+            targetSequence: initialSequence
           }));
 
           // Notify Player 1 that opponent has arrived
@@ -248,7 +260,8 @@ function handleWebSocketMessage(socket, data) {
             type: 'opponent_joined',
             opponentHandle: socket.playerHandle,
             opponentAvatar: socket.playerAvatar,
-            status: 'OPPONENT_CONNECTED'
+            status: 'OPPONENT_CONNECTED',
+            targetSequence: initialSequence
           }));
         } else {
           // Room full or rejoining

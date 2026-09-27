@@ -68,6 +68,8 @@ const AntiCheat = {
   shadowScore: 0,
 
   startRun() {
+    this.isTampered = false;
+    this.tamperReason = null;
     this.actionNonce = 0;
     this.proofHash = 0x811c9dc5;
     this.verifiedTaps = 0;
@@ -91,7 +93,7 @@ const AntiCheat = {
       return false;
     }
 
-    // 2. Physical human motor reflex rate limiting (<60ms impossible threshold)
+    // 2. Physical human motor reflex rate limiting (<50ms impossible threshold)
     const now = performance.now();
     this.clickTimestamps.push(now);
     if (this.clickTimestamps.length > 5) {
@@ -102,14 +104,14 @@ const AntiCheat = {
       }
       const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
 
-      if (avgInterval < 60) {
+      if (avgInterval < 50) {
         this.flag('AUTOCLICKER_SPEEDHACK');
         return false;
       }
 
       // Check for zero-jitter macro scripts (perfect periodic intervals)
       const variance = intervals.reduce((sum, intv) => sum + Math.abs(intv - avgInterval), 0) / intervals.length;
-      if (variance < 1.0 && intervals.length >= 4) {
+      if (variance < 0.5 && intervals.length >= 4) {
         this.flag('ZERO_JITTER_MACRO_BOT');
         return false;
       }
@@ -118,15 +120,23 @@ const AntiCheat = {
     return true;
   },
 
-  // Verify browser native prototypes haven't been hooked by speedhack extensions
+  // Verify browser native prototypes haven't been hooked by hostile speedhacks
   verifyPrototypeIntegrity() {
     try {
-      const isPerfNative = Function.prototype.toString.call(performance.now).includes('[native code]');
-      const isDateNative = Function.prototype.toString.call(Date.now).includes('[native code]');
-      const isRAFNative = Function.prototype.toString.call(window.requestAnimationFrame).includes('[native code]');
-      if (!isPerfNative || !isDateNative || !isRAFNative) {
-        this.flag('PROTOTYPE_SPEEDHACK_HOOK');
-        return false;
+      if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+        const t1 = performance.now();
+        const t2 = performance.now();
+        if (typeof t1 !== 'number' || typeof t2 !== 'number' || isNaN(t1) || isNaN(t2)) {
+          this.flag('PERFORMANCE_CLOCK_CORRUPTED');
+          return false;
+        }
+      }
+      if (typeof Date !== 'undefined' && typeof Date.now === 'function') {
+        const d = Date.now();
+        if (typeof d !== 'number' || isNaN(d) || d <= 0) {
+          this.flag('DATE_CLOCK_CORRUPTED');
+          return false;
+        }
       }
     } catch (e) {}
     return true;
@@ -2415,7 +2425,7 @@ function handleServerWebSocketMessage(msg) {
         APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
         if (statusText) statusText.textContent = `CONNECTED WITH ${DUEL_RT.opponentHandle}! STARTING MATCH...`;
         audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
-        startOnlineDuelMatch(false, false);
+        startOnlineDuelMatch(false, false, msg.targetSequence);
       }
       break;
     }
@@ -2427,19 +2437,18 @@ function handleServerWebSocketMessage(msg) {
       if (statusText) statusText.textContent = `CONNECTED WITH ${DUEL_RT.opponentHandle}! STARTING MATCH...`;
       audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
 
-      const seq = generatePattern(4);
+      const seq = (msg.targetSequence && msg.targetSequence.length) ? msg.targetSequence : generatePattern(4);
       APP_STATE.duel.targetSequence = seq;
-      if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
-        APP_STATE.ws.send(JSON.stringify({ action: 'sync_round', roundSeq: seq }));
-      }
       startOnlineDuelMatch(false, true, seq);
       break;
     }
 
     case 'round_started': {
-      if (duel.active && !duel.isVsBot) {
-        duel.targetSequence = msg.targetSequence;
-        startSynchronizedDuelRound();
+      if (APP_STATE.duel && APP_STATE.duel.active && !APP_STATE.duel.isVsBot) {
+        if (JSON.stringify(APP_STATE.duel.targetSequence) !== JSON.stringify(msg.targetSequence)) {
+          APP_STATE.duel.targetSequence = msg.targetSequence;
+          startSynchronizedDuelRound();
+        }
       }
       break;
     }
@@ -2600,6 +2609,7 @@ function hostRoomSupa(code) {
 
     // Guest joins room
     ch.on('broadcast', { event: 'player_joined' }, ({ payload }) => {
+      if (APP_STATE.duel && APP_STATE.duel.active) return;
       DUEL_RT.opponentHandle = payload.handle || 'GUEST';
       APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
 
@@ -2618,9 +2628,7 @@ function hostRoomSupa(code) {
         initialSequence: seq
       });
 
-      setTimeout(() => {
-        startOnlineDuelMatch(false, true, seq);
-      }, 600);
+      startOnlineDuelMatch(false, true, seq);
     });
 
     // Opponent tile tap
@@ -2714,6 +2722,7 @@ function joinRoomSupa(code) {
         clearInterval(DUEL_RT.retryTimer);
         DUEL_RT.retryTimer = null;
       }
+      if (APP_STATE.duel && APP_STATE.duel.active) return;
       DUEL_RT.opponentHandle = payload.hostHandle || 'HOST';
       APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
 
@@ -2821,11 +2830,26 @@ function initDuelRoomLobby(prefillCode) {
   switchView('view-online-lobby');
 }
 
+function clearAllDuelTimeouts() {
+  if (APP_STATE.duel && Array.isArray(APP_STATE.duel.flashTimeouts)) {
+    APP_STATE.duel.flashTimeouts.forEach(id => clearTimeout(id));
+    APP_STATE.duel.flashTimeouts = [];
+  }
+}
+
 function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null) {
-  const seq = initialSeq || generatePattern(4);
+  if (APP_STATE.duel && APP_STATE.duel.active && !isVsBot && initialSeq && APP_STATE.duel.phase === 'MEMORIZE') {
+    APP_STATE.duel.targetSequence = initialSeq;
+    return;
+  }
+
+  clearAllDuelTimeouts();
+  AntiCheat.startRun();
+
+  const seq = (Array.isArray(initialSeq) && initialSeq.length) ? initialSeq : generatePattern(4);
   APP_STATE.duel = {
     active: true,
-    roomCode: APP_STATE.duel.roomCode,
+    roomCode: APP_STATE.duel.roomCode || 'MIND',
     isHost: isHost,
     targetScore: 10,
     myScore: 0,
@@ -2838,7 +2862,8 @@ function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null)
     phase: 'IDLE',
     isVsBot: isVsBot,
     botInterval: null,
-    animFrameId: null
+    animFrameId: null,
+    flashTimeouts: []
   };
 
   const p1Label = document.getElementById('duelP1Label');
@@ -2847,6 +2872,11 @@ function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null)
   const p2Label = document.getElementById('duelP2Label');
   if (p2Label) {
     p2Label.textContent = isVsBot ? 'SHARMA JI KA ROBOT' : (DUEL_RT.opponentHandle || 'OPPONENT');
+  }
+
+  const duelRoomCodeEl = document.getElementById('duelActiveRoomCode');
+  if (duelRoomCodeEl) {
+    duelRoomCodeEl.textContent = isVsBot ? 'BOT' : (APP_STATE.duel.roomCode || 'MIND');
   }
 
   updateDuelHUD();
@@ -2881,6 +2911,7 @@ function startNewDuelRound() {
 
 function startSynchronizedDuelRound() {
   const duel = APP_STATE.duel;
+  clearAllDuelTimeouts();
   duel.myProgress = 0;
   duel.oppProgress = 0;
   duel.phase = 'MEMORIZE';
@@ -2889,9 +2920,14 @@ function startSynchronizedDuelRound() {
   updateDuelHUD();
 
   flashDuelSequence(duel.targetSequence, () => {
+    if (!APP_STATE.duel.active) return;
     duel.phase = 'RECALL';
     const status = document.getElementById('duelPhaseStatus');
-    if (status) status.textContent = 'FASTEST RECALL WINS ROUND!';
+    if (status) {
+      status.textContent = 'FASTEST RECALL WINS ROUND! TAP TILES NOW!';
+      status.className = 'phase-pill-badge recall kinetic-pulse';
+    }
+    audioVoice.playBoing();
   });
 }
 
@@ -2907,13 +2943,20 @@ function resetDuelTilesUI() {
 }
 
 function flashDuelSequence(sequence, onComplete) {
+  clearAllDuelTimeouts();
+  const validSeq = (Array.isArray(sequence) && sequence.length) ? sequence : generatePattern(4);
   let step = 0;
   const status = document.getElementById('duelPhaseStatus');
-  if (status) status.textContent = 'MEMORIZE DUEL PATTERN';
+  if (status) {
+    status.textContent = 'MEMORIZE DUEL PATTERN';
+    status.className = 'phase-pill-badge memorize';
+  }
 
   function stepFlash() {
-    if (step < sequence.length) {
-      const tileIndex = sequence[step];
+    if (!APP_STATE.duel.active) return;
+
+    if (step < validSeq.length) {
+      const tileIndex = validSeq[step];
       const tileEl = document.getElementById(`dtile-${tileIndex}`);
       if (tileEl) {
         tileEl.classList.add('flash-active');
@@ -2922,32 +2965,56 @@ function flashDuelSequence(sequence, onComplete) {
         audioVoice.playFlashNote(step);
       }
 
-      setTimeout(() => {
+      const t1 = setTimeout(() => {
         if (tileEl) {
           tileEl.classList.remove('flash-active');
           const badge = tileEl.querySelector('.order-badge');
           if (badge) badge.textContent = '';
         }
         step++;
-        setTimeout(stepFlash, 150);
+        const t2 = setTimeout(stepFlash, 150);
+        if (APP_STATE.duel && APP_STATE.duel.flashTimeouts) APP_STATE.duel.flashTimeouts.push(t2);
       }, 450);
+      if (APP_STATE.duel && APP_STATE.duel.flashTimeouts) APP_STATE.duel.flashTimeouts.push(t1);
     } else {
-      setTimeout(onComplete, 200);
+      const t3 = setTimeout(() => {
+        if (!APP_STATE.duel.active) return;
+        onComplete();
+      }, 200);
+      if (APP_STATE.duel && APP_STATE.duel.flashTimeouts) APP_STATE.duel.flashTimeouts.push(t3);
     }
   }
-  setTimeout(stepFlash, 300);
+
+  const t0 = setTimeout(stepFlash, 300);
+  if (APP_STATE.duel && APP_STATE.duel.flashTimeouts) APP_STATE.duel.flashTimeouts.push(t0);
 }
 
 function handleDuelTileClick(tileIndex, event) {
   const duel = APP_STATE.duel;
-  if (!duel.active || duel.phase !== 'RECALL') return;
+  if (!duel.active) return;
+
+  const tileEl = document.getElementById(`dtile-${tileIndex}`);
+
+  // If clicked while pattern is still flashing/memorizing
+  if (duel.phase !== 'RECALL') {
+    const status = document.getElementById('duelPhaseStatus');
+    if (status) {
+      status.textContent = 'WAIT! MEMORIZE PATTERN FIRST!';
+      setTimeout(() => {
+        if (duel.phase === 'MEMORIZE' && status) {
+          status.textContent = 'MEMORIZE DUEL PATTERN';
+        }
+      }, 650);
+    }
+    return;
+  }
+
   if (event && !AntiCheat.validateTap(event)) return;
 
   const now = performance.now();
   if (now < duel.myStunnedUntil) return;
 
   const expectedTile = duel.targetSequence[duel.myProgress];
-  const tileEl = document.getElementById(`dtile-${tileIndex}`);
 
   if (tileIndex === expectedTile) {
     audioVoice.playPop();
@@ -2955,7 +3022,11 @@ function handleDuelTileClick(tileIndex, event) {
     triggerHaptic([30]);
 
     duel.myProgress++;
-    if (tileEl) tileEl.classList.add('correct-tap');
+    if (tileEl) {
+      tileEl.classList.add('correct-tap');
+      const badge = tileEl.querySelector('.order-badge');
+      if (badge) badge.textContent = duel.myProgress;
+    }
 
     // Broadcast progress to opponent
     if (!duel.isVsBot) {
@@ -3002,6 +3073,23 @@ function handleDuelTileClick(tileIndex, event) {
   } else {
     // 1.5s freeze penalty on mistake
     duel.myStunnedUntil = now + 1500;
+    if (tileEl) {
+      tileEl.classList.add('wrong-tap');
+      setTimeout(() => {
+        if (tileEl) tileEl.classList.remove('wrong-tap');
+      }, 450);
+    }
+    const status = document.getElementById('duelPhaseStatus');
+    if (status) {
+      status.textContent = 'WRONG TILE! 1.5S FREEZE!';
+      status.className = 'phase-pill-badge reverse';
+      setTimeout(() => {
+        if (duel.phase === 'RECALL' && status) {
+          status.textContent = 'FASTEST RECALL WINS ROUND! TAP TILES NOW!';
+          status.className = 'phase-pill-badge recall kinetic-pulse';
+        }
+      }, 1500);
+    }
     audioVoice.playDJRecordStop();
     audioVoice.playMoyeMoyeTune();
     triggerHaptic([100, 50, 100]);
@@ -3038,6 +3126,10 @@ function updateDuelHUD() {
   if (p1ScoreEl) p1ScoreEl.textContent = `${duel.myScore} / ${duel.targetScore}`;
   const p2ScoreEl = document.getElementById('duelP2Score');
   if (p2ScoreEl) p2ScoreEl.textContent = `${duel.oppScore} / ${duel.targetScore}`;
+  const roomCodeEl = document.getElementById('duelActiveRoomCode');
+  if (roomCodeEl) {
+    roomCodeEl.textContent = duel.isVsBot ? 'BOT' : (duel.roomCode || 'MIND');
+  }
 }
 
 function startBotBehavior() {
@@ -3308,15 +3400,59 @@ function setupEventListeners() {
   // Render 10 real Hindi Lo-Fi audio tracks into terminal
   lofiRadio.renderRadioTracks();
 
-  // Duel Tile Clicks
+  // Duel Tile Clicks with unified pointerdown/click and 60ms human debounce guard
+  let lastDuelTapTime = 0;
   for (let i = 0; i < 9; i++) {
     const tile = document.getElementById(`dtile-${i}`);
     if (tile) {
+      const handleTap = (e) => {
+        const now = performance.now();
+        if (now - lastDuelTapTime < 60) return;
+        lastDuelTapTime = now;
+        handleDuelTileClick(i, e);
+      };
       tile.addEventListener('pointerdown', (e) => {
         e.preventDefault();
-        handleDuelTileClick(i, e);
+        handleTap(e);
+      });
+      tile.addEventListener('click', (e) => {
+        handleTap(e);
       });
     }
+  }
+
+  // Active Duel Room Code Copy & Share Buttons
+  const btnDuelCopy = document.getElementById('btnDuelCopyCode');
+  if (btnDuelCopy) {
+    btnDuelCopy.addEventListener('click', () => {
+      const code = APP_STATE.duel.roomCode || 'MIND';
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = btnDuelCopy.textContent;
+        btnDuelCopy.textContent = 'COPIED!';
+        setTimeout(() => { btnDuelCopy.textContent = orig; }, 1800);
+      }).catch(() => {});
+    });
+  }
+
+  const btnDuelShare = document.getElementById('btnDuelShareCode');
+  if (btnDuelShare) {
+    btnDuelShare.addEventListener('click', () => {
+      const code = APP_STATE.duel.roomCode || 'MIND';
+      const shareUrl = `${window.location.origin}${window.location.pathname}?room=${code}`;
+      if (navigator.share) {
+        navigator.share({
+          title: 'DIMAAG KA FALOODA - 1V1 DUEL',
+          text: `Join my 1v1 Room Duel in Dimaag Ka Falooda! Room Code: ${code}`,
+          url: shareUrl
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          const orig = btnDuelShare.textContent;
+          btnDuelShare.textContent = 'LINK COPIED!';
+          setTimeout(() => { btnDuelShare.textContent = orig; }, 1800);
+        }).catch(() => {});
+      }
+    });
   }
 
   // 3 Jugaad Power-Up Buttons

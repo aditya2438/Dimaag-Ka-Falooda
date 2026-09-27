@@ -1123,6 +1123,45 @@ header.funky-header {
 .duel-stun-badge { display: none; position: absolute; inset: 0; border-radius: 18px; background: rgba(255, 51, 102, 0.92); backdrop-filter: blur(8px); color: #FFFFFF; font-size: 0.85rem; font-weight: 900; align-items: center; justify-content: center; z-index: 20; }
 .player-score-card.is-stunned .duel-stun-badge { display: flex; }
 
+.duel-room-code-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: var(--glass-border-subtle);
+  border-radius: 14px;
+  padding: 6px 12px;
+  flex-shrink: 0;
+}
+.duel-code-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.duel-code-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+.duel-code-val {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--color-primary);
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 12px var(--color-primary-glow);
+}
+.duel-code-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 /* 8. VIEW: ONLINE ROOM SETUP */
 #view-online-lobby { justify-content: center; gap: 12px; overflow-y: auto; overflow-x: hidden; }
 .glass-modal-card { background: var(--glass-card); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: var(--glass-border); box-shadow: var(--glass-rim), var(--glass-shadow-lg); border-radius: 24px; padding: 20px; max-height: 88dvh; overflow-y: auto; }
@@ -1791,6 +1830,7 @@ header.funky-header {
   border-radius: 4px;
   padding: 4px 8px;
   cursor: pointer;
+  pointer-events: none;
 }
 .term-track-row.playing .track-play-btn {
   background: #05D9E8;
