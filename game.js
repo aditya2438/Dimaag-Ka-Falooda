@@ -251,16 +251,20 @@ function getLevelConfig(level) {
   let timeLimitSec = 3.5;
 
   if (level < 5) {
-    // PHASE 1: FORWARD ORDER
+    // PHASE 1: FORWARD ORDER (Smooth onboarding & addictive flow curve)
     isReverse = false;
     if (level === 1) {
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 3.5;
+      // Warm-up round: 3x3 grid, seq 3, 4.5s generous timer for instant positive feedback
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 4.5;
     } else if (level === 2) {
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 3.0;
+      // Flow builder: 3x3 grid, seq 3, 4.0s timer to solidify rhythm and lock in combos
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 4.0;
     } else if (level === 3) {
-      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 2.7;
+      // Stepping up: 3x3 grid, seq 4, 3.4s timer to test memory without visual overload
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 3.4;
     } else if (level === 4) {
-      rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 2.4;
+      // Grid expansion: 3x4 grid (12 tiles), seq 4, 2.8s timer preparing for reverse phase
+      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 2.8;
     }
   } else {
     // PHASE 2: REVERSE ORDER MODE (Starts at Level 5!)
@@ -1993,6 +1997,12 @@ function startNewRound() {
 
 function flashTilesSequence(sequence, hasDecoy, totalTiles, onComplete) {
   let step = 0;
+  const sp = APP_STATE.singlePlay;
+  // Early level pacing: slightly longer flash for crystal-clear pattern intake in Level 1-2
+  const isEarlyLevel = sp && sp.level <= 2;
+  const flashActiveMs = isEarlyLevel ? 480 : 430;
+  const flashPauseMs = isEarlyLevel ? 160 : 140;
+
   function showNext() {
     if (step < sequence.length) {
       const tileIndex = sequence[step];
@@ -2012,8 +2022,8 @@ function flashTilesSequence(sequence, hasDecoy, totalTiles, onComplete) {
           if (badge) badge.textContent = '';
         }
         step++;
-        setTimeout(showNext, 140);
-      }, 430);
+        setTimeout(showNext, flashPauseMs);
+      }, flashActiveMs);
     } else {
       // Sequence completed: start recall phase with clean timing, zero fake blinks
       setTimeout(onComplete, 180);
@@ -2078,6 +2088,9 @@ function handleTileClick(tileIndex, event) {
     audioVoice.playDJTileBeat(sp.playerTapIndex);
     triggerHaptic([30]);
     sp.playerTapIndex++;
+
+    // Addictive flow boost: +0.25s time reward for quick accurate taps (capped at timeLimitSec)
+    sp.remainingTimeSec = Math.min(sp.timeLimitSec, sp.remainingTimeSec + 0.25);
 
     if (tileEl) {
       tileEl.classList.add('correct-tap');
