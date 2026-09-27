@@ -1,8 +1,13 @@
 {
-  "name": "dimaag-ka-falooda-beat-run",
+  "name": "dimaag-ka-falooda",
   "version": "2.0.0",
   "description": "High-stakes spatial memory reflex web game with dynamic matrix grid scaling, retro radio terminal, real Hindi Lo-Fi audio, and live DJ beat synchronizer.",
   "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aditya2438/Dimaag-Ka-Falooda.git"
+  },
+  "homepage": "https://aditya2438.github.io/Dimaag-Ka-Falooda/",
   "scripts": {
     "start": "node server.js"
   },
@@ -14,7 +19,7 @@
     "multiplayer-duel",
     "dj-beats"
   ],
-  "author": "Antigravity Engineering",
+  "author": "aditya2438",
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2"

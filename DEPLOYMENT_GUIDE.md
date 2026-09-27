@@ -49,17 +49,12 @@ git add .
 git commit -m "feat: Dimaag Ka Falooda Beat Run with 60 blocks, Hindi Lo-Fi radio, and live DJ beats"
 ```
 
-### 4. Create a new repository on GitHub
-1. Open [https://github.com/new](https://github.com/new).
-2. Set **Repository name**: `dimaag-ka-falooda-beat-run` (or any preferred name).
-3. Set Visibility: **Public**.
-4. Leave "Add a README file" **unchecked** (we already have a complete README).
-5. Click **Create repository**.
+### 4. GitHub Repository Link
+Repository created at: `https://github.com/aditya2438/Dimaag-Ka-Falooda.git`
 
 ### 5. Link local repository and push to GitHub
-Replace `<YOUR_GITHUB_USERNAME>` with your actual GitHub username:
 ```bash
-git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/dimaag-ka-falooda-beat-run.git
+git remote add origin https://github.com/aditya2438/Dimaag-Ka-Falooda.git
 git branch -M main
 git push -u origin main
 ```
@@ -232,7 +227,7 @@ If you only want static hosting (Solo Mode + Bot Sparring + Live Supabase Leader
 3. Under **Branch**, select `main` and `/ (root)`.
 4. Click **Save**.
 5. After 1 minute, your site will be live at:  
-   `https://<YOUR_GITHUB_USERNAME>.github.io/dimaag-ka-falooda-beat-run/`
+   `https://aditya2438.github.io/Dimaag-Ka-Falooda/`
 
 *Note: On GitHub Pages, 1v1 Bot Sparring works completely offline. For live player-vs-player room duels across different devices, host the `server.js` backend on Render.com.*
 
