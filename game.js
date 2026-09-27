@@ -3664,26 +3664,6 @@ function setupEventListeners() {
     }
   });
 
-  // Cloud Settings Modal
-  document.getElementById('btnOpenSettings').addEventListener('click', () => {
-    document.getElementById('inputSupaUrl').value = APP_STATE.supabaseUrl;
-    document.getElementById('inputSupaKey').value = APP_STATE.supabaseKey;
-    document.getElementById('modalSettings').classList.add('open');
-  });
-  document.getElementById('btnCloseSettings').addEventListener('click', () => {
-    document.getElementById('modalSettings').classList.remove('open');
-  });
-  document.getElementById('btnSaveSettings').addEventListener('click', () => {
-    const url = document.getElementById('inputSupaUrl').value.trim();
-    const key = document.getElementById('inputSupaKey').value.trim();
-    APP_STATE.supabaseUrl = url;
-    APP_STATE.supabaseKey = key;
-    localStorage.setItem('bm_supa_url', url);
-    localStorage.setItem('bm_supa_key', key);
-    initSupabase();
-    document.getElementById('modalSettings').classList.remove('open');
-  });
-
   // Keyboard Numpad & Digits (1-9) + Powers (C, V, T)
   window.addEventListener('keydown', (e) => {
     // Physical Desktop Numpad orientation:

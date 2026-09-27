@@ -639,7 +639,8 @@ header.funky-header {
   transform: scale(1.05);
 }
 
-.menu-bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+.menu-bottom-row { display: flex; gap: 8px; margin-top: 6px; }
+.menu-bottom-row .btn-funky { flex: 1; }
 
 /* 6. VIEW: SINGLE PLAYER (SHARED MOBILE/BASE RULES) */
 #view-singleplay {
