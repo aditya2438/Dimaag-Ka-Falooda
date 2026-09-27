@@ -24,7 +24,10 @@ const server = http.createServer((req, res) => {
   if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
 
   const safePath = path.normalize(path.join(__dirname, reqPath));
-  if (!safePath.startsWith(__dirname)) {
+  const baseDir = path.resolve(__dirname);
+  const resolvedPath = path.resolve(safePath);
+
+  if (!resolvedPath.startsWith(baseDir + path.sep) && resolvedPath !== path.join(baseDir, 'index.html')) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     res.end('403 Forbidden');
     return;
@@ -101,6 +104,30 @@ function broadcastAll(data) {
 }
 
 server.on('upgrade', (req, socket, head) => {
+  // Origin check on WebSocket upgrade handshake
+  const origin = req.headers['origin'];
+  if (origin) {
+    try {
+      const u = new URL(origin);
+      const allowedHosts = [
+        'localhost',
+        '127.0.0.1',
+        'dimaag-ka-falooda.vercel.app',
+        'aditya2438.github.io'
+      ];
+      const isAllowed = allowedHosts.some(h => u.hostname === h || u.hostname.endsWith('.' + h));
+      if (!isAllowed) {
+        socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
+        socket.destroy();
+        return;
+      }
+    } catch (e) {
+      socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
+      socket.destroy();
+      return;
+    }
+  }
+
   const wsKey = req.headers['sec-websocket-key'];
   if (!wsKey) {
     socket.destroy();
@@ -124,6 +151,7 @@ server.on('upgrade', (req, socket, head) => {
   socket.roomCode = null;
   socket.playerNumber = null;
   socket.playerHandle = 'PLAYER';
+  socket.messageTimestamps = [];
 
   let buffer = Buffer.alloc(0);
 
@@ -146,6 +174,13 @@ server.on('upgrade', (req, socket, head) => {
         if (buffer.length < 10) return;
         payloadLength = Number(buffer.readBigUInt64BE(2));
         offset = 10;
+      }
+
+      // Enforce max frame payload length cap (16 KB) against unbounded memory DoS
+      if (payloadLength > 16384) {
+        console.warn('Frame payload length exceeds 16KB limit; disconnecting client.');
+        socket.destroy();
+        return;
       }
 
       const maskLength = isMasked ? 4 : 0;
@@ -177,6 +212,16 @@ server.on('upgrade', (req, socket, head) => {
         pong[1] = 0;
         socket.write(pong);
       } else if (opcode === 0x1) {
+        // Enforce per-socket rate limiter: max 20 messages per 10 seconds
+        const now = Date.now();
+        socket.messageTimestamps = (socket.messageTimestamps || []).filter(t => now - t < 10000);
+        if (socket.messageTimestamps.length >= 20) {
+          console.warn('Rate limit exceeded for client socket; disconnecting.');
+          socket.destroy();
+          return;
+        }
+        socket.messageTimestamps.push(now);
+
         // Text message
         try {
           const messageStr = payload.toString('utf8');
@@ -212,15 +257,30 @@ function generateServerPattern(length = 4) {
   return seq;
 }
 
+const KNOWN_AVATARS = [
+  'cutting_chai', 'sharma_beta', 'auto_rocket', 'chintu_pro',
+  'gabbar_mustache', 'desi_alien', 'samosa_ninja', 'babu_rao'
+];
+
 function handleWebSocketMessage(socket, data) {
+  if (!data || typeof data !== 'object') return;
   const { action, roomCode, handle, avatar, tileIndex, progress, score, roundSeq } = data;
+  if (!action || typeof action !== 'string') return;
 
   switch (action) {
     case 'join_room': {
-      const code = (roomCode || 'MIND').toUpperCase();
+      if (typeof roomCode !== 'string' || !/^[A-Z0-9]{4}$/i.test(roomCode)) return;
+      const code = roomCode.toUpperCase();
+      const safeHandle = (typeof handle === 'string' && /^[A-Za-z0-9_]{3,20}$/.test(handle))
+        ? handle
+        : 'OPERATIVE';
+      const safeAvatar = (typeof avatar === 'string' && KNOWN_AVATARS.includes(avatar))
+        ? avatar
+        : 'cutting_chai';
+
       socket.roomCode = code;
-      socket.playerHandle = handle || 'OPERATIVE';
-      socket.playerAvatar = avatar || 'cutting_chai';
+      socket.playerHandle = safeHandle;
+      socket.playerAvatar = safeAvatar;
 
       if (!duelRooms.has(code)) {
         duelRooms.set(code, {
@@ -277,10 +337,10 @@ function handleWebSocketMessage(socket, data) {
     }
 
     case 'sync_round': {
-      if (!socket.roomCode) return;
+      if (!socket.roomCode || !duelRooms.has(socket.roomCode)) return;
       const room = duelRooms.get(socket.roomCode);
-      if (room) {
-        room.targetSequence = roundSeq || [];
+      if (room && Array.isArray(roundSeq) && roundSeq.length === 4 && roundSeq.every(n => Number.isInteger(n) && n >= 0 && n <= 8)) {
+        room.targetSequence = roundSeq;
         // Broadcast synchronized sequence to both players
         room.players.forEach(p => {
           sendWsText(p, JSON.stringify({
@@ -293,7 +353,9 @@ function handleWebSocketMessage(socket, data) {
     }
 
     case 'tap_progress': {
-      if (!socket.roomCode) return;
+      if (!socket.roomCode || !duelRooms.has(socket.roomCode)) return;
+      if (!Number.isInteger(tileIndex) || tileIndex < 0 || tileIndex > 8) return;
+      if (!Number.isInteger(progress) || progress < 0 || progress > 4) return;
       const room = duelRooms.get(socket.roomCode);
       if (room) {
         // Forward progress to opponent
@@ -304,7 +366,7 @@ function handleWebSocketMessage(socket, data) {
               playerNumber: socket.playerNumber,
               tileIndex,
               progress,
-              score
+              score: Number.isInteger(score) ? score : 0
             }));
           }
         });
@@ -313,7 +375,7 @@ function handleWebSocketMessage(socket, data) {
     }
 
     case 'player_stun': {
-      if (!socket.roomCode) return;
+      if (!socket.roomCode || !duelRooms.has(socket.roomCode)) return;
       const room = duelRooms.get(socket.roomCode);
       if (room) {
         room.players.forEach(p => {
@@ -330,9 +392,9 @@ function handleWebSocketMessage(socket, data) {
     }
 
     case 'duel_victory': {
-      if (!socket.roomCode) return;
+      if (!socket.roomCode || !duelRooms.has(socket.roomCode)) return;
       const room = duelRooms.get(socket.roomCode);
-      if (room) {
+      if (room && room.players.includes(socket)) {
         room.players.forEach(p => {
           sendWsText(p, JSON.stringify({
             type: 'match_over',
@@ -345,11 +407,32 @@ function handleWebSocketMessage(socket, data) {
     }
 
     case 'leaderboard_update': {
-      // Broadcast live leaderboard record to ALL active players
-      broadcastAll({
-        type: 'leaderboard_sync',
-        record: data.record
-      });
+      // Validate incoming record before broadcasting to prevent broadcast injection
+      const rec = data.record;
+      if (
+        rec &&
+        typeof rec === 'object' &&
+        typeof rec.username === 'string' &&
+        /^[A-Za-z0-9_]{3,20}$/.test(rec.username) &&
+        typeof rec.avatar === 'string' &&
+        KNOWN_AVATARS.includes(rec.avatar) &&
+        Number.isInteger(rec.high_score) &&
+        rec.high_score >= 0 &&
+        rec.high_score <= 150000 &&
+        Number.isInteger(rec.max_level) &&
+        rec.max_level >= 1 &&
+        rec.max_level <= 30
+      ) {
+        broadcastAll({
+          type: 'leaderboard_sync',
+          record: {
+            username: rec.username,
+            avatar: rec.avatar,
+            high_score: rec.high_score,
+            max_level: rec.max_level
+          }
+        });
+      }
       break;
     }
   }

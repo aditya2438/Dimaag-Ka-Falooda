@@ -3243,21 +3243,48 @@ async function loadLeaderboard() {
   listEl.innerHTML = '';
   records.forEach((row, index) => {
     const isMe = row.username === APP_STATE.playerHandle;
-    const avatarSvg = AVATARS[row.avatar] || AVATARS.cutting_chai;
+    const avatarKey = (row.avatar && AVATARS[row.avatar]) ? row.avatar : 'cutting_chai';
+    const avatarSvg = AVATARS[avatarKey];
 
     const li = document.createElement('li');
     li.className = `lb-row-item rank-${index + 1} ${isMe ? 'current-player' : ''}`;
-    li.innerHTML = `
-      <span class="lb-rank-badge">#${index + 1}</span>
-      <div class="lb-user-block">
-        <div class="lb-avatar-box">${avatarSvg}</div>
-        <span style="font-weight: 800;">${row.username}</span>
-      </div>
-      <div style="text-align: right;">
-        <div class="lb-score-val">${row.high_score} PTS</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">LVL ${row.max_level || 1}</div>
-      </div>
-    `;
+
+    const rankBadge = document.createElement('span');
+    rankBadge.className = 'lb-rank-badge';
+    rankBadge.textContent = `#${index + 1}`;
+    li.appendChild(rankBadge);
+
+    const userBlock = document.createElement('div');
+    userBlock.className = 'lb-user-block';
+
+    const avatarBox = document.createElement('div');
+    avatarBox.className = 'lb-avatar-box';
+    avatarBox.innerHTML = avatarSvg;
+    userBlock.appendChild(avatarBox);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.style.fontWeight = '800';
+    nameSpan.textContent = String(row.username || 'PLAYER'); // XSS prevention: strict text node escaping
+    userBlock.appendChild(nameSpan);
+
+    li.appendChild(userBlock);
+
+    const scoreBlock = document.createElement('div');
+    scoreBlock.style.textAlign = 'right';
+
+    const scoreVal = document.createElement('div');
+    scoreVal.className = 'lb-score-val';
+    scoreVal.textContent = `${Number(row.high_score) || 0} PTS`;
+    scoreBlock.appendChild(scoreVal);
+
+    const lvlVal = document.createElement('div');
+    lvlVal.style.fontSize = '0.7rem';
+    lvlVal.style.color = 'var(--text-muted)';
+    lvlVal.style.fontFamily = 'var(--font-mono)';
+    lvlVal.textContent = `LVL ${Number(row.max_level) || 1}`;
+    scoreBlock.appendChild(lvlVal);
+
+    li.appendChild(scoreBlock);
     listEl.appendChild(li);
   });
 }
@@ -3289,20 +3316,26 @@ async function upsertScoreToLeaderboard(username, avatar, score, level) {
     }));
   }
 
-  if (APP_STATE.supabaseClient) {
-    try {
-      await APP_STATE.supabaseClient
-        .from('blind_matrix_leaderboard')
-        .upsert({
-          username: username,
-          avatar: avatar,
-          high_score: score,
-          max_level: level,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'username' });
-    } catch (e) {
-      console.warn("Supabase upsert error:", e);
+  // Secure Serverless Score Submission via /api/submit-score (trusted server boundary)
+  try {
+    const res = await fetch('/api/submit-score', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username,
+        avatar: avatar,
+        score: score,
+        level: level
+      })
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      console.warn('Backend score submission response:', res.status, errData.error || '');
     }
+  } catch (e) {
+    console.warn('Backend score submission endpoint unreachable:', e);
   }
 }
 

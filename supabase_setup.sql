@@ -30,22 +30,12 @@ FOR SELECT
 TO anon, authenticated
 USING (true);
 
--- 5. Create Public Insert Policy (Allow players to register initial score)
+-- 5. Lock Down Write Access (Fix C1 / Root Cause Resolution)
+-- Direct client writes from browser anon/authenticated keys are permanently revoked.
+-- The trusted backend serverless endpoint (/api/submit-score) uses SUPABASE_SECRET_KEY,
+-- which bypasses RLS securely on the server without exposing write capabilities to clients.
 DROP POLICY IF EXISTS "Public leaderboard insert" ON public.blind_matrix_leaderboard;
-CREATE POLICY "Public leaderboard insert"
-ON public.blind_matrix_leaderboard
-FOR INSERT
-TO anon, authenticated
-WITH CHECK (true);
-
--- 6. Create Public Update Policy (Allow players to update their scores)
 DROP POLICY IF EXISTS "Public leaderboard update" ON public.blind_matrix_leaderboard;
-CREATE POLICY "Public leaderboard update"
-ON public.blind_matrix_leaderboard
-FOR UPDATE
-TO anon, authenticated
-USING (true)
-WITH CHECK (true);
 
 -- 7. Add table to Supabase Realtime Publication for live WebSocket score push
 ALTER PUBLICATION supabase_realtime ADD TABLE public.blind_matrix_leaderboard;
