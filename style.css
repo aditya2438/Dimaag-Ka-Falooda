@@ -279,6 +279,9 @@ body {
   position: relative;
   z-index: 10;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   transition: max-width 0.3s ease, height 0.3s ease;
 }
 
