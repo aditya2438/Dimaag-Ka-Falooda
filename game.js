@@ -2850,6 +2850,72 @@ function clearAllDuelTimeouts() {
   }
 }
 
+function setupDuelGrid() {
+  const container = document.getElementById('duelMatrixGrid');
+  if (!container) return;
+  container.style.gridTemplateColumns = 'repeat(3, 1fr)';
+  container.style.gridTemplateRows = 'repeat(3, 1fr)';
+  container.setAttribute('data-total-tiles', '9');
+
+  if (container.children.length === 9) {
+    for (let i = 0; i < 9; i++) {
+      const tile = container.children[i];
+      tile.id = `dtile-${i}`;
+      tile.className = 'glass-tile';
+      tile.setAttribute('data-index', i);
+      let hint = tile.querySelector('.numpad-hint');
+      if (!hint) {
+        hint = document.createElement('span');
+        hint.className = 'numpad-hint';
+        hint.textContent = i + 1;
+        tile.prepend(hint);
+      } else {
+        hint.textContent = i + 1;
+      }
+      let badge = tile.querySelector('.order-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'order-badge';
+        tile.appendChild(badge);
+      }
+    }
+    return;
+  }
+
+  container.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < 9; i++) {
+    const tile = document.createElement('div');
+    tile.id = `dtile-${i}`;
+    tile.className = 'glass-tile';
+    tile.setAttribute('data-index', i);
+
+    const hint = document.createElement('span');
+    hint.className = 'numpad-hint';
+    hint.textContent = i + 1;
+    tile.appendChild(hint);
+
+    const badge = document.createElement('span');
+    badge.className = 'order-badge';
+    tile.appendChild(badge);
+
+    let lastTap = 0;
+    const handleTap = (e) => {
+      e.preventDefault();
+      const now = performance.now();
+      if (now - lastTap < 60) return;
+      lastTap = now;
+      handleDuelTileClick(i, e);
+    };
+
+    tile.addEventListener('pointerdown', handleTap);
+    tile.addEventListener('click', handleTap);
+
+    frag.appendChild(tile);
+  }
+  container.appendChild(frag);
+}
+
 function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null) {
   if (APP_STATE.duel && APP_STATE.duel.active && !isVsBot && initialSeq && APP_STATE.duel.phase === 'MEMORIZE') {
     APP_STATE.duel.targetSequence = initialSeq;
@@ -2892,6 +2958,7 @@ function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null)
     duelRoomCodeEl.textContent = isVsBot ? 'BOT' : (APP_STATE.duel.roomCode || 'MIND');
   }
 
+  setupDuelGrid();
   updateDuelHUD();
   switchView('view-duel-room');
 
@@ -2929,6 +2996,7 @@ function startSynchronizedDuelRound() {
   duel.oppProgress = 0;
   duel.phase = 'MEMORIZE';
 
+  setupDuelGrid();
   resetDuelTilesUI();
   updateDuelHUD();
 
@@ -3618,23 +3686,23 @@ function setupEventListeners() {
 
   // Keyboard Numpad & Digits (1-9) + Powers (C, V, T)
   window.addEventListener('keydown', (e) => {
-    if (APP_STATE.currentView === 'view-singleplay' && APP_STATE.singlePlay.active) {
-      // Physical Desktop Numpad orientation:
-      // [7] [8] [9] -> Row 1 (0, 1, 2)
-      // [4] [5] [6] -> Row 2 (3, 4, 5)
-      // [1] [2] [3] -> Row 3 (6, 7, 8)
-      const numpadCodeMap = {
-        'Numpad7': 0, 'Numpad8': 1, 'Numpad9': 2,
-        'Numpad4': 3, 'Numpad5': 4, 'Numpad6': 5,
-        'Numpad1': 6, 'Numpad2': 7, 'Numpad3': 8
-      };
-      // Standard Top-Row Digit Keys:
-      const digitKeyMap = {
-        '1': 0, '2': 1, '3': 2,
-        '4': 3, '5': 4, '6': 5,
-        '7': 6, '8': 7, '9': 8
-      };
+    // Physical Desktop Numpad orientation:
+    // [7] [8] [9] -> Row 1 (0, 1, 2)
+    // [4] [5] [6] -> Row 2 (3, 4, 5)
+    // [1] [2] [3] -> Row 3 (6, 7, 8)
+    const numpadCodeMap = {
+      'Numpad7': 0, 'Numpad8': 1, 'Numpad9': 2,
+      'Numpad4': 3, 'Numpad5': 4, 'Numpad6': 5,
+      'Numpad1': 6, 'Numpad2': 7, 'Numpad3': 8
+    };
+    // Standard Top-Row Digit Keys:
+    const digitKeyMap = {
+      '1': 0, '2': 1, '3': 2,
+      '4': 3, '5': 4, '6': 5,
+      '7': 6, '8': 7, '9': 8
+    };
 
+    if (APP_STATE.currentView === 'view-singleplay' && APP_STATE.singlePlay.active) {
       if (numpadCodeMap[e.code] !== undefined) {
         handleTileClick(numpadCodeMap[e.code], e);
       } else if (digitKeyMap[e.key] !== undefined) {
@@ -3645,6 +3713,12 @@ function setupEventListeners() {
         useChashmaPower();
       } else if (e.key.toUpperCase() === 'T') {
         useThinkFeature();
+      }
+    } else if (APP_STATE.currentView === 'view-duel-room' && APP_STATE.duel && APP_STATE.duel.active) {
+      if (numpadCodeMap[e.code] !== undefined) {
+        handleDuelTileClick(numpadCodeMap[e.code], e);
+      } else if (digitKeyMap[e.key] !== undefined) {
+        handleDuelTileClick(digitKeyMap[e.key], e);
       }
     }
   });

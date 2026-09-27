@@ -831,7 +831,10 @@ header.funky-header {
 }
 
 /* Dynamic density scaling based on total tiles */
+#duelMatrixGrid,
 .matrix-grid-dynamic[data-total-tiles="9"] {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 8px;
 }
 .matrix-grid-dynamic[data-total-tiles="9"] .glass-tile {
@@ -841,9 +844,19 @@ header.funky-header {
   font-size: 1.6rem;
 }
 
-.matrix-grid-dynamic[data-total-tiles="12"],
-.matrix-grid-dynamic[data-total-tiles="15"],
+.matrix-grid-dynamic[data-total-tiles="12"] {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 6px;
+}
+.matrix-grid-dynamic[data-total-tiles="15"] {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 6px;
+}
 .matrix-grid-dynamic[data-total-tiles="16"] {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   gap: 6px;
 }
 .matrix-grid-dynamic[data-total-tiles="12"] .glass-tile,
@@ -857,9 +870,19 @@ header.funky-header {
   font-size: 1.25rem;
 }
 
-.matrix-grid-dynamic[data-total-tiles="20"],
-.matrix-grid-dynamic[data-total-tiles="25"],
+.matrix-grid-dynamic[data-total-tiles="20"] {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 4.5px;
+}
+.matrix-grid-dynamic[data-total-tiles="25"] {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 4.5px;
+}
 .matrix-grid-dynamic[data-total-tiles="30"] {
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
   gap: 4.5px;
 }
 .matrix-grid-dynamic[data-total-tiles="20"] .glass-tile,
@@ -873,8 +896,14 @@ header.funky-header {
   font-size: 0.95rem;
 }
 
-.matrix-grid-dynamic[data-total-tiles="40"],
+.matrix-grid-dynamic[data-total-tiles="40"] {
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 3px;
+}
 .matrix-grid-dynamic[data-total-tiles="60"] {
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   gap: 3px;
 }
 .matrix-grid-dynamic[data-total-tiles="40"] .glass-tile,
@@ -887,6 +916,9 @@ header.funky-header {
 }
 
 .glass-tile {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
