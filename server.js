@@ -72,7 +72,10 @@ const MIME_TYPES = {
   '.json': 'application/json',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.mp3': 'audio/mpeg',
+  '.wav': 'audio/wav',
+  '.ogg': 'audio/ogg'
 };
 
 const KNOWN_AVATARS = [
@@ -297,6 +300,42 @@ const server = http.createServer(async (req, res) => {
 
     const ext = path.extname(safePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
+    // Support HTTP Range headers for smooth mobile and desktop audio streaming
+    if (ext === '.mp3' || ext === '.wav' || ext === '.ogg') {
+      const stat = fs.statSync(safePath);
+      const total = stat.size;
+      const range = req.headers.range;
+
+      if (range) {
+        const parts = range.replace(/bytes=/, "").split("-");
+        const partialstart = parts[0];
+        const partialend = parts[1];
+        const start = parseInt(partialstart, 10);
+        const end = partialend ? parseInt(partialend, 10) : total - 1;
+        const chunksize = (end - start) + 1;
+
+        const stream = fs.createReadStream(safePath, { start, end });
+        res.writeHead(206, {
+          'Content-Range': `bytes ${start}-${end}/${total}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': chunksize,
+          'Content-Type': contentType,
+          'Access-Control-Allow-Origin': '*'
+        });
+        stream.pipe(res);
+        return;
+      } else {
+        res.writeHead(200, {
+          'Content-Length': total,
+          'Accept-Ranges': 'bytes',
+          'Content-Type': contentType,
+          'Access-Control-Allow-Origin': '*'
+        });
+        fs.createReadStream(safePath).pipe(res);
+        return;
+      }
+    }
 
     fs.readFile(safePath, (readErr, content) => {
       if (readErr) {

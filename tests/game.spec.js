@@ -43,11 +43,11 @@ test.describe('Dimaag Ka Falooda 3.0 Fortress Verification Suite', () => {
   // [FEATURE-01] Dynamic Difficulty Timer Scaling
   test('FEATURE-01: Guessing/recall time scales up dynamically as grid size expands', async ({ page }) => {
     const times = await page.evaluate(() => {
-      const cfgL1 = getLevelConfig(1);   // 3x3 = 9 tiles
-      const cfgL8 = getLevelConfig(8);   // 3x5 = 15 tiles
-      const cfgL9 = getLevelConfig(9);   // 4x5 = 20 tiles
-      const cfgL11 = getLevelConfig(11); // 5x6 = 30 tiles
-      const cfgL12 = getLevelConfig(12); // 5x8 = 40 tiles
+      const cfgL1 = getLevelConfig(1);   // 3x3 = 9 tiles (12.0s simple start)
+      const cfgL8 = getLevelConfig(8);   // 3x4 = 12 tiles (12.0s)
+      const cfgL9 = getLevelConfig(9);   // 3x5 = 15 tiles (13.5s)
+      const cfgL11 = getLevelConfig(11); // 5x6 = 30 tiles (17.5s)
+      const cfgL12 = getLevelConfig(12); // 5x8 = 40 tiles (20.0s extreme)
       return {
         t1: cfgL1.guessTime,
         t8: cfgL8.guessTime,

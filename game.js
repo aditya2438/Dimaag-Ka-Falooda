@@ -335,61 +335,53 @@ function getLevelConfig(level) {
   let cols = 3;
   let totalTiles = 9;
   let sequenceLength = 3;
-  const hasDecoy = false; // Fake decoy tiles completely eliminated per client request
+  const hasDecoy = false; // Fake decoy tiles eliminated
   let isReverse = false;
   let isGhost = false;
-  let timeLimitSec = 5.5;
+  let timeLimitSec = 12.0;
 
-  if (level < 5) {
-    // PHASE 1: FORWARD ORDER (Smooth onboarding & addictive flow curve)
-    isReverse = false;
-    if (level === 1) {
-      // Warm-up round: 3x3 grid, seq 3, 5.5s generous timer for instant positive feedback & addiction
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 5.5;
-    } else if (level === 2) {
-      // Flow builder: 3x3 grid, seq 3, 5.0s timer to solidify rhythm and lock in combos
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 5.0;
-    } else if (level === 3) {
-      // Stepping up: 3x3 grid, seq 4, 5.2s timer to test memory without visual overload
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 5.2;
-    } else if (level === 4) {
-      // Grid expansion: 3x4 grid (12 tiles), seq 4. When grid increases, guessing time increases to 7.2s!
-      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 7.2;
-    }
+  // Progression: Basic & Simple -> Medium -> Hard -> Extreme
+  if (level === 1) {
+    // Level 1: Basic & Simple Tutorial - 3x3 grid, 3 tiles, 12.0s generous timer (instant hook & win)
+    rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 12.0;
+  } else if (level === 2) {
+    // Level 2: Easy Flow - 3x3 grid, 3 tiles, 10.5s
+    rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 10.5;
+  } else if (level === 3) {
+    // Level 3: Confidence Step - 3x3 grid, 4 tiles, 10.0s
+    rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 10.0;
+  } else if (level === 4) {
+    // Level 4: First Grid Expansion - 3x4 grid (12 tiles), 4 tiles, 11.5s
+    rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 11.5;
+  } else if (level === 5) {
+    // Level 5: Intermediate Flow - 3x4 grid (12 tiles), 5 tiles, 11.0s
+    rows = 3; cols = 4; totalTiles = 12; sequenceLength = 5; timeLimitSec = 11.0;
+  } else if (level === 6) {
+    // Level 6: Second Grid Expansion - 3x5 grid (15 tiles), 5 tiles, 12.5s
+    rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 12.5;
+  } else if (level === 7) {
+    // Level 7: Introduction to Reverse Mode - 3x3 grid (9 tiles), 3 tiles, 11.0s (calm & doable!)
+    rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 11.0; isReverse = true;
+  } else if (level === 8) {
+    // Level 8: Reverse Step 2 - 3x4 grid (12 tiles), 4 tiles, 12.0s
+    rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 12.0; isReverse = true;
+  } else if (level === 9) {
+    // Level 9: Reverse Step 3 - 3x5 grid (15 tiles), 5 tiles, 13.5s
+    rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 13.5; isReverse = true;
+  } else if (level === 10) {
+    // Level 10: Challenger Matrix - 4x5 grid (20 tiles), 6 tiles, 15.0s
+    rows = 4; cols = 5; totalTiles = 20; sequenceLength = 6; timeLimitSec = 15.0; isReverse = true;
+  } else if (level === 11) {
+    // Level 11: Hard Mode - 5x6 grid (30 tiles), 7 tiles, 17.5s
+    rows = 5; cols = 6; totalTiles = 30; sequenceLength = 7; timeLimitSec = 17.5; isReverse = true;
   } else {
-    // PHASE 2: REVERSE ORDER MODE (Starts at Level 5!)
-    // When grid expands, time scales up proportionally so it's always doable and addictive!
+    // Level 12+: Extreme Master Mode - 5x8 grid (40 tiles), 8-10 tiles, 20.0s - 25.0s
+    rows = 5; cols = 8; totalTiles = 40;
+    const over = level - 12;
+    sequenceLength = Math.min(10, 8 + Math.floor(over / 2));
+    timeLimitSec = Math.min(25.0, 20.0 + (sequenceLength - 8) * 1.5);
     isReverse = true;
-    const revLevel = level - 4; // 1, 2, 3, 4, 5...
-
-    if (revLevel === 1) {
-      // Level 5: Reverse Level 1 (9 tiles, seq 3, 5.5s to get used to reverse thinking)
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 5.5;
-    } else if (revLevel === 2) {
-      // Level 6: Reverse Level 2 (9 tiles, seq 4, 6.0s)
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 6.0;
-    } else if (revLevel === 3) {
-      // Level 7: Reverse Level 3 (12 tiles, seq 4) -> Grid increases -> Time increases to 7.8s
-      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 7.8;
-    } else if (revLevel === 4) {
-      // Level 8: Reverse Level 4 (15 tiles, seq 5) -> Grid increases -> Time increases to 9.2s
-      rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 9.2;
-    } else if (revLevel === 5) {
-      // Level 9: Reverse Level 5 (20 tiles, seq 6) -> Grid increases -> Time increases to 11.5s
-      rows = 4; cols = 5; totalTiles = 20; sequenceLength = 6; timeLimitSec = 11.5;
-    } else if (revLevel === 6) {
-      // Level 10: Reverse Level 6 (20 tiles, seq 7) -> Time increases to 12.5s
-      rows = 4; cols = 5; totalTiles = 20; sequenceLength = 7; timeLimitSec = 12.5;
-    } else if (revLevel === 7) {
-      // Level 11: Reverse Level 7 (30 tiles, seq 8) -> Grid increases -> Time increases to 15.0s
-      rows = 5; cols = 6; totalTiles = 30; sequenceLength = 8; timeLimitSec = 15.0;
-    } else {
-      // Level 12+: Ultra Reflex Reverse Mode (40 tiles) -> Generous scaled timer (17.5s - 20s)
-      rows = 5; cols = 8; totalTiles = 40;
-      sequenceLength = Math.min(10, 8 + Math.floor((revLevel - 7) / 2));
-      timeLimitSec = Math.min(20.0, 16.5 + (sequenceLength - 8) * 1.5);
-      isGhost = revLevel >= 12;
-    }
+    isGhost = level >= 15;
   }
 
   return { rows, cols, totalTiles, tiles: totalTiles, sequenceLength, hasDecoy, isReverse, isGhost, timeLimitSec, guessTime: timeLimitSec };
@@ -886,206 +878,130 @@ class LofiRadioEngine {
     this.currentTrack = 0;
     this.volume = 0.70;
     this.vizAnimId = null;
-    this.mode = 'AUTO'; // 'AUTO', 'STREAM', or 'SYNTH'
+    this.mode = 'STREAM'; // Direct audio streaming for 100% real songs
     this.synthIntervalId = null;
     this.synthMasterGain = null;
     this.synthStep = 0;
 
-    // Top 10 Melodious, Romantic & Peaceful Hindi Songs (Real Audio Streams + Full Procedural Chords)
+    // Top 10 Melodious, Romantic & Peaceful Hindi Songs (Local zero-latency MP3s + verified high-speed streams)
     this.tracks = [
       {
         id: 0,
         name: "KESARIYA",
         artist: "Arijit Singh",
         sub: "Brahmastra // Warm Saffron Love Song",
-        url: "https://ia801403.us.archive.org/26/items/best-of-2022-bollywood-songs/Brahmastra%20%282022%29%20-%20Kesariya.mp3",
-        bpm: 78,
-        chords: [
-          [146.83, 185.00, 220.00, 293.66], // D Major
-          [110.00, 138.59, 164.81, 220.00], // A Major
-          [123.47, 146.83, 185.00, 246.94], // B Minor
-          [98.00,  123.47, 146.83, 196.00]  // G Major
-        ],
-        bass: [73.42, 55.00, 61.74, 49.00],
-        melody: [369.99, 392.00, 440.00, 440.00, 493.88, 440.00, 369.99, 329.63, 293.66, 329.63, 369.99, 293.66]
+        url: "./audio/kesariya.mp3",
+        fallback: "https://archive.org/download/best-of-2022-bollywood-songs/Brahmastra%20%282022%29%20-%20Kesariya.mp3",
+        bpm: 78
       },
       {
         id: 1,
         name: "APNA BANA LE",
         artist: "Arijit Singh",
         sub: "Bhediya // Soulful Romantic Melody",
-        url: "https://ia801403.us.archive.org/26/items/best-of-2022-bollywood-songs/Bhediya%20%282022%29%20-%20Apna%20Bana%20Le.mp3",
-        bpm: 74,
-        chords: [
-          [174.61, 220.00, 261.63, 349.23], // F Major
-          [146.83, 174.61, 220.00, 293.66], // D Minor
-          [116.54, 146.83, 174.61, 233.08], // Bb Major
-          [130.81, 164.81, 196.00, 261.63]  // C Major
-        ],
-        bass: [87.31, 73.42, 58.27, 65.41],
-        melody: [349.23, 392.00, 440.00, 392.00, 349.23, 329.63, 293.66, 349.23, 329.63, 293.66, 261.63, 293.66]
+        url: "./audio/apna_bana_le.mp3",
+        fallback: "https://archive.org/download/best-of-2022-bollywood-songs/Bhediya%20%282022%29%20-%20Apna%20Bana%20Le.mp3",
+        bpm: 74
       },
       {
         id: 2,
-        name: "TUM HI HO",
+        name: "SANAM RE (LOFI)",
         artist: "Arijit Singh",
-        sub: "Aashiqui 2 // Iconic Love Anthem",
-        url: "https://dn710006.ca.archive.org/0/items/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Tum%20Hi%20Ho%20myfreemp3.vip%20.mp3",
-        bpm: 72,
-        chords: [
-          [164.81, 196.00, 246.94, 329.63], // E Minor
-          [130.81, 164.81, 196.00, 261.63], // C Major
-          [146.83, 185.00, 220.00, 293.66], // D Major
-          [123.47, 146.83, 185.00, 246.94]  // B Minor
-        ],
-        bass: [82.41, 65.41, 73.42, 61.74],
-        melody: [493.88, 523.25, 493.88, 440.00, 392.00, 440.00, 493.88, 392.00, 369.99, 329.63, 293.66, 329.63]
+        sub: "Sanam Re // Relaxing Acoustic Lo-Fi",
+        url: "./audio/sanam_re_lofi.mp3",
+        fallback: "https://archive.org/download/sanam-re-lofi-lyrics-arijit-singh-mp-3-160-k/Sanam%20Re%20Lofi%20%28Lyrics%29%20-%20Arijit%20Singh%28MP3_160K%29.mp3",
+        bpm: 75
       },
       {
         id: 3,
-        name: "CHANNA MEREYA",
-        artist: "Arijit Singh",
-        sub: "ADHM // Melancholy Acoustic Soul",
-        url: "https://dn711305.ca.archive.org/0/items/07-channa-mereya-arijit-singh-320-kbps/07%20Channa%20Mereya%20-%20Arijit%20Singh%20320Kbps.mp3",
-        bpm: 72,
-        chords: [
-          [98.00,  116.54, 146.83, 196.00], // G Minor
-          [87.31,  110.00, 130.81, 174.61], // F Major
-          [77.78,  98.00,  116.54, 155.56], // Eb Major
-          [116.54, 146.83, 174.61, 233.08]  // Bb Major
-        ],
-        bass: [49.00, 43.65, 38.89, 58.27],
-        melody: [293.66, 293.66, 293.66, 261.63, 233.08, 261.63, 293.66, 233.08, 196.00, 233.08, 261.63, 196.00]
-      },
-      {
-        id: 4,
-        name: "RAABTA",
-        artist: "Arijit Singh",
-        sub: "Agent Vinod // Serene Midnight Groove",
-        url: "https://dn710006.ca.archive.org/0/items/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Raabta%20myfreemp3.vip%20.mp3",
-        bpm: 76,
-        chords: [
-          [130.81, 164.81, 196.00, 261.63], // C Major
-          [110.00, 130.81, 164.81, 220.00], // A Minor
-          [87.31,  110.00, 130.81, 174.61], // F Major
-          [98.00,  123.47, 146.83, 196.00]  // G Major
-        ],
-        bass: [65.41, 55.00, 43.65, 49.00],
-        melody: [329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 261.63, 293.66, 329.63, 392.00, 440.00, 329.63]
-      },
-      {
-        id: 5,
-        name: "DHUNDHALA",
-        artist: "Talwinder & Yashraj",
-        sub: "Talwinder // Chill Hypnotic Vibes",
-        url: "https://ia600905.us.archive.org/21/items/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3",
-        bpm: 82,
-        chords: [
-          [110.00, 130.81, 164.81, 220.00], // Am
-          [87.31,  110.00, 130.81, 174.61], // F
-          [130.81, 164.81, 196.00, 261.63], // C
-          [98.00,  123.47, 146.83, 196.00]  // G
-        ],
-        bass: [55.00, 43.65, 65.41, 49.00],
-        melody: [220.00, 246.94, 261.63, 293.66, 261.63, 246.94, 220.00, 196.00, 220.00, 261.63, 220.00, 196.00]
-      },
-      {
-        id: 6,
-        name: "HASEEN",
-        artist: "Talwinder",
-        sub: "Talwinder // Smooth Romantic Lo-Fi",
-        url: "https://dn721903.ca.archive.org/0/items/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3",
-        bpm: 75,
-        chords: [
-          [146.83, 174.61, 220.00, 293.66], // Dm
-          [116.54, 146.83, 174.61, 233.08], // Bb
-          [174.61, 220.00, 261.63, 349.23], // F
-          [130.81, 164.81, 196.00, 261.63]  // C
-        ],
-        bass: [73.42, 58.27, 87.31, 65.41],
-        melody: [293.66, 329.63, 349.23, 329.63, 293.66, 261.63, 233.08, 261.63, 293.66, 349.23, 329.63, 293.66]
-      },
-      {
-        id: 7,
-        name: "SAHIBA",
-        artist: "Aditya Rikhari",
-        sub: "Aditya Rikhari // Soulful Acoustic Love",
-        url: "https://dn721903.ca.archive.org/0/items/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3",
-        bpm: 76,
-        chords: [
-          [98.00,  123.47, 146.83, 196.00], // G
-          [164.81, 196.00, 246.94, 329.63], // Em
-          [130.81, 164.81, 196.00, 261.63], // C
-          [146.83, 185.00, 220.00, 293.66]  // D
-        ],
-        bass: [49.00, 82.41, 65.41, 73.42],
-        melody: [392.00, 440.00, 493.88, 440.00, 392.00, 329.63, 293.66, 329.63, 392.00, 440.00, 392.00, 293.66]
-      },
-      {
-        id: 8,
-        name: "SAMJHO NA",
-        artist: "Aditya Rikhari",
-        sub: "Aditya Rikhari // Peaceful Melodious Flow",
-        url: "https://dn711303.ca.archive.org/0/items/aditya-rikhari-samjho-na-nasamajh-mp-3-160-k/Aditya%20Rikhari%20-%20SAMJHO%20NA%20%28%20NASAMAJH%20%29%28MP3_160K%29.mp3",
-        bpm: 78,
-        chords: [
-          [164.81, 207.65, 246.94, 329.63], // E Major
-          [138.59, 164.81, 207.65, 277.18], // C#m
-          [110.00, 138.59, 164.81, 220.00], // A
-          [123.47, 155.56, 185.00, 246.94]  // B
-        ],
-        bass: [82.41, 69.30, 55.00, 61.74],
-        melody: [329.63, 369.99, 415.30, 369.99, 329.63, 277.18, 246.94, 277.18, 329.63, 415.30, 369.99, 329.63]
-      },
-      {
-        id: 9,
         name: "FAASLE",
         artist: "Aditya Rikhari",
         sub: "Aditya Rikhari // Heartfelt Reflection",
-        url: "https://ia800704.us.archive.org/10/items/aditya-rikhari-faasle/Aditya%20Rikhari%20-%20FAASLE.mp3",
-        bpm: 70,
-        chords: [
-          [123.47, 146.83, 185.00, 246.94], // Bm
-          [98.00,  123.47, 146.83, 196.00], // G
-          [146.83, 185.00, 220.00, 293.66], // D
-          [110.00, 138.59, 164.81, 220.00]  // A
-        ],
-        bass: [61.74, 49.00, 73.42, 55.00],
-        melody: [293.66, 329.63, 369.99, 329.63, 293.66, 246.94, 220.00, 246.94, 293.66, 369.99, 329.63, 293.66]
+        url: "./audio/faasle.mp3",
+        fallback: "https://archive.org/download/aditya-rikhari-faasle/Aditya%20Rikhari%20-%20FAASLE.mp3",
+        bpm: 70
+      },
+      {
+        id: 4,
+        name: "SAMJHO NA",
+        artist: "Aditya Rikhari",
+        sub: "Aditya Rikhari // Peaceful Melodious Flow",
+        url: "./audio/samjho_na.mp3",
+        fallback: "https://archive.org/download/aditya-rikhari-samjho-na-nasamajh-mp-3-160-k/Aditya%20Rikhari%20-%20SAMJHO%20NA%20%28%20NASAMAJH%20%29%28MP3_160K%29.mp3",
+        bpm: 78
+      },
+      {
+        id: 5,
+        name: "ISHQ MUBARAK (LOFI)",
+        artist: "Arijit Singh",
+        sub: "Tum Bin 2 // Soulful Slowed Reverb",
+        url: "https://archive.org/download/ishq-mubarak-slowed-reverb-arijit-singh-love-story-song-lofi-music-channel/Ishq%20Mubarak%20%28Slowed%20%20Reverb%29%20Arijit%20Singh%20%20Love%20Story%20Song%20%28Lofi%20Music%20Channel%29.mp3",
+        bpm: 72
+      },
+      {
+        id: 6,
+        name: "SAHIBA",
+        artist: "Aditya Rikhari",
+        sub: "Aditya Rikhari // Soulful Acoustic Love",
+        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3",
+        bpm: 76
+      },
+      {
+        id: 7,
+        name: "DHUNDHALA",
+        artist: "Talwinder & Yashraj",
+        sub: "Talwinder // Chill Hypnotic Vibes",
+        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3",
+        bpm: 82
+      },
+      {
+        id: 8,
+        name: "HASEEN",
+        artist: "Talwinder",
+        sub: "Talwinder // Smooth Romantic Lo-Fi",
+        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3",
+        bpm: 75
+      },
+      {
+        id: 9,
+        name: "SONI SONI",
+        artist: "Darshan Raval",
+        sub: "Ishq Vishk // Romantic Chill",
+        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Soni%20Soni%20%28From%20_Ishq%20Vishk%20Rebound_%29%20-%20Darshan%20Raval.mp3",
+        bpm: 78
       }
     ];
 
-    // Native HTML5 Audio (Direct to hardware speakers)
+    // Native HTML5 Audio (Direct hardware speaker streaming)
     this.audioEl = new Audio();
-    this.audioEl.preload = "none"; // don't auto-preload — wait for user action
+    this.audioEl.preload = "auto";
     this.audioEl.setAttribute('playsinline', '');
     this.audioEl.setAttribute('webkit-playsinline', '');
     this.audioEl.volume = this.volume;
 
     this.audioEl.addEventListener('playing', () => {
-      // Real stream active! Fade out procedural synth bed
-      if (this.mode === 'AUTO') {
-        this.stopSynthPlayback();
-      }
+      this.isPlaying = true;
+      this.stopSynthPlayback(); // Never play piano synth over real songs!
       this.updateRadioUI();
+      this.startVisualizer();
     });
 
     this.audioEl.addEventListener('ended', () => {
       this.nextTrack();
     });
 
-    this.audioEl.addEventListener('error', () => {
-      // Stream failed — stay on synth, don't crash the game
-      if (this.isPlaying && this.mode !== 'STREAM') {
-        if (!this.synthIntervalId) {
-          this.startSynthPlayback(this.currentTrack);
+    this.audioEl.addEventListener('error', (e) => {
+      console.warn('[LofiRadio] Track error, switching to fallback or next track:', e);
+      const cur = this.tracks[this.currentTrack];
+      if (cur && cur.fallback && this.audioEl.src !== cur.fallback) {
+        this.audioEl.src = cur.fallback;
+        this.audioEl.play().catch(() => {
+          if (this.isPlaying) this.nextTrack();
+        });
+      } else {
+        if (this.isPlaying) {
+          setTimeout(() => this.nextTrack(), 500);
         }
-      }
-    });
-
-    this.audioEl.addEventListener('stalled', () => {
-      if (this.isPlaying && this.mode !== 'STREAM' && !this.synthIntervalId) {
-        this.startSynthPlayback(this.currentTrack);
       }
     });
   }
@@ -1237,58 +1153,46 @@ class LofiRadioEngine {
 
   playTrack(index) {
     this.ensureContext();
-    if (index >= 0 && index < this.tracks.length) {
+    this.stopSynthPlayback(); // NEVER play piano synth when streaming real songs!
+
+    if (index !== undefined && index >= 0 && index < this.tracks.length) {
       this.currentTrack = index;
     }
     const track = this.tracks[this.currentTrack];
-
-    // Step 1: Always start synth immediately for zero-latency audio (no silence ever)
-    if (this.mode !== 'STREAM') {
-      this.startSynthPlayback(this.currentTrack);
-    }
-
-    // Step 2: Attempt real audio stream in background
-    if (this.mode !== 'SYNTH' && this.audioEl) {
-      try {
-        if (this.audioEl.src !== track.url) {
-          this.audioEl.src = track.url;
-        }
-        this.audioEl.volume = this.volume;
-        const playPromise = this.audioEl.play();
-        if (playPromise && typeof playPromise.then === 'function') {
-          playPromise.then(() => {
-            // Check after a brief delay if stream is actually emitting audio
-            setTimeout(() => {
-              if (this.audioEl && !this.audioEl.paused && this.audioEl.currentTime > 0.3) {
-                if (this.mode === 'AUTO') {
-                  this.stopSynthPlayback();
-                }
-              } else {
-                if (!this.synthIntervalId && this.mode !== 'STREAM') {
-                  this.startSynthPlayback(this.currentTrack);
-                }
-              }
-            }, 600);
-            this.updateRadioUI();
-          }).catch(() => {
-            // Stream blocked (autoplay policy or network) — synth keeps playing
-            if (!this.synthIntervalId && this.mode !== 'STREAM') {
-              this.startSynthPlayback(this.currentTrack);
-            }
-          });
-        }
-      } catch (e) {
-        // Stream unavailable — synth already running
-        if (!this.synthIntervalId && this.mode !== 'STREAM') {
-          this.startSynthPlayback(this.currentTrack);
-        }
-      }
-    }
+    if (!track) return;
 
     this.isPlaying = true;
     if (this.audioEngine) this.audioEngine.isSpeechMuted = true;
     if (window.speechSynthesis) {
       try { window.speechSynthesis.cancel(); } catch (e) {}
+    }
+
+    try {
+      const srcUrl = track.url;
+      if (this.audioEl.src !== srcUrl && !this.audioEl.src.endsWith(srcUrl.replace('./', ''))) {
+        this.audioEl.src = srcUrl;
+      }
+      this.audioEl.volume = this.volume;
+      const playPromise = this.audioEl.play();
+      if (playPromise && typeof playPromise.then === 'function') {
+        playPromise.then(() => {
+          this.updateRadioUI();
+          this.startVisualizer();
+        }).catch((err) => {
+          console.warn('[LofiRadio] HTML5 Audio waiting for user gesture:', err.message);
+          const unlock = () => {
+            if (this.isPlaying && this.audioEl.paused) {
+              this.audioEl.play().catch(() => {});
+            }
+            window.removeEventListener('click', unlock);
+            window.removeEventListener('touchstart', unlock);
+          };
+          window.addEventListener('click', unlock, { once: true });
+          window.addEventListener('touchstart', unlock, { once: true });
+        });
+      }
+    } catch (e) {
+      console.warn('[LofiRadio] Audio playback error:', e);
     }
 
     this.updateRadioUI();
@@ -2083,6 +1987,11 @@ function startSinglePlayerGame() {
   audioVoice.playDholakBeat();
   audioVoice.speakHindi(audioVoice.phrasesStart);
 
+  // Peaceful background song plays automatically when game starts!
+  if (!lofiRadio.isPlaying) {
+    lofiRadio.playTrack(lofiRadio.currentTrack);
+  }
+
   resetPowerBtnsUI();
   updateSinglePlayerHUD();
   switchView('view-singleplay');
@@ -2205,10 +2114,18 @@ function startNewRound() {
 function flashTilesSequence(sequence, hasDecoy, totalTiles, onComplete) {
   let step = 0;
   const sp = APP_STATE.singlePlay;
-  // Early level pacing: slightly longer flash for crystal-clear pattern intake in Level 1-2
-  const isEarlyLevel = sp && sp.level <= 2;
-  const flashActiveMs = isEarlyLevel ? 480 : 430;
-  const flashPauseMs = isEarlyLevel ? 160 : 140;
+  // Early level pacing: relaxed, comfortable flash duration so beginners easily absorb the pattern
+  let flashActiveMs = 430;
+  let flashPauseMs = 140;
+  if (sp) {
+    if (sp.level <= 2) {
+      flashActiveMs = 650;
+      flashPauseMs = 240;
+    } else if (sp.level <= 4) {
+      flashActiveMs = 540;
+      flashPauseMs = 180;
+    }
+  }
 
   function showNext() {
     if (step < sequence.length) {
@@ -2296,8 +2213,8 @@ function handleTileClick(tileIndex, event) {
     triggerHaptic([30]);
     sp.playerTapIndex++;
 
-    // Addictive flow boost: +0.25s time reward for quick accurate taps (capped at timeLimitSec)
-    sp.remainingTimeSec = Math.min(sp.timeLimitSec, sp.remainingTimeSec + 0.25);
+    // Addictive flow boost: +0.40s time reward for quick accurate taps (capped at timeLimitSec)
+    sp.remainingTimeSec = Math.min(sp.timeLimitSec, sp.remainingTimeSec + 0.40);
 
     if (tileEl) {
       tileEl.classList.add('correct-tap');
