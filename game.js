@@ -44,22 +44,69 @@ function getBrainIQInfo(level, score) {
 }
 
 /* ==========================================================================
-   SECTION 2B: TAMPER DEFENSE & ANTI-CHEAT ENGINE
-   Prevents memory hacking, synthetic event bots, autoclicker speedhacks,
-   DevTools tampering, and forged high scores
+   SECTION 2B: ARCHITECTURE CONFIG & DEVICE PROFILE ENGINE
    ========================================================================== */
+const CONFIG = {
+  SERVER_URL: (() => {
+    const meta = document.querySelector('meta[name="game-server"]');
+    if (meta && meta.content && meta.content.trim()) return meta.content.trim();
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}`;
+    }
+    return '';
+  })(),
+  API_BASE_URL: (() => {
+    const meta = document.querySelector('meta[name="game-server"]');
+    if (meta && meta.content && meta.content.trim()) {
+      return meta.content.trim().replace(/^ws(s?):/, 'http$1:');
+    }
+    return '';
+  })()
+};
+
+const DeviceProfile = {
+  detect() {
+    const hasTouch = (navigator.maxTouchPoints || 0) > 0;
+    const w = window.screen ? window.screen.width : window.innerWidth;
+    const h = window.screen ? window.screen.height : window.innerHeight;
+    const maxDim = Math.max(w, h);
+    const minDim = Math.min(w, h);
+    const ua = navigator.userAgent ? navigator.userAgent.toLowerCase() : '';
+
+    if (hasTouch && (minDim < 600 || maxDim < 900) && (ua.includes('mobile') || ua.includes('android'))) {
+      return 'phone';
+    }
+    if (hasTouch && minDim >= 600 && maxDim <= 1366) {
+      return 'tablet';
+    }
+    if (!hasTouch && maxDim >= 1024) {
+      return 'laptop';
+    }
+    if (hasTouch && maxDim < 900) {
+      return 'phone';
+    }
+    return 'laptop';
+  },
+  get() {
+    if (!this._cached) this._cached = this.detect();
+    return this._cached;
+  }
+};
+
 /* ==========================================================================
-   SECTION 2B: ADVANCED TAMPER DEFENSE & MILITARY-GRADE ANTI-CHEAT SUITE
+   SECTION 2C: ADVANCED TAMPER DEFENSE & ZERO-TRUST ANTI-CHEAT SUITE
    - Memory encryption & shadow state integrity checks
    - Native browser prototype integrity verification (Speedhack defense)
    - Synthetic bot event detection (!e.isTrusted)
-   - Motor reflex jitter & impossible-speed autoclicker analysis (<60ms)
+   - Motor reflex jitter & impossible-speed autoclicker analysis (<35ms)
    - Active DevTools timing & shortcut interception (F12, Ctrl+Shift+I/J/C, Ctrl+U)
    - Cryptographic Proof-of-Play action chain for leaderboard validation
    ========================================================================== */
 const AntiCheat = {
   sessionKey: (Math.random() * 0xFFFFFF) | 0x100000,
   clickTimestamps: [],
+  actionChain: [],
+  runStartTime: 0,
   isTampered: false,
   tamperReason: '',
   actionNonce: 0,
@@ -75,6 +122,8 @@ const AntiCheat = {
     this.verifiedTaps = 0;
     this.shadowScore = 0;
     this.clickTimestamps = [];
+    this.actionChain = [];
+    this.runStartTime = performance.now();
   },
 
   recordTap(tileIndex, level, pts) {
@@ -82,6 +131,27 @@ const AntiCheat = {
     this.shadowScore += pts;
     this.actionNonce++;
     this.proofHash = (Math.imul(this.proofHash ^ tileIndex, 0x01000193) ^ level ^ pts) >>> 0;
+    this.actionChain.push({
+      t: Math.round(performance.now() - (this.runStartTime || performance.now())),
+      i: tileIndex,
+      l: level
+    });
+  },
+
+  async generateReplayHash(runData) {
+    const raw = JSON.stringify(runData);
+    if (typeof crypto !== 'undefined' && crypto.subtle && typeof TextEncoder !== 'undefined') {
+      try {
+        const enc = new TextEncoder().encode(raw);
+        const buf = await crypto.subtle.digest('SHA-256', enc);
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (e) {}
+    }
+    let h = 0x811c9dc5;
+    for (let i = 0; i < raw.length; i++) {
+      h = Math.imul(h ^ raw.charCodeAt(i), 0x01000193) >>> 0;
+    }
+    return h.toString(16).padStart(8, '0');
   },
 
   validateTap(event) {
@@ -93,7 +163,7 @@ const AntiCheat = {
       return false;
     }
 
-    // 2. Physical human motor reflex rate limiting (<50ms impossible threshold)
+    // 2. Physical human motor reflex rate limiting (<35ms impossible threshold)
     const now = performance.now();
     this.clickTimestamps.push(now);
     if (this.clickTimestamps.length > 5) {
@@ -104,7 +174,7 @@ const AntiCheat = {
       }
       const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
 
-      if (avgInterval < 50) {
+      if (avgInterval < 35) {
         this.flag('AUTOCLICKER_SPEEDHACK');
         return false;
       }
@@ -968,7 +1038,8 @@ class LofiRadioEngine {
     // Native HTML5 Audio (Direct to hardware speakers)
     this.audioEl = new Audio();
     this.audioEl.preload = "none"; // don't auto-preload — wait for user action
-    this.audioEl.crossOrigin = "anonymous";
+    this.audioEl.setAttribute('playsinline', '');
+    this.audioEl.setAttribute('webkit-playsinline', '');
     this.audioEl.volume = this.volume;
 
     this.audioEl.addEventListener('playing', () => {
@@ -1766,61 +1837,100 @@ function triggerRecoilShake() {
   }
 }
 
-function setupSinglePlayerGrid(rows, cols) {
-  const container = document.getElementById('singleMatrixGrid');
-  if (!container) return;
-  const total = rows * cols;
-
-  const currentTotal = parseInt(container.getAttribute('data-total-tiles') || '0', 10);
-  if (currentTotal === total && container.children.length === total) {
-    resetTilesUI(total);
-    return;
+/* ==========================================================================
+   SECTION 8B: OBJECT POOL FOR MATRIX TILES (ZERO-ALLOCATION DYNAMIC GRID)
+   Pre-allocates up to 60 tiles once during startup to eliminate layout thrashing,
+   memory churn, garbage collection pauses, and screen flicker between rounds.
+   ========================================================================== */
+class TilePool {
+  constructor(containerId, maxCapacity = 60) {
+    this.container = document.getElementById(containerId);
+    this.maxCapacity = maxCapacity;
+    this.tiles = [];
+    this.init();
   }
 
-  container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-  container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-  container.setAttribute('data-total-tiles', total);
+  init() {
+    if (!this.container) return;
+    this.container.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < this.maxCapacity; i++) {
+      const tile = document.createElement('div');
+      tile.id = `tile-${i}`;
+      tile.className = 'glass-tile hidden-tile';
+      tile.setAttribute('data-index', i);
 
-  container.innerHTML = '';
-  const frag = document.createDocumentFragment();
-  for (let i = 0; i < total; i++) {
-    const tile = document.createElement('div');
-    tile.id = `tile-${i}`;
-    tile.className = 'glass-tile';
-    tile.setAttribute('data-index', i);
-
-    if (total === 9) {
       const hint = document.createElement('span');
       hint.className = 'numpad-hint';
       hint.textContent = i + 1;
       tile.appendChild(hint);
+
+      const badge = document.createElement('span');
+      badge.className = 'order-badge';
+      tile.appendChild(badge);
+
+      tile.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        handleTileClick(i, e);
+      });
+
+      this.tiles.push(tile);
+      frag.appendChild(tile);
     }
-
-    const badge = document.createElement('span');
-    badge.className = 'order-badge';
-    tile.appendChild(badge);
-
-    tile.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      handleTileClick(i, e);
-    });
-
-    frag.appendChild(tile);
+    this.container.appendChild(frag);
   }
-  container.appendChild(frag);
+
+  activateGrid(rows, cols) {
+    if (!this.container) return;
+    const total = rows * cols;
+    this.container.style.setProperty('--cols', cols);
+    this.container.style.setProperty('--rows', rows);
+    this.container.setAttribute('data-total-tiles', total);
+
+    for (let i = 0; i < this.maxCapacity; i++) {
+      const tile = this.tiles[i];
+      if (!tile) continue;
+      if (i < total) {
+        tile.className = 'glass-tile';
+        tile.style.animationDelay = '';
+        const hint = tile.querySelector('.numpad-hint');
+        if (hint) {
+          hint.style.display = total === 9 ? 'block' : 'none';
+        }
+        const badge = tile.querySelector('.order-badge');
+        if (badge) badge.textContent = '';
+      } else {
+        tile.className = 'glass-tile hidden-tile';
+      }
+    }
+  }
+
+  resetTiles(total) {
+    const limit = Math.min(total, this.maxCapacity);
+    for (let i = 0; i < limit; i++) {
+      const tile = this.tiles[i];
+      if (tile) {
+        tile.className = 'glass-tile';
+        tile.style.animationDelay = '';
+        const badge = tile.querySelector('.order-badge');
+        if (badge) badge.textContent = '';
+      }
+    }
+  }
+}
+
+let singleTilePool = null;
+
+function setupSinglePlayerGrid(rows, cols) {
+  if (!singleTilePool) {
+    singleTilePool = new TilePool('singleMatrixGrid', 60);
+  }
+  singleTilePool.activateGrid(rows, cols);
 }
 
 function resetTilesUI(totalTiles = 9) {
-  const container = document.getElementById('singleMatrixGrid');
-  const count = container ? (container.children.length || totalTiles) : totalTiles;
-  for (let i = 0; i < count; i++) {
-    const tile = document.getElementById(`tile-${i}`);
-    if (tile) {
-      tile.className = 'glass-tile';
-      tile.style.animationDelay = '';
-      const badge = tile.querySelector('.order-badge');
-      if (badge) badge.textContent = '';
-    }
+  if (singleTilePool) {
+    singleTilePool.resetTiles(totalTiles);
   }
 }
 
@@ -2391,11 +2501,16 @@ function endSinglePlayerGame(reason) {
    ========================================================================== */
 function initWebSocket() {
   if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) return;
+  if (!CONFIG.SERVER_URL && window.location.protocol === 'https:' && !window.location.host.includes('localhost')) {
+    // Dual deployment compatibility: static host fallback to Supabase Realtime broadcast mode
+    return;
+  }
 
   try {
+    const defaultHost = window.location.host || 'localhost:3000';
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.host || 'localhost:3000';
-    const ws = new WebSocket(`${protocol}//${host}`);
+    const wsUrl = CONFIG.SERVER_URL || `${protocol}//${defaultHost}`;
+    const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
       APP_STATE.isWsConnected = true;
@@ -2431,8 +2546,15 @@ function handleServerWebSocketMessage(msg) {
   switch (msg.type) {
     case 'room_joined': {
       const statusText = document.getElementById('roomStatusText');
-      if (msg.status === 'WAITING_FOR_OPPONENT') {
+      if (msg.status === 'HOSTED') {
+        if (statusText) statusText.textContent = `HOSTING ROOM ${msg.roomCode} // WAITING FOR OPPONENT...`;
+      } else if (msg.status === 'WAITING_FOR_OPPONENT') {
         if (statusText) statusText.textContent = "WAITING FOR OPPONENT TO JOIN...";
+      } else if (msg.status === 'DEVICE_MISMATCH') {
+        showDeviceMismatchModal(msg.required);
+        if (statusText) statusText.textContent = `DEVICE MISMATCH: ROOM REQUIRES ${msg.required.toUpperCase()}`;
+      } else if (msg.status === 'FULL') {
+        if (statusText) statusText.textContent = "ROOM IS ALREADY FULL!";
       } else if (msg.status === 'OPPONENT_CONNECTED') {
         DUEL_RT.opponentHandle = msg.opponentHandle || 'HOST';
         APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
@@ -2440,6 +2562,30 @@ function handleServerWebSocketMessage(msg) {
         audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
         startOnlineDuelMatch(false, false, msg.targetSequence);
       }
+      break;
+    }
+
+    case 'player_joined': {
+      DUEL_RT.opponentHandle = msg.handle || 'GUEST';
+      APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
+      const statusText = document.getElementById('roomStatusText');
+      if (statusText) statusText.textContent = `CONNECTED WITH ${DUEL_RT.opponentHandle}! STARTING MATCH...`;
+      audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
+      const seq = (msg.initialSequence && msg.initialSequence.length) ? msg.initialSequence : generatePattern(4);
+      APP_STATE.duel.targetSequence = seq;
+      startOnlineDuelMatch(false, true, seq);
+      break;
+    }
+
+    case 'room_ready': {
+      DUEL_RT.opponentHandle = msg.hostHandle || 'HOST';
+      APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
+      const statusText = document.getElementById('roomStatusText');
+      if (statusText) statusText.textContent = `CONNECTED WITH ${DUEL_RT.opponentHandle}! STARTING MATCH...`;
+      audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
+      const seq = (msg.initialSequence && msg.initialSequence.length) ? msg.initialSequence : generatePattern(4);
+      APP_STATE.duel.targetSequence = seq;
+      startOnlineDuelMatch(false, false, seq);
       break;
     }
 
@@ -2598,6 +2744,40 @@ function sendDuelEvent(event, payload = {}) {
   }
 }
 
+function updateLobbyDeviceBadge() {
+  const badge = document.getElementById('lobbyDeviceBadge');
+  if (badge) {
+    const dev = DeviceProfile.get().toUpperCase();
+    badge.textContent = `[ HARDWARE: ${dev} ]`;
+  }
+}
+
+function showDeviceMismatchModal(requiredDevice) {
+  const modal = document.getElementById('modalDeviceMismatch');
+  const descHi = document.getElementById('mismatchDescHindi');
+  const descEn = document.getElementById('mismatchDescEnglish');
+  if (modal) {
+    const req = (requiredDevice || 'laptop').toUpperCase();
+    const myDev = DeviceProfile.get().toUpperCase();
+    if (descHi) {
+      descHi.textContent = `Ye room ${req} ke liye hai. Aapka hardware (${myDev}) match nahi karta.`;
+    }
+    if (descEn) {
+      descEn.textContent = `This room requires a ${req}. Your device is detected as ${myDev}.`;
+    }
+    modal.classList.add('active');
+    modal.style.display = 'flex';
+  }
+}
+
+function hideDeviceMismatchModal() {
+  const modal = document.getElementById('modalDeviceMismatch');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+  }
+}
+
 function hostRoomSupa(code) {
   closeDuelChannel();
   DUEL_RT.isHost = true;
@@ -2623,6 +2803,14 @@ function hostRoomSupa(code) {
     // Guest joins room
     ch.on('broadcast', { event: 'player_joined' }, ({ payload }) => {
       if (APP_STATE.duel && APP_STATE.duel.active) return;
+
+      // Device mismatch check in Supabase Realtime broadcast mode
+      const myDev = DeviceProfile.get();
+      if (payload.deviceType && payload.deviceType !== myDev) {
+        sendDuelEvent('device_mismatch', { required: myDev, detected: payload.deviceType });
+        return;
+      }
+
       DUEL_RT.opponentHandle = payload.handle || 'GUEST';
       APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
 
@@ -2745,6 +2933,16 @@ function joinRoomSupa(code) {
       startOnlineDuelMatch(false, false, payload.initialSequence);
     });
 
+    // Host reports device mismatch
+    ch.on('broadcast', { event: 'device_mismatch' }, ({ payload }) => {
+      if (DUEL_RT.retryTimer) {
+        clearInterval(DUEL_RT.retryTimer);
+        DUEL_RT.retryTimer = null;
+      }
+      showDeviceMismatchModal(payload.required);
+      if (statusEl) statusEl.textContent = `DEVICE MISMATCH: ROOM REQUIRES ${payload.required.toUpperCase()}`;
+    });
+
     // Opponent tile tap
     ch.on('broadcast', { event: 'duel_tap' }, ({ payload }) => {
       if (!APP_STATE.duel.active) return;
@@ -2811,7 +3009,12 @@ function joinRoomSupa(code) {
           ch.send({
             type: 'broadcast',
             event: 'player_joined',
-            payload: { handle: APP_STATE.playerHandle, avatar: APP_STATE.playerAvatar, code }
+            payload: {
+              handle: APP_STATE.playerHandle,
+              avatar: APP_STATE.playerAvatar,
+              deviceType: DeviceProfile.get(),
+              code
+            }
           });
         };
         sendJoin();
@@ -2828,9 +3031,13 @@ function initDuelRoomLobby(prefillCode) {
   APP_STATE.duel.roomCode = code;
   const codeEl = document.getElementById('lblRoomCode');
   if (codeEl) codeEl.textContent = code;
+  const duelRoomCodeEl = document.getElementById('duelActiveRoomCode');
+  if (duelRoomCodeEl) duelRoomCodeEl.textContent = code;
 
   const statusEl = document.getElementById('roomStatusText');
   if (statusEl) statusEl.textContent = 'HOSTING ROOM // SHARE CODE TO PLAY LIVE!';
+
+  updateLobbyDeviceBadge();
 
   if (prefillCode && /^[A-Z0-9]{4}$/i.test(prefillCode)) {
     const joinInput = document.getElementById('inputJoinRoom');
@@ -2916,6 +3123,42 @@ function setupDuelGrid() {
   container.appendChild(frag);
 }
 
+function startDuelCountdown(onComplete) {
+  let count = 3;
+  const status = document.getElementById('duelPhaseStatus');
+  if (status) {
+    status.textContent = 'MATCH STARTING IN 3...';
+    status.className = 'phase-pill-badge memorize kinetic-pulse';
+  }
+  audioVoice.playPop();
+
+  const timer = setInterval(() => {
+    if (!APP_STATE.duel.active) {
+      clearInterval(timer);
+      return;
+    }
+    count--;
+    if (count > 0) {
+      if (status) {
+        status.textContent = `MATCH STARTING IN ${count}...`;
+      }
+      audioVoice.playPop();
+    } else {
+      clearInterval(timer);
+      if (status) {
+        status.textContent = 'MEMORIZE DUEL PATTERN';
+        status.className = 'phase-pill-badge memorize';
+      }
+      audioVoice.playBoing();
+      setTimeout(() => {
+        if (APP_STATE.duel.active) {
+          onComplete();
+        }
+      }, 300);
+    }
+  }, 700);
+}
+
 function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null) {
   if (APP_STATE.duel && APP_STATE.duel.active && !isVsBot && initialSeq && APP_STATE.duel.phase === 'MEMORIZE') {
     APP_STATE.duel.targetSequence = initialSeq;
@@ -2962,11 +3205,12 @@ function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null)
   updateDuelHUD();
   switchView('view-duel-room');
 
-  startSynchronizedDuelRound();
-
-  if (isVsBot) {
-    startBotBehavior();
-  }
+  startDuelCountdown(() => {
+    startSynchronizedDuelRound();
+    if (isVsBot) {
+      startBotBehavior();
+    }
+  });
 
   function duelLoop(now) {
     if (!APP_STATE.duel.active) return;
@@ -3370,19 +3614,50 @@ async function loadLeaderboard() {
   });
 }
 
-async function upsertScoreToLeaderboard(username, avatar, score, level) {
+async function submitRun(runParams) {
+  const {
+    username = APP_STATE.playerHandle,
+    avatar = APP_STATE.playerAvatar,
+    score = 0,
+    level = 1,
+    mode = 'solo'
+  } = runParams || {};
+
   // Anti-cheat verification before writing to local or cloud leaderboard
   if (!AntiCheat.validateScoreSubmission(score, level)) return;
 
+  const deviceType = DeviceProfile.get();
+  const actionChain = AntiCheat.actionChain || [];
+  const replayHash = await AntiCheat.generateReplayHash({
+    username,
+    avatar,
+    score,
+    level,
+    mode,
+    deviceType,
+    actionChain
+  });
+
+  // Local optimistic update
   let localData = getLocalLeaderboard();
   const existingIdx = localData.findIndex(r => r.username === username);
-  const record = { username, avatar, high_score: score, max_level: level };
+  const record = {
+    username,
+    avatar,
+    high_score: score,
+    max_level: level,
+    mode,
+    device_type: deviceType,
+    replay_hash: replayHash
+  };
 
   if (existingIdx >= 0) {
     if (score > localData[existingIdx].high_score) {
       localData[existingIdx].high_score = score;
       localData[existingIdx].max_level = level;
       localData[existingIdx].avatar = avatar;
+      localData[existingIdx].mode = mode;
+      localData[existingIdx].device_type = deviceType;
     }
   } else {
     localData.push(record);
@@ -3398,26 +3673,70 @@ async function upsertScoreToLeaderboard(username, avatar, score, level) {
   }
 
   // Secure Serverless Score Submission via /api/submit-score (trusted server boundary)
+  const apiEndpoint = (CONFIG.API_BASE_URL || '') + '/api/submit-score';
   try {
-    const res = await fetch('/api/submit-score', {
+    const res = await fetch(apiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: username,
-        avatar: avatar,
-        score: score,
-        level: level
+        username,
+        avatar,
+        score,
+        level,
+        mode,
+        replayHash,
+        deviceType,
+        actionChain
       })
     });
     if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      console.warn('Backend score submission response:', res.status, errData.error || '');
+      enqueueOfflineScore({ username, avatar, score, level, mode, replayHash, deviceType, actionChain });
     }
   } catch (e) {
-    console.warn('Backend score submission endpoint unreachable:', e);
+    enqueueOfflineScore({ username, avatar, score, level, mode, replayHash, deviceType, actionChain });
   }
+}
+
+function enqueueOfflineScore(item) {
+  try {
+    const raw = localStorage.getItem('bm_pending_scores');
+    const queue = raw ? JSON.parse(raw) : [];
+    queue.push(item);
+    if (queue.length > 20) queue.shift();
+    localStorage.setItem('bm_pending_scores', JSON.stringify(queue));
+  } catch (e) {}
+}
+
+async function flushOfflineScores() {
+  try {
+    const raw = localStorage.getItem('bm_pending_scores');
+    if (!raw) return;
+    const queue = JSON.parse(raw);
+    if (!Array.isArray(queue) || queue.length === 0) return;
+
+    const remaining = [];
+    const apiEndpoint = (CONFIG.API_BASE_URL || '') + '/api/submit-score';
+
+    for (const item of queue) {
+      try {
+        const res = await fetch(apiEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(item)
+        });
+        if (!res.ok) remaining.push(item);
+      } catch (e) {
+        remaining.push(item);
+      }
+    }
+    localStorage.setItem('bm_pending_scores', JSON.stringify(remaining));
+  } catch (e) {}
+}
+
+function upsertScoreToLeaderboard(username, avatar, score, level) {
+  return submitRun({ username, avatar, score, level, mode: 'solo' });
 }
 
 /* ==========================================================================
@@ -3626,6 +3945,11 @@ function setupEventListeners() {
     const code = document.getElementById('inputJoinRoom').value.trim().toUpperCase();
     if (code.length === 4) {
       APP_STATE.duel.roomCode = code;
+      const codeEl = document.getElementById('lblRoomCode');
+      if (codeEl) codeEl.textContent = code;
+      const duelRoomCodeEl = document.getElementById('duelActiveRoomCode');
+      if (duelRoomCodeEl) duelRoomCodeEl.textContent = code;
+
       const statusEl = document.getElementById('roomStatusText');
       if (statusEl) statusEl.textContent = 'CONNECTING TO ROOM ' + code + '...';
       // Use Supabase Realtime for cross-device join
@@ -3635,6 +3959,12 @@ function setupEventListeners() {
       if (joinInput) joinInput.focus();
     }
   });
+
+  // Device Mismatch Modal Close
+  const btnCloseMismatch = document.getElementById('btnCloseMismatch');
+  if (btnCloseMismatch) {
+    btnCloseMismatch.addEventListener('click', hideDeviceMismatchModal);
+  }
 
   // Theme Switcher Pills
   document.querySelectorAll('.theme-pill-btn').forEach(btn => {
@@ -3752,6 +4082,26 @@ window.addEventListener('DOMContentLoaded', () => {
   initWebSocket();
   initSupabase();
 
+  // Initialize Zero-Allocation Tile Object Pool
+  singleTilePool = new TilePool('singleMatrixGrid', 60);
+
+  // Offline queue retry and background sync
+  flushOfflineScores();
+  window.addEventListener('online', flushOfflineScores);
+
+  // Tab visibility pause handler
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (APP_STATE.singlePlay && APP_STATE.singlePlay.active) {
+        APP_STATE.singlePlay.isTimerFrozen = true;
+      }
+    } else {
+      if (APP_STATE.singlePlay && APP_STATE.singlePlay.active) {
+        APP_STATE.singlePlay.isTimerFrozen = false;
+      }
+    }
+  });
+
   // URL deep-link: ?room=CODE — auto-open lobby and pre-fill join code
   const urlParams = new URLSearchParams(window.location.search);
   const roomParam = urlParams.get('room');
@@ -3769,6 +4119,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 800);
   }
 
-  console.log("DIMAAG KA FALOODA: BEAT RUN 2.0 (Ultra Funky Live Edition) Bootstrapped.");
+  console.log("DIMAAG KA FALOODA: BEAT RUN 3.0 (Fortress Edition) Bootstrapped.");
 });
 

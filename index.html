@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>DIMAAG KA FALOODA: BEAT RUN 2.0</title>
+  <title>DIMAAG KA FALOODA: BEAT RUN 3.0 FORTRESS</title>
+  <meta name="game-server" content="">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co wss://* ws://*; media-src https://archive.org https://*.archive.org blob:; object-src 'none'; base-uri 'self';">
   
   <!-- Funky Vector Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23080E21'/%3E%3Ccircle cx='20' cy='20' r='8' fill='%23FFB703'/%3E%3Ccircle cx='44' cy='20' r='8' fill='%23FF2A6D'/%3E%3Ccircle cx='20' cy='44' r='8' fill='%2305D9E8'/%3E%3Ccircle cx='44' cy='44' r='8' fill='%23FFE600'/%3E%3Cpath d='M20 20L44 44M44 20L20 44' stroke='%23FFFFFF' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -19,7 +21,7 @@
   <!-- Supabase JS Client for Realtime Global Leaderboard (Pinned with SRI integrity verification) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"
           integrity="sha384-YieCqqg9gQufX7+5HcFvCEg/n3KUEdl8/Jb+A6J0npf1mB740VayvwKjTrtCeUoy"
-          crossorigin="anonymous"></script>
+          crossorigin="anonymous" defer></script>
 </head>
 <body>
 
@@ -407,8 +409,9 @@
     <div id="view-online-lobby" class="screen-view">
       <div class="glass-modal-card lobby-modal-card">
         <h2 class="kinetic-text">1V1 ROOM DUEL</h2>
+        <div id="lobbyDeviceBadge" class="device-pill-badge">[ DETECTING HARDWARE... ]</div>
         <div style="font-size: 0.74rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 12px; letter-spacing: 0.04em;">
-          PLAY WITH A FRIEND ON ANY PHONE, TABLET OR PC IN REAL-TIME
+          PLAY WITH A FRIEND ON MATCHING HARDWARE IN REAL-TIME
         </div>
 
         <!-- Room Code Display Box -->
@@ -590,9 +593,18 @@
     </div>
   </div>
 
-  <!-- Anti-Cheat Security Notification Toast -->
-  <div id="anticheatAlert" class="anticheat-alert-toast" style="display: none;">
-    <span id="anticheatText">SECURITY ALERT: TAMPERING DETECTED! SCORE INVALIDATED.</span>
+  <!-- Device Mismatch Notification Modal -->
+  <div id="modalDeviceMismatch" class="glass-modal-backdrop">
+    <div class="glass-modal-card" style="width: 100%; max-width: 380px; text-align: center;">
+      <h2 class="kinetic-text" style="color: var(--color-secondary);">DEVICE MISMATCH</h2>
+      <p id="mismatchDescHindi" style="font-size: 0.88rem; color: #FFFFFF; font-weight: 700; margin: 12px 0 6px;">
+        Ye room laptop ke liye hai. Phone se join nahi kar sakte.
+      </p>
+      <p id="mismatchDescEnglish" style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 16px;">
+        This room requires a matching device type. Please join from a matching device.
+      </p>
+      <button id="btnCloseMismatch" class="btn-funky primary" style="width: 100%;">UNDERSTOOD</button>
+    </div>
   </div>
 
   <!-- External Master Game Engine Script -->

@@ -1,34 +1,46 @@
 -- ============================================================================
--- DIMAAG KA FALOODA: BEAT RUN 2.0 - SUPABASE SECURITY LOCKDOWN SCRIPT
+-- DIMAAG KA FALOODA: BEAT RUN 3.0 "FORTRESS EDITION" - DATABASE SCHEMA & MIGRATION
 -- Project ID: dfixypyqewrdofaufehg
 -- SQL Editor URL: https://supabase.com/dashboard/project/dfixypyqewrdofaufehg/sql/new
 -- ============================================================================
 
--- STEP 1: Delete all unauthorized or hacked records
-DELETE FROM public.blind_matrix_leaderboard 
-WHERE username IN ('HACKUR', 'HACK_TEST', '__test_probe__')
-   OR username ILIKE '%hack%';
-
--- STEP 2: Create the leaderboard table if not already present
+-- 1. Create or upgrade the leaderboard table
 CREATE TABLE IF NOT EXISTS public.blind_matrix_leaderboard (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username TEXT UNIQUE NOT NULL,
     avatar TEXT NOT NULL DEFAULT 'cutting_chai',
     high_score BIGINT NOT NULL DEFAULT 0,
     max_level INTEGER NOT NULL DEFAULT 1,
+    mode TEXT NOT NULL DEFAULT 'solo',
+    replay_hash TEXT,
+    device_type TEXT DEFAULT 'unknown',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- STEP 3: Create index on high_score for instant leaderboard queries
+-- Migration safety for existing v2 tables
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='blind_matrix_leaderboard' AND column_name='mode') THEN
+        ALTER TABLE public.blind_matrix_leaderboard ADD COLUMN mode TEXT NOT NULL DEFAULT 'solo';
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='blind_matrix_leaderboard' AND column_name='replay_hash') THEN
+        ALTER TABLE public.blind_matrix_leaderboard ADD COLUMN replay_hash TEXT;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='blind_matrix_leaderboard' AND column_name='device_type') THEN
+        ALTER TABLE public.blind_matrix_leaderboard ADD COLUMN device_type TEXT DEFAULT 'unknown';
+    END IF;
+END $$;
+
+-- 2. Index high_score for instant top-10 queries
 CREATE INDEX IF NOT EXISTS idx_leaderboard_high_score 
 ON public.blind_matrix_leaderboard (high_score DESC);
 
--- STEP 4: Force Row Level Security (RLS)
+-- 3. Force Row Level Security (RLS)
 ALTER TABLE public.blind_matrix_leaderboard ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blind_matrix_leaderboard FORCE ROW LEVEL SECURITY;
 
--- STEP 5: Drop ALL existing policies to eliminate permissive write holes
+-- 4. Purge all legacy or permissive policies
 DO $$ 
 DECLARE 
     pol record;
@@ -42,15 +54,14 @@ BEGIN
     END LOOP; 
 END $$;
 
--- STEP 6: Create strictly READ-ONLY policy for the public / anon key
+-- 5. Create strictly READ-ONLY policy for public and anonymous players
 CREATE POLICY "Public leaderboard view"
 ON public.blind_matrix_leaderboard
 FOR SELECT
 TO anon, authenticated
 USING (true);
 
--- STEP 7: Revoke write permissions at the PostgreSQL role level
--- Completely blocks any client-side INSERT, UPDATE, DELETE from PostgREST / anon key
+-- 6. Revoke write permissions at the database role level (Blocks unauthorized PostgREST writes)
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON TABLE public.blind_matrix_leaderboard FROM anon;
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON TABLE public.blind_matrix_leaderboard FROM authenticated;
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON TABLE public.blind_matrix_leaderboard FROM public;
@@ -59,10 +70,10 @@ REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON TABLE public.blind_matrix_leaderboard
 GRANT SELECT ON TABLE public.blind_matrix_leaderboard TO anon;
 GRANT SELECT ON TABLE public.blind_matrix_leaderboard TO authenticated;
 
--- Grant full administrative access to service_role (used by /api/submit-score on Vercel)
+-- Grant administrative full access to service_role (used by /api/submit-score on server)
 GRANT ALL ON TABLE public.blind_matrix_leaderboard TO service_role;
 
--- STEP 8: Add table to Supabase Realtime Publication for live WebSocket score push
+-- 7. Realtime Publication attachment for live scoreboard sync
 DO $$
 BEGIN
     IF NOT EXISTS (
