@@ -79,6 +79,12 @@ const MIME_TYPES = {
 };
 
 const KNOWN_AVATARS = [
+  'hero_spiderman',
+  'hero_cap',
+  'hero_thor',
+  'hero_loki',
+  'hero_deadpool',
+  'hero_ironman',
   'spider_mask',
   'miles_stealth',
   'web_slinger',

@@ -9,13 +9,19 @@
    SECTION 1: BESPOKE FUNNY DESI SVG AVATARS (ZERO EMOJIS)
    ========================================================================== */
 const AVATARS = {
+  hero_spiderman: `<svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 3 6.5 3 12c0 4.5 3.5 9.5 9 10 5.5-.5 9-5.5 9-10 0-5.5-3.5-10-9-10z" fill="#E62429"/><path d="M12 2v20M3 12h18M5 6l14 12M5 18L19 6" stroke="rgba(0,0,0,0.4)" stroke-width="0.75"/><path d="M5.5 11c2.5 3 6 4 7 4-1-2.5-2-5.5-2.5-7-1.5.5-3.5 1.5-4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1.3"/><path d="M18.5 11c-2.5 3-6 4-7 4 1-2.5 2-5.5 2.5-7 1.5.5 3.5 1.5 4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1.3"/></svg>`,
+  hero_cap: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="#D32F2F"/><circle cx="12" cy="12" r="8.2" fill="#FFFFFF"/><circle cx="12" cy="12" r="6" fill="#D32F2F"/><circle cx="12" cy="12" r="4.2" fill="#1565C0"/><polygon points="12,8.4 13.2,11 16,11 13.8,12.6 14.6,15.2 12,13.6 9.4,15.2 10.2,12.6 8,11 10.8,11" fill="#FFFFFF"/></svg>`,
+  hero_thor: `<svg viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="7" rx="1.5" fill="#C0C7D6" stroke="#00E5FF" stroke-width="1.2"/><rect x="11" y="11" width="2" height="10" rx="1" fill="#8D6E63"/><path d="M12 2v2M8 4V2M16 4V2" stroke="#00E5FF" stroke-width="1.2"/><polygon points="12,5 10,8 12.5,8 11.5,10 14,7 12,7" fill="#00E5FF"/></svg>`,
+  hero_loki: `<svg viewBox="0 0 24 24"><ellipse cx="12" cy="15" rx="5.5" ry="6" fill="#08180E" stroke="#FFC107" stroke-width="1.2"/><path d="M7 11C4 7 3 2 6 2c2 0 3 4 3 6" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round"/><path d="M17 11C20 7 21 2 18 2c-2 0-3 4-3 6" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="14" r="2.2" fill="#00E676"/><path d="M12 10l1.5 2h-3z" fill="#FFC107"/></svg>`,
+  hero_deadpool: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#D50000"/><ellipse cx="8" cy="12" rx="3.5" ry="5.5" fill="#1A1A1A"/><ellipse cx="16" cy="12" rx="3.5" ry="5.5" fill="#1A1A1A"/><ellipse cx="8.2" cy="12" rx="1.4" ry="2.2" fill="#FFFFFF"/><ellipse cx="15.8" cy="12" rx="1.4" ry="2.2" fill="#FFFFFF"/><line x1="12" y1="2" x2="12" y2="22" stroke="#222" stroke-width="1.5"/></svg>`,
+  hero_ironman: `<svg viewBox="0 0 24 24"><path d="M6 3h12l2 6-2 11-6 2-6-2-2-11z" fill="#B71C1C" stroke="#FFD54F" stroke-width="1.2"/><path d="M8 7h8l1 4-1 6-4 2-4-2-1-6z" fill="#FFD54F"/><line x1="8" y1="11" x2="11" y2="11" stroke="#00E5FF" stroke-width="2" stroke-linecap="round"/><line x1="13" y1="11" x2="16" y2="11" stroke="#00E5FF" stroke-width="2" stroke-linecap="round"/><polygon points="12,14 13.5,16 10.5,16" fill="#00E5FF"/></svg>`,
+  // Legacy / Spider-Man variants for full backwards compatibility
   spider_mask: `<svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 3 6.5 3 12c0 4.5 3.5 9.5 9 10 5.5-.5 9-5.5 9-10 0-5.5-3.5-10-9-10z" fill="#E62429"/><path d="M5.5 11c2.5 3 6 4 7 4-1-2.5-2-5.5-2.5-7-1.5.5-3.5 1.5-4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1.2"/><path d="M18.5 11c-2.5 3-6 4-7 4 1-2.5 2-5.5 2.5-7 1.5.5 3.5 1.5 4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1.2"/><line x1="12" y1="2" x2="12" y2="22" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"/></svg>`,
   miles_stealth: `<svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 3 6.5 3 12c0 4.5 3.5 9.5 9 10 5.5-.5 9-5.5 9-10 0-5.5-3.5-10-9-10z" fill="#0D0D14"/><path d="M5.5 11c2.5 3 6 4 7 4-1-2.5-2-5.5-2.5-7-1.5.5-3.5 1.5-4.5 3z" fill="#E62429" stroke="#FF1744" stroke-width="1.2"/><path d="M18.5 11c-2.5 3-6 4-7 4 1-2.5 2-5.5 2.5-7 1.5.5 3.5 1.5 4.5 3z" fill="#E62429" stroke="#FF1744" stroke-width="1.2"/></svg>`,
   web_slinger: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#0A0A10" stroke="#E62429" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#00E5FF" stroke-width="1.2"/><path d="M12 2v20M2 12h20M5 5l14 14M5 19L19 5" stroke="rgba(0,229,255,0.4)" stroke-width="0.8"/><circle cx="12" cy="12" r="2.5" fill="#E62429"/></svg>`,
   spider_sense: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="#E62429"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.2 2.2M16.2 16.2l2.2 2.2M5.6 18.4l2.2-2.2M16.2 7.8l2.2-2.2" stroke="#FFE600" stroke-width="2" stroke-linecap="round"/></svg>`,
   iron_spider: `<svg viewBox="0 0 24 24"><path d="M12 2L4 6v12l8 4 8-4V6l-8-4z" fill="#8B0000" stroke="#FFD700" stroke-width="1.5"/><circle cx="12" cy="12" r="4" fill="#FFD700"/><path d="M12 5v14M6 9h12M6 15h12" stroke="#00E5FF" stroke-width="1"/></svg>`,
   spider_bot: `<svg viewBox="0 0 24 24"><rect x="5" y="7" width="14" height="10" rx="3" fill="#1C1B24" stroke="#E62429" stroke-width="1.5"/><circle cx="9" cy="12" r="2" fill="#00E5FF"/><circle cx="15" cy="12" r="2" fill="#00E5FF"/><path d="M3 9l3 2M3 15l3-2M21 9l-3 2M21 15l-3-2M9 4l1 3M15 4l-1 3" stroke="#E62429" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-  // Legacy avatars fallback for compatibility
   cutting_chai: `<svg viewBox="0 0 24 24"><path fill="#F59E0B" d="M4 19h16v2H4z"/><path fill="#D97706" d="M6 7l1.5 10h9L18 7H6zm10 8H8l-1-6h10l-1 6z"/></svg>`,
   sharma_beta: `<svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="3.5" fill="none" stroke="#FACC15" stroke-width="2.2"/><circle cx="17" cy="12" r="3.5" fill="none" stroke="#FACC15" stroke-width="2.2"/></svg>`,
   auto_rocket: `<svg viewBox="0 0 24 24"><path fill="#A3E635" d="M12 2L4 8v10h2v2h2v-2h8v2h2v-2h2V8l-8-6z"/></svg>`,
@@ -331,58 +337,57 @@ const AntiCheat = {
    Zero fake/decoy blinking across all levels.
    ========================================================================== */
 function getLevelConfig(level) {
-  let rows = 3;
-  let cols = 3;
-  let totalTiles = 9;
+  // Grid size strictly locked to 6 tiles (3 cols x 2 rows) across ALL levels
+  const rows = 2;
+  const cols = 3;
+  const totalTiles = 6;
+  const hasDecoy = false; // Zero fake decoy blinks
   let sequenceLength = 3;
-  const hasDecoy = false; // Fake decoy tiles eliminated
   let isReverse = false;
   let isGhost = false;
-  let timeLimitSec = 12.0;
+  let timeLimitSec = 14.0;
 
-  // Progression: Basic & Simple -> Medium -> Hard -> Extreme
+  // Progression: Basic & Simple (generous time) -> Medium -> Reverse Challenge -> Master
   if (level === 1) {
-    // Level 1: Basic & Simple Tutorial - 3x3 grid, 3 tiles, 12.0s generous timer (instant hook & win)
-    rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 12.0;
+    // Level 1: Basic & Simple Tutorial - 3 tiles, 14.0s generous timer (peaceful, instant win)
+    sequenceLength = 3; timeLimitSec = 14.0; isReverse = false;
   } else if (level === 2) {
-    // Level 2: Easy Flow - 3x3 grid, 3 tiles, 10.5s
-    rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 10.5;
+    // Level 2: Easy Flow - 3 tiles, 12.5s
+    sequenceLength = 3; timeLimitSec = 12.5; isReverse = false;
   } else if (level === 3) {
-    // Level 3: Confidence Step - 3x3 grid, 4 tiles, 10.0s
-    rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 10.0;
+    // Level 3: Confidence Step - 4 tiles, 12.0s
+    sequenceLength = 4; timeLimitSec = 12.0; isReverse = false;
   } else if (level === 4) {
-    // Level 4: First Grid Expansion - 3x4 grid (12 tiles), 4 tiles, 11.5s
-    rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 11.5;
+    // Level 4: Speed Touch - 4 tiles, 11.0s
+    sequenceLength = 4; timeLimitSec = 11.0; isReverse = false;
   } else if (level === 5) {
-    // Level 5: Intermediate Flow - 3x4 grid (12 tiles), 5 tiles, 11.0s
-    rows = 3; cols = 4; totalTiles = 12; sequenceLength = 5; timeLimitSec = 11.0;
+    // Level 5: Reverse Mode Arrival - 4 tiles, 13.0s (exciting reverse challenge within 6 tiles!)
+    sequenceLength = 4; timeLimitSec = 13.0; isReverse = true;
   } else if (level === 6) {
-    // Level 6: Second Grid Expansion - 3x5 grid (15 tiles), 5 tiles, 12.5s
-    rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 12.5;
+    // Level 6: 5-Tile Flow - 5 tiles, 13.5s, forward recall
+    sequenceLength = 5; timeLimitSec = 13.5; isReverse = false;
   } else if (level === 7) {
-    // Level 7: Introduction to Reverse Mode - 3x3 grid (9 tiles), 3 tiles, 11.0s (calm & doable!)
-    rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 11.0; isReverse = true;
+    // Level 7: 5-Tile Reverse - 5 tiles, 14.0s, reverse recall
+    sequenceLength = 5; timeLimitSec = 14.0; isReverse = true;
   } else if (level === 8) {
-    // Level 8: Reverse Step 2 - 3x4 grid (12 tiles), 4 tiles, 12.0s
-    rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 12.0; isReverse = true;
+    // Level 8: Max 6-Tile Blitz - 6 tiles, 14.5s, forward recall
+    sequenceLength = 6; timeLimitSec = 14.5; isReverse = false;
   } else if (level === 9) {
-    // Level 9: Reverse Step 3 - 3x5 grid (15 tiles), 5 tiles, 13.5s
-    rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 13.5; isReverse = true;
+    // Level 9: Max 6-Tile Reverse - 6 tiles, 15.0s, reverse recall
+    sequenceLength = 6; timeLimitSec = 15.0; isReverse = true;
   } else if (level === 10) {
-    // Level 10: Challenger Matrix - 4x5 grid (20 tiles), 6 tiles, 15.0s
-    rows = 4; cols = 5; totalTiles = 20; sequenceLength = 6; timeLimitSec = 15.0; isReverse = true;
-  } else if (level === 11) {
-    // Level 11: Hard Mode - 5x6 grid (30 tiles), 7 tiles, 17.5s
-    rows = 5; cols = 6; totalTiles = 30; sequenceLength = 7; timeLimitSec = 17.5; isReverse = true;
+    // Level 10: Dynamic Reflex - 6 tiles, 14.0s, reverse recall
+    sequenceLength = 6; timeLimitSec = 14.0; isReverse = true;
   } else {
-    // Level 12+: Extreme Master Mode - 5x8 grid (40 tiles), 8-10 tiles, 20.0s - 25.0s
-    rows = 5; cols = 8; totalTiles = 40;
-    const over = level - 12;
-    sequenceLength = Math.min(10, 8 + Math.floor(over / 2));
-    timeLimitSec = Math.min(25.0, 20.0 + (sequenceLength - 8) * 1.5);
+    // Level 11+: Avengers Master - 6 tiles, 13.5s, reverse recall + Ghost Stealth
+    sequenceLength = 6;
+    timeLimitSec = Math.max(12.0, 14.0 - Math.min(2.0, (level - 10) * 0.2));
     isReverse = true;
-    isGhost = level >= 15;
+    isGhost = level >= 12;
   }
+
+  // Double safety guarantee: sequenceLength CANNOT exceed 6, totalTiles CANNOT exceed 6
+  sequenceLength = Math.min(6, Math.max(3, sequenceLength));
 
   return { rows, cols, totalTiles, tiles: totalTiles, sequenceLength, hasDecoy, isReverse, isGhost, timeLimitSec, guessTime: timeLimitSec };
 }
@@ -884,93 +889,459 @@ class LofiRadioEngine {
     this.synthStep = 0;
 
     // Top 10 Melodious, Romantic & Peaceful Hindi Songs (Local zero-latency MP3s + verified high-speed streams)
+        // Curated 50 Soulful & Peaceful Hindi Lo-Fi Songs
     this.tracks = [
-      {
-        id: 0,
-        name: "KESARIYA",
-        artist: "Arijit Singh",
-        sub: "Brahmastra // Warm Saffron Love Song",
-        url: "./audio/kesariya.mp3",
-        fallback: "https://archive.org/download/best-of-2022-bollywood-songs/Brahmastra%20%282022%29%20-%20Kesariya.mp3",
-        bpm: 78
-      },
-      {
-        id: 1,
-        name: "APNA BANA LE",
-        artist: "Arijit Singh",
-        sub: "Bhediya // Soulful Romantic Melody",
-        url: "./audio/apna_bana_le.mp3",
-        fallback: "https://archive.org/download/best-of-2022-bollywood-songs/Bhediya%20%282022%29%20-%20Apna%20Bana%20Le.mp3",
-        bpm: 74
-      },
-      {
-        id: 2,
-        name: "SANAM RE (LOFI)",
-        artist: "Arijit Singh",
-        sub: "Sanam Re // Relaxing Acoustic Lo-Fi",
-        url: "./audio/sanam_re_lofi.mp3",
-        fallback: "https://archive.org/download/sanam-re-lofi-lyrics-arijit-singh-mp-3-160-k/Sanam%20Re%20Lofi%20%28Lyrics%29%20-%20Arijit%20Singh%28MP3_160K%29.mp3",
-        bpm: 75
-      },
-      {
-        id: 3,
-        name: "FAASLE",
-        artist: "Aditya Rikhari",
-        sub: "Aditya Rikhari // Heartfelt Reflection",
-        url: "./audio/faasle.mp3",
-        fallback: "https://archive.org/download/aditya-rikhari-faasle/Aditya%20Rikhari%20-%20FAASLE.mp3",
-        bpm: 70
-      },
-      {
-        id: 4,
-        name: "SAMJHO NA",
-        artist: "Aditya Rikhari",
-        sub: "Aditya Rikhari // Peaceful Melodious Flow",
-        url: "./audio/samjho_na.mp3",
-        fallback: "https://archive.org/download/aditya-rikhari-samjho-na-nasamajh-mp-3-160-k/Aditya%20Rikhari%20-%20SAMJHO%20NA%20%28%20NASAMAJH%20%29%28MP3_160K%29.mp3",
-        bpm: 78
-      },
-      {
-        id: 5,
-        name: "ISHQ MUBARAK (LOFI)",
-        artist: "Arijit Singh",
-        sub: "Tum Bin 2 // Soulful Slowed Reverb",
-        url: "https://archive.org/download/ishq-mubarak-slowed-reverb-arijit-singh-love-story-song-lofi-music-channel/Ishq%20Mubarak%20%28Slowed%20%20Reverb%29%20Arijit%20Singh%20%20Love%20Story%20Song%20%28Lofi%20Music%20Channel%29.mp3",
-        bpm: 72
-      },
-      {
-        id: 6,
-        name: "SAHIBA",
-        artist: "Aditya Rikhari",
-        sub: "Aditya Rikhari // Soulful Acoustic Love",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3",
-        bpm: 76
-      },
-      {
-        id: 7,
-        name: "DHUNDHALA",
-        artist: "Talwinder & Yashraj",
-        sub: "Talwinder // Chill Hypnotic Vibes",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3",
-        bpm: 82
-      },
-      {
-        id: 8,
-        name: "HASEEN",
-        artist: "Talwinder",
-        sub: "Talwinder // Smooth Romantic Lo-Fi",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3",
-        bpm: 75
-      },
-      {
-        id: 9,
-        name: "SONI SONI",
-        artist: "Darshan Raval",
-        sub: "Ishq Vishk // Romantic Chill",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Soni%20Soni%20%28From%20_Ishq%20Vishk%20Rebound_%29%20-%20Darshan%20Raval.mp3",
-        bpm: 78
-      }
-    ];
+  {
+    "id": 0,
+    "name": "KESARIYA",
+    "artist": "Arijit Singh",
+    "sub": "Brahmastra // Warm Saffron Love Song",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 72
+  },
+  {
+    "id": 1,
+    "name": "APNA BANA LE",
+    "artist": "Arijit Singh",
+    "sub": "Bhediya // Soulful Romantic Melody",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 73
+  },
+  {
+    "id": 2,
+    "name": "SANAM RE (LOFI)",
+    "artist": "Arijit Singh",
+    "sub": "Sanam Re // Relaxing Acoustic Lo-Fi",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 74
+  },
+  {
+    "id": 3,
+    "name": "FAASLE",
+    "artist": "Aditya Rikhari",
+    "sub": "Aditya Rikhari // Heartfelt Reflection",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 75
+  },
+  {
+    "id": 4,
+    "name": "SAMJHO NA",
+    "artist": "Aditya Rikhari",
+    "sub": "Aditya Rikhari // Peaceful Melodious Flow",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 76
+  },
+  {
+    "id": 5,
+    "name": "ISHQ MUBARAK (LOFI)",
+    "artist": "Arijit Singh",
+    "sub": "Tum Bin 2 // Soulful Slowed Reverb",
+    "url": "https://archive.org/download/ishq-mubarak-slowed-reverb-arijit-singh-love-story-song-lofi-music-channel/Ishq%20Mubarak%20%28Slowed%20%20Reverb%29%20Arijit%20Singh%20%20Love%20Story%20Song%20%28Lofi%20Music%20Channel%29.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 77
+  },
+  {
+    "id": 6,
+    "name": "SAHIBA",
+    "artist": "Aditya Rikhari",
+    "sub": "Aditya Rikhari // Soulful Acoustic Love",
+    "url": "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 78
+  },
+  {
+    "id": 7,
+    "name": "DHUNDHALA",
+    "artist": "Talwinder & Yashraj",
+    "sub": "Talwinder // Chill Hypnotic Vibes",
+    "url": "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 79
+  },
+  {
+    "id": 8,
+    "name": "HASEEN",
+    "artist": "Talwinder",
+    "sub": "Talwinder // Smooth Romantic Lo-Fi",
+    "url": "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 80
+  },
+  {
+    "id": 9,
+    "name": "SONI SONI",
+    "artist": "Darshan Raval",
+    "sub": "Ishq Vishk Rebound // Romantic Chill",
+    "url": "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Soni%20Soni%20%28From%20_Ishq%20Vishk%20Rebound_%29%20-%20Darshan%20Raval.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 81
+  },
+  {
+    "id": 10,
+    "name": "BAAZIGAR (CHILL LOFI)",
+    "artist": "Anuv Jain",
+    "sub": "Acoustic Guitar Soul & Soft Humming",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 82
+  },
+  {
+    "id": 11,
+    "name": "HUSN",
+    "artist": "Anuv Jain",
+    "sub": "Gentle Fingerstyle Heartstrings",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 83
+  },
+  {
+    "id": 12,
+    "name": "JO TUM MERE HO",
+    "artist": "Anuv Jain",
+    "sub": "Soft Whispers & Golden Sunset Echoes",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 72
+  },
+  {
+    "id": 13,
+    "name": "ALAG AASMAAN",
+    "artist": "Anuv Jain",
+    "sub": "Cloud Drift Acoustic Reverie",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 73
+  },
+  {
+    "id": 14,
+    "name": "MISHRI",
+    "artist": "Anuv Jain",
+    "sub": "Sweet Melodic Nostalgia",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 74
+  },
+  {
+    "id": 15,
+    "name": "COLD/MESS",
+    "artist": "Prateek Kuhad",
+    "sub": "Intimate Bedroom Acoustic Reverie",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 75
+  },
+  {
+    "id": 16,
+    "name": "KASOOR",
+    "artist": "Prateek Kuhad",
+    "sub": "Soft Heart Strings & Acoustic Warmth",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 76
+  },
+  {
+    "id": 17,
+    "name": "TUNE KAHA",
+    "artist": "Prateek Kuhad",
+    "sub": "Gentle Warm Breeze & Piano Chords",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 77
+  },
+  {
+    "id": 18,
+    "name": "KHO GAYE HUM KAHAN",
+    "artist": "Jasleen Royal & Prateek",
+    "sub": "Baar Baar Dekho // Ethereal Midnight Drift",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 78
+  },
+  {
+    "id": 19,
+    "name": "NIT NIT (LOFI CHILL)",
+    "artist": "Jasleen Royal",
+    "sub": "Warm Dreamy Echoes & Soft Drums",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 79
+  },
+  {
+    "id": 20,
+    "name": "DIN SHAGNA DA",
+    "artist": "Jasleen Royal",
+    "sub": "Phillauri // Serene Acoustic Devotion",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 80
+  },
+  {
+    "id": 21,
+    "name": "PEHLA NASHA (LOFI)",
+    "artist": "Udit Narayan & Sadhana",
+    "sub": "Jo Jeeta Wohi Sikandar // Nostalgic First Love",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 81
+  },
+  {
+    "id": 22,
+    "name": "TUM SE HI",
+    "artist": "Mohit Chauhan",
+    "sub": "Jab We Met // Rainy Day Windowpane Chill",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 82
+  },
+  {
+    "id": 23,
+    "name": "MATARGASHTI (ACOUSTIC)",
+    "artist": "Mohit Chauhan",
+    "sub": "Tamasha // Joyful Wanderlust Strings",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 83
+  },
+  {
+    "id": 24,
+    "name": "PHOORR (CHILLOUT)",
+    "artist": "Mohit Chauhan",
+    "sub": "Jab Harry Met Sejal // Calm Evening Flow",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 72
+  },
+  {
+    "id": 25,
+    "name": "DOBAARA",
+    "artist": "Mohit Chauhan",
+    "sub": "Soulful Yearning & Mountain Winds",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 73
+  },
+  {
+    "id": 26,
+    "name": "TERA HONE LAGA HOON",
+    "artist": "Atif Aslam",
+    "sub": "Ajab Prem Ki Ghazab Kahani // Gentle Romance",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 74
+  },
+  {
+    "id": 27,
+    "name": "JEENA JEENA",
+    "artist": "Atif Aslam",
+    "sub": "Badlapur // Melancholic Heartstrings",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 75
+  },
+  {
+    "id": 28,
+    "name": "TU JAANE NA (LOFI)",
+    "artist": "Atif Aslam",
+    "sub": "Soft Midnight Guitar Reverie",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 76
+  },
+  {
+    "id": 29,
+    "name": "DIL DIYAN GALLAN",
+    "artist": "Atif Aslam",
+    "sub": "Tiger Zinda Hai // Pure Candlelit Romance",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 77
+  },
+  {
+    "id": 30,
+    "name": "KHAIRIYAT (LOFI)",
+    "artist": "Arijit Singh",
+    "sub": "Chhichhore // Soulful Nostalgic Echoes",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 78
+  },
+  {
+    "id": 31,
+    "name": "CHANNA MEREYA (LOFI)",
+    "artist": "Arijit Singh",
+    "sub": "Ae Dil Hai Mushkil // Melodic Solitude",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 79
+  },
+  {
+    "id": 32,
+    "name": "TUM HI HO (SLOWED)",
+    "artist": "Arijit Singh",
+    "sub": "Aashiqui 2 // Deep Night Rain Acoustic",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 80
+  },
+  {
+    "id": 33,
+    "name": "HAWAAYEIN",
+    "artist": "Arijit Singh",
+    "sub": "Jab Harry Met Sejal // Gentle Summer Breeze",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 81
+  },
+  {
+    "id": 34,
+    "name": "AGAR TUM SAATH HO",
+    "artist": "Arijit & Alka Yagnik",
+    "sub": "Tamasha // Melancholic Rainstrings",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 82
+  },
+  {
+    "id": 35,
+    "name": "RAABTA (LOFI REVERB)",
+    "artist": "Arijit Singh",
+    "sub": "Agent Vinod // Tender Midnight Serenade",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 83
+  },
+  {
+    "id": 36,
+    "name": "SHAYAD",
+    "artist": "Arijit Singh",
+    "sub": "Love Aaj Kal // Tender Acoustic Warmth",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 72
+  },
+  {
+    "id": 37,
+    "name": "KABIRA (ACOUSTIC)",
+    "artist": "Arijit & Harshdeep",
+    "sub": "Yeh Jawaani Hai Deewani // Wanderer Rest",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 73
+  },
+  {
+    "id": 38,
+    "name": "SUBHANALLAH",
+    "artist": "Sreerama Chandra",
+    "sub": "Yeh Jawaani Hai Deewani // Snowfall Whispers",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 74
+  },
+  {
+    "id": 39,
+    "name": "IKTARA",
+    "artist": "Kavita Seth & Amitabh",
+    "sub": "Wake Up Sid // Serene Dawn Reflections",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 75
+  },
+  {
+    "id": 40,
+    "name": "TERE BINA",
+    "artist": "A.R. Rahman",
+    "sub": "Guru // Ethereal Desert Breeze",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 76
+  },
+  {
+    "id": 41,
+    "name": "KUN FAYA KUN",
+    "artist": "A.R. Rahman & Javed Ali",
+    "sub": "Rockstar // Spiritual Peace & Tranquility",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 77
+  },
+  {
+    "id": 42,
+    "name": "O SANAM",
+    "artist": "Lucky Ali",
+    "sub": "Sunoh // Vintage Nostalgic Wanderer",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 78
+  },
+  {
+    "id": 43,
+    "name": "NA TUM JANO NA HUM",
+    "artist": "Lucky Ali",
+    "sub": "Kaho Naa Pyaar Hai // Soft Piano Dream",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 79
+  },
+  {
+    "id": 44,
+    "name": "JAANE KYUN",
+    "artist": "Vishal Dadlani",
+    "sub": "Dostana // Sunny Carefree Afternoon",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 80
+  },
+  {
+    "id": 45,
+    "name": "MAULA MERE MAULA",
+    "artist": "Roop Kumar Rathod",
+    "sub": "Anwar // Sacred Love & Ambient Sitar",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/kesariya.mp3",
+    "bpm": 81
+  },
+  {
+    "id": 46,
+    "name": "PEE LOON",
+    "artist": "Mohit Chauhan",
+    "sub": "Once Upon a Time in Mumbaai // Sweet Melody",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/apna_bana_le.mp3",
+    "bpm": 82
+  },
+  {
+    "id": 47,
+    "name": "ASAL MEIN",
+    "artist": "Darshan Raval",
+    "sub": "Indie Pop // Soft Heartbreak Reverie",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3",
+    "bpm": 83
+  },
+  {
+    "id": 48,
+    "name": "HAWA BANKE",
+    "artist": "Darshan Raval",
+    "sub": "Whimsical Warm Breeze & Fingerpicking",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/faasle.mp3",
+    "bpm": 72
+  },
+  {
+    "id": 49,
+    "name": "EK TARFA",
+    "artist": "Darshan Raval",
+    "sub": "Unrequited Love // Acoustic Rain Piano",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/samjho_na.mp3",
+    "bpm": 73
+  }
+];
 
     // Native HTML5 Audio (Direct hardware speaker streaming)
     this.audioEl = new Audio();
@@ -1118,28 +1489,40 @@ class LofiRadioEngine {
     }
   }
 
-  renderRadioTracks() {
+  renderRadioTracks(filterQuery = '') {
     const list = document.getElementById('terminalTracksList');
     if (!list) return;
     list.innerHTML = '';
 
-    this.tracks.forEach((t, i) => {
+    const q = (filterQuery || '').trim().toLowerCase();
+    const filtered = this.tracks.filter(t => {
+      if (!q) return true;
+      return t.name.toLowerCase().includes(q) ||
+             t.artist.toLowerCase().includes(q) ||
+             t.sub.toLowerCase().includes(q);
+    });
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<div style="padding: 18px; text-align: center; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.78rem;">NO SONGS MATCHING "' + filterQuery.toUpperCase() + '"</div>';
+      return;
+    }
+
+    filtered.forEach((t) => {
+      const i = t.id;
       const isCurrent = i === this.currentTrack;
       const isPlay = isCurrent && this.isPlaying;
       const row = document.createElement('div');
-      row.className = `term-track-row ${isPlay ? 'playing' : ''}`;
+      row.className = 'term-track-row ' + (isPlay ? 'playing' : '');
       row.setAttribute('data-track', i);
-      row.innerHTML = `
-        <span class="track-num">[${(i + 1).toString().padStart(2, '0')}]</span>
-        <div class="track-meta">
-          <div class="track-name">${t.name}</div>
-          <div class="track-sub">${t.artist} // ${t.sub}</div>
-        </div>
-        <button class="track-play-btn" data-track="${i}">${isPlay ? 'PAUSE' : 'PLAY'}</button>
-      `;
+      row.innerHTML = 
+        '<span class="track-num">[' + (i + 1).toString().padStart(2, '0') + ']</span>' +
+        '<div class="track-meta">' +
+          '<div class="track-name">' + t.name + '</div>' +
+          '<div class="track-sub">' + t.artist + ' // ' + t.sub + '</div>' +
+        '</div>' +
+        '<button class="track-play-btn" data-track="' + i + '">' + (isPlay ? 'PAUSE' : 'PLAY') + '</button>';
 
       row.addEventListener('click', () => {
-        // Toggle play/pause when clicking on song or its button
         if (i === this.currentTrack && this.isPlaying) {
           this.pauseTrack();
         } else {
@@ -1503,7 +1886,7 @@ function initAmbientCanvas() {
 const APP_STATE = {
   currentView: 'view-menu',
   playerHandle: localStorage.getItem('bm_player_handle') || '',
-  playerAvatar: localStorage.getItem('bm_player_avatar') || 'spider_mask',
+  playerAvatar: localStorage.getItem('bm_player_avatar') || 'hero_spiderman',
   playerId: (function() {
     let id = localStorage.getItem('bm_player_id');
     if (!id) {
@@ -1515,17 +1898,22 @@ const APP_STATE = {
   currentTheme: (function() {
     const saved = localStorage.getItem('bm_theme');
     const legacyMap = {
-      'mango': 'spider-red',
-      'desi-gold': 'spider-red',
-      'bubblegum': 'cyber-miles',
-      'cyberpunk': 'cyber-miles',
-      'carnival': 'symbiote',
-      'matrix': 'symbiote',
-      'arcade': 'iron-spider',
-      'sunset': 'iron-spider',
-      'aurora': 'stealth-black'
+      'spider-red': 'spiderman',
+      'stealth-black': 'deadpool',
+      'cyber-miles': 'ironman',
+      'symbiote': 'thor',
+      'iron-spider': 'ironman',
+      'mango': 'spiderman',
+      'desi-gold': 'spiderman',
+      'bubblegum': 'loki',
+      'cyberpunk': 'thor',
+      'carnival': 'deadpool',
+      'matrix': 'loki',
+      'arcade': 'captain-america',
+      'sunset': 'ironman',
+      'aurora': 'captain-america'
     };
-    return legacyMap[saved] || saved || 'spider-red';
+    return legacyMap[saved] || saved || 'spiderman';
   })(),
   highScore: parseInt(localStorage.getItem('bm_high_score') || '0', 10),
   maxLevel: parseInt(localStorage.getItem('bm_max_level') || '1', 10),
@@ -1630,22 +2018,27 @@ function updateFunkyCapsule(text, styleClass) {
 
 function applyTheme(themeName) {
   const legacyMap = {
-    'mango': 'spider-red',
-    'desi-gold': 'spider-red',
-    'bubblegum': 'cyber-miles',
-    'cyberpunk': 'cyber-miles',
-    'carnival': 'symbiote',
-    'matrix': 'symbiote',
-    'arcade': 'iron-spider',
-    'sunset': 'iron-spider',
-    'aurora': 'stealth-black'
+    'spider-red': 'spiderman',
+    'stealth-black': 'deadpool',
+    'cyber-miles': 'ironman',
+    'symbiote': 'thor',
+    'iron-spider': 'ironman',
+    'mango': 'spiderman',
+    'desi-gold': 'spiderman',
+    'bubblegum': 'loki',
+    'cyberpunk': 'thor',
+    'carnival': 'deadpool',
+    'matrix': 'loki',
+    'arcade': 'captain-america',
+    'sunset': 'ironman',
+    'aurora': 'captain-america'
   };
   if (legacyMap[themeName]) {
     themeName = legacyMap[themeName];
   }
 
-  const allowed = ['spider-red', 'stealth-black', 'cyber-miles', 'symbiote', 'iron-spider'];
-  if (!allowed.includes(themeName)) themeName = 'spider-red';
+  const allowed = ['spiderman', 'captain-america', 'thor', 'loki', 'deadpool', 'ironman'];
+  if (!allowed.includes(themeName)) themeName = 'spiderman';
 
   APP_STATE.currentTheme = themeName;
   localStorage.setItem('bm_theme', themeName);
@@ -4044,6 +4437,13 @@ function setupEventListeners() {
   if (miniRadioInfoBtn) miniRadioInfoBtn.addEventListener('click', openRadioDeckHandler);
 
   // Render 10 real Hindi Lo-Fi audio tracks into terminal
+  // Live search / filter across all 50 Hindi Lo-Fi songs
+  const trackSearchInput = document.getElementById('terminalTrackSearch');
+  if (trackSearchInput) {
+    trackSearchInput.addEventListener('input', (e) => {
+      lofiRadio.renderRadioTracks(e.target.value);
+    });
+  }
   lofiRadio.renderRadioTracks();
 
   // 3 Jugaad Power-Up Buttons
@@ -4218,6 +4618,18 @@ window.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   AntiCheat.initProtection();
   initWebSocket();
+
+  // Instant continuous background music trigger on first user interaction
+  const autoPlayMusic = () => {
+    lofiRadio.ensureContext();
+    if (!lofiRadio.isPlaying) {
+      lofiRadio.playTrack(0);
+    }
+    window.removeEventListener('pointerdown', autoPlayMusic);
+    window.removeEventListener('keydown', autoPlayMusic);
+  };
+  window.addEventListener('pointerdown', autoPlayMusic, { once: true });
+  window.addEventListener('keydown', autoPlayMusic, { once: true });
   initSupabase();
 
   // If user hasn't registered a custom codename yet, prompt them to write their own name!
