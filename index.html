@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>DIMAAG KA FALOODA: BEAT RUN 3.0 FORTRESS</title>
+  <title>DIMAAG KA FALOODA: SPIDER BEAT RUN</title>
   <meta name="game-server" content="">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co wss://* ws://*; media-src https://archive.org https://*.archive.org blob:; object-src 'none'; base-uri 'self';">
   
-  <!-- Funky Vector Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23080E21'/%3E%3Ccircle cx='20' cy='20' r='8' fill='%23FFB703'/%3E%3Ccircle cx='44' cy='20' r='8' fill='%23FF2A6D'/%3E%3Ccircle cx='20' cy='44' r='8' fill='%2305D9E8'/%3E%3Ccircle cx='44' cy='44' r='8' fill='%23FFE600'/%3E%3Cpath d='M20 20L44 44M44 20L20 44' stroke='%23FFFFFF' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <!-- Spider Vector Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%2308070A'/%3E%3Cellipse cx='32' cy='32' rx='22' ry='26' fill='%23E62429'/%3E%3Cpath d='M16 26c4 6 10 9 14 9-2-5-4-11-5-14-3 1-7 3-9 5z' fill='%23FFFFFF' stroke='%23000000' stroke-width='2'/%3E%3Cpath d='M48 26c-4 6-10 9-14 9 2-5 4-11 5-14 3 1 7 3 9 5z' fill='%23FFFFFF' stroke='%23000000' stroke-width='2'/%3E%3C/svg%3E">
 
   <!-- Google Fonts: Plus Jakarta Sans, Space Grotesk, Outfit & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,12 +34,17 @@
     <!-- Top Funky Glass Header -->
     <header class="funky-header">
       <div class="header-brand">
-        <div class="brand-icon-box">
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 5.6L20 10l-4.4 4 1.3 6-4.9-3.2L7.1 20l1.3-6L4 10l5.6-2.4z"/></svg>
+        <div class="brand-icon-box spider-brand-icon">
+          <svg viewBox="0 0 24 24">
+            <!-- Spider Mask Vector -->
+            <path d="M12 2C6.5 2 3 6.5 3 12c0 4.5 3.5 9.5 9 10 5.5-.5 9-5.5 9-10 0-5.5-3.5-10-9-10z" fill="#E62429"/>
+            <path d="M5.5 11c2.5 3 6 4 7 4-1-2.5-2-5.5-2.5-7-1.5.5-3.5 1.5-4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1"/>
+            <path d="M18.5 11c-2.5 3-6 4-7 4 1-2.5 2-5.5 2.5-7 1.5.5 3.5 1.5 4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1"/>
+          </svg>
         </div>
         <div class="brand-text-block">
           <h1 class="kinetic-text">DIMAAG KA FALOODA</h1>
-          <div class="badge-sub">BEAT RUN 2.0</div>
+          <div class="badge-sub">SPIDER EDITION</div>
         </div>
       </div>
 
@@ -114,50 +119,40 @@
               <!-- Injected via game.js -->
             </div>
             <div style="text-align: left;">
-              <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">ACTIVE OPERATIVE</div>
-              <div id="lblPlayerHandle" class="operator-handle kinetic-text-gold">CHINTU_404</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">ACTIVE SPIDER OPERATIVE</div>
+              <div id="lblPlayerHandle" class="operator-handle kinetic-text-gold">REGISTER_NAME</div>
             </div>
           </div>
-          <button id="btnEditProfile" class="btn-funky" style="padding: 6px 11px; font-size: 0.78rem;">EDIT</button>
+          <button id="btnEditProfile" class="btn-funky" style="padding: 6px 11px; font-size: 0.78rem;">CHANGE CODENAME</button>
         </div>
       </div>
 
       <!-- Right Column on PC / Bottom Stack on Mobile -->
       <div class="menu-right-col">
-        <!-- Mode Selection -->
+        <!-- Mode Selection (Single Player Focused) -->
         <div class="modes-list">
-          <!-- Mode 1: Solo Campaign -->
-          <div id="btnStartSolo" class="mode-item-glass">
+          <!-- Solo Campaign -->
+          <div id="btnStartSolo" class="mode-item-glass primary-solo-mode">
             <div class="mode-icon-bubble">
-              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
             </div>
             <div class="mode-details">
-              <span class="mode-badge">01 // SOLO</span>
-              <div class="mode-name">BEAT RUN</div>
-            </div>
-          </div>
-
-          <!-- Mode 2: 1v1 Room Duel -->
-          <div id="btnStartOnline" class="mode-item-glass">
-            <div class="mode-icon-bubble">
-              <svg viewBox="0 0 24 24"><path d="M19.5 3h-15C3.12 3 2 4.12 2 5.5v13C2 19.88 3.12 21 4.5 21h15c1.38 0 2.5-1.12 2.5-2.5v-13C22 4.12 20.88 3 19.5 3zm-9 13.5l-4-4 1.41-1.41L10.5 13.67l6.09-6.08L18 9l-7.5 7.5z"/></svg>
-            </div>
-            <div class="mode-details">
-              <span class="mode-badge">02 // 1V1 DUEL</span>
-              <div class="mode-name">ROOM DUEL</div>
+              <span class="mode-badge">CAMPAIGN // 100% SINGLE PLAYER</span>
+              <div class="mode-name">START BEAT RUN</div>
+              <div class="mode-desc">Dynamic 60-Tile Memory Arena & Desi Lo-Fi Beats</div>
             </div>
           </div>
         </div>
 
-        <!-- 5 Top-Notch Curated Themes Selector -->
+        <!-- Spider-Man Curated Themes Selector -->
         <div class="theme-selector-box">
-          <div class="theme-label-header">PALETTES:</div>
+          <div class="theme-label-header">SUIT THEMES:</div>
           <div class="theme-selector-row">
-            <button class="theme-pill-btn active" data-theme="desi-gold">DESI GOLD</button>
-            <button class="theme-pill-btn" data-theme="cyberpunk">CYBERPUNK</button>
-            <button class="theme-pill-btn" data-theme="matrix">MATRIX</button>
-            <button class="theme-pill-btn" data-theme="sunset">SUNSET</button>
-            <button class="theme-pill-btn" data-theme="aurora">AURORA</button>
+            <button class="theme-pill-btn active" data-theme="spider-red">SPIDER-RED</button>
+            <button class="theme-pill-btn" data-theme="stealth-black">STEALTH</button>
+            <button class="theme-pill-btn" data-theme="cyber-miles">MILES</button>
+            <button class="theme-pill-btn" data-theme="symbiote">SYMBIOTE</button>
+            <button class="theme-pill-btn" data-theme="iron-spider">IRON SPIDER</button>
           </div>
         </div>
 
@@ -165,7 +160,7 @@
         <div class="menu-bottom-row">
           <button id="btnOpenLeaderboard" class="btn-funky">
             <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1c1.9-.38 3.4-1.95 3.61-3.94C19.08 11.63 21 9.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
-            TOP 10 RANKS
+            GLOBAL LEADERBOARD (TOP 10)
           </button>
         </div>
       </div>
@@ -174,46 +169,11 @@
     <!-- =====================================================================
          SCREEN 2: SINGLE PLAYER (ADAPTIVE: 3-COL COCKPIT ON PC, STACK ON MOBILE)
          ===================================================================== -->
+    <!-- =====================================================================
+         SCREEN 2: SINGLE PLAYER (CLEAN FOCUSED ARENA)
+         ===================================================================== -->
     <div id="view-singleplay" class="screen-view">
       <div class="singleplay-responsive-layout">
-
-        <!-- DESKTOP LEFT WING (PC / LAPTOP / MAC COCKPIT) -->
-        <div class="desktop-wing-left">
-          <!-- Operative Telemetry Card -->
-          <div class="cockpit-panel-glass">
-            <div class="cockpit-panel-title">OPERATOR TELEMETRY</div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div id="dtAvatarPreview" class="operator-avatar-preview"></div>
-              <div>
-                <div id="dtPlayerHandle" class="operator-handle kinetic-text-gold" style="font-size: 1rem;">CHINTU_PRO</div>
-                <div style="font-size: 0.72rem; color: var(--color-accent); font-weight: 700;">PRO MEMORIZER</div>
-              </div>
-            </div>
-            <!-- Neural Shields Status -->
-            <div style="margin-top: 6px; border-top: var(--glass-border-subtle); padding-top: 6px;">
-              <div style="font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono);">NEURAL SHIELDS</div>
-              <div id="dtShieldsContainer" class="shields-container" style="justify-content: flex-start; margin-top: 4px;">
-                <!-- Mirrored from main shields -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Desktop Physical Numpad Helper Diagram -->
-          <div class="cockpit-panel-glass">
-            <div class="cockpit-panel-title">NUMPAD REFLEX MAP</div>
-            <div class="numpad-grid-helper">
-              <div class="numpad-key-box">[ 7 ]</div>
-              <div class="numpad-key-box">[ 8 ]</div>
-              <div class="numpad-key-box">[ 9 ]</div>
-              <div class="numpad-key-box">[ 4 ]</div>
-              <div class="numpad-key-box">[ 5 ]</div>
-              <div class="numpad-key-box">[ 6 ]</div>
-              <div class="numpad-key-box">[ 1 ]</div>
-              <div class="numpad-key-box">[ 2 ]</div>
-              <div class="numpad-key-box">[ 3 ]</div>
-            </div>
-          </div>
-        </div>
 
         <!-- CENTER STAGE (ARENA & CORE ENGINE) -->
         <div class="desktop-center-stage">
@@ -234,6 +194,35 @@
                 <svg id="shield-2" class="shield-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
                 <svg id="shield-3" class="shield-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
               </div>
+            </div>
+          </div>
+
+          <!-- Mini Radio Player Bar (In-Game Lo-Fi Audio Deck) -->
+          <div id="miniRadioBar" class="mini-radio-bar">
+            <div class="mini-radio-info" id="miniRadioInfoBtn" title="Click to view radio tracklist">
+              <div class="mini-radio-equalizer">
+                <span class="m-eq-bar bar-1"></span>
+                <span class="m-eq-bar bar-2"></span>
+                <span class="m-eq-bar bar-3"></span>
+              </div>
+              <div class="mini-radio-text">
+                <span id="miniRadioTrackTitle" class="mini-track-title">KESARIYA</span>
+                <span id="miniRadioTrackArtist" class="mini-track-artist">Arijit Singh // Hindi Lo-Fi</span>
+              </div>
+            </div>
+            <div class="mini-radio-controls">
+              <button id="btnMiniRadioPrev" class="btn-mini-ctrl" title="Previous Song">
+                <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" fill="currentColor"/></svg>
+              </button>
+              <button id="btnMiniRadioPlayPause" class="btn-mini-ctrl primary" title="Play/Pause Music">
+                <svg id="miniRadioPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+              </button>
+              <button id="btnMiniRadioNext" class="btn-mini-ctrl" title="Next Song">
+                <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" fill="currentColor"/></svg>
+              </button>
+              <button id="btnMiniRadioExpand" class="btn-mini-ctrl radio-expand-btn" title="Open 108.4 FM Radio Deck">
+                <span class="radio-freq-badge">108.4 FM</span>
+              </button>
             </div>
           </div>
 
@@ -294,150 +283,23 @@
                 <div class="reverse-alert-tag">ATTENTION!</div>
                 <h3 class="reverse-title kinetic-text">REVERSE ORDER MODE!</h3>
                 <p class="reverse-desc">DHYAN DE! NOW TAP TILES IN REVERSE ORDER (LAST TO FIRST)!</p>
-                <div class="reverse-rule-badge">TILES: 9 (3x3) // TIME: 2.0s</div>
+                <div class="reverse-rule-badge">REVERSE RECALL // TAKE YOUR TIME</div>
                 <button id="btnDismissReverse" class="btn-funky primary reverse-action-btn">READY! LET'S GO</button>
               </div>
             </div>
 
             <div id="singleMatrixGrid" class="matrix-grid-dynamic">
-              <!-- Dynamically populated via setupSinglePlayerGrid() in game.js -->
+              <!-- Dynamically populated via setupSinglePlayerGrid() in game.js without any numpad hints -->
             </div>
           </div>
 
           <!-- Live Brain IQ Rank Banner -->
           <div class="iq-meter-banner">
             <span>BRAIN STATUS:</span>
-            <span id="spBrainIQ" class="iq-badge kinetic-text">CHINTU (50 IQ)</span>
+            <span id="spBrainIQ" class="iq-badge kinetic-text">SPIDER INITIATE (50 IQ)</span>
           </div>
         </div>
 
-        <!-- DESKTOP RIGHT WING (PC / LAPTOP / MAC COCKPIT) -->
-        <div class="desktop-wing-right">
-          <!-- Brain IQ Radar Card -->
-          <div class="cockpit-panel-glass">
-            <div class="cockpit-panel-title">COGNITIVE RADAR</div>
-            <div id="dtDiffLevel" style="font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; color: var(--color-primary); margin-top: 4px;">
-              STANDARD 3-SEQ
-            </div>
-          </div>
-
-          <!-- Live Desi Taunts Feed -->
-          <div class="cockpit-panel-glass">
-            <div class="cockpit-panel-title">DESI COMMENTARY</div>
-            <div id="dtLiveTaunt" style="font-size: 0.84rem; font-weight: 700; color: var(--color-coral); line-height: 1.35;">
-              "Arey Sharma ji ke ladke ko dekho!"
-            </div>
-          </div>
-
-          <!-- Live Leaderboard Quick Look -->
-          <div class="cockpit-panel-glass" style="flex: 1; min-height: 0;">
-            <div class="cockpit-panel-title">TOP HIGH SCORE</div>
-            <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 4px;">
-              <span id="dtHighScoreVal" class="kinetic-text" style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 900;">0</span>
-              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">PTS</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- =====================================================================
-         SCREEN 3: 1V1 ROOM DUEL (LIVE WEBSOCKET SYNC)
-         ===================================================================== -->
-    <div id="view-duel-room" class="screen-view">
-      <!-- Duel Scoreboard HUD -->
-      <div class="duel-scoreboard-hud">
-        <div id="duelP1Card" class="player-score-card">
-          <div class="duel-stun-badge">MOYE MOYE (1.5S)</div>
-          <div class="score-card-top">
-            <span id="duelP1Label" class="card-player-label">YOU (PLAYER 1)</span>
-            <span id="duelP1Score" class="card-points-badge kinetic-text">0 / 10</span>
-          </div>
-        </div>
-        <div id="duelP2Card" class="player-score-card opponent">
-          <div class="duel-stun-badge">MOYE MOYE (1.5S)</div>
-          <div class="score-card-top">
-            <span id="duelP2Label" class="card-player-label">OPPONENT</span>
-            <span id="duelP2Score" class="card-points-badge kinetic-text">0 / 10</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Active Duel Room Code Share Block -->
-      <div class="duel-room-code-banner">
-        <div class="duel-code-info">
-          <span class="duel-code-label">ROOM:</span>
-          <span id="duelActiveRoomCode" class="duel-code-val kinetic-text">MIND</span>
-        </div>
-        <div class="duel-code-actions">
-          <button id="btnDuelCopyCode" class="btn-funky" style="padding: 4px 10px; font-size: 0.72rem;">COPY CODE</button>
-          <button id="btnDuelShareCode" class="btn-funky primary" style="padding: 4px 10px; font-size: 0.72rem;">SHARE</button>
-        </div>
-      </div>
-
-      <!-- Duel Phase Banner -->
-      <div class="phase-status-glass">
-        <span class="phase-text-title">DUEL STATUS</span>
-        <span id="duelPhaseStatus" class="phase-pill-badge memorize">MEMORIZE DUEL PATTERN</span>
-      </div>
-
-      <!-- Duel Matrix -->
-      <div class="matrix-arena-card">
-        <div id="duelMatrixGrid" class="matrix-grid-dynamic" data-total-tiles="9" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);">
-          <div id="dtile-0" class="glass-tile" data-index="0"><span class="numpad-hint">1</span><span class="order-badge"></span></div>
-          <div id="dtile-1" class="glass-tile" data-index="1"><span class="numpad-hint">2</span><span class="order-badge"></span></div>
-          <div id="dtile-2" class="glass-tile" data-index="2"><span class="numpad-hint">3</span><span class="order-badge"></span></div>
-          <div id="dtile-3" class="glass-tile" data-index="3"><span class="numpad-hint">4</span><span class="order-badge"></span></div>
-          <div id="dtile-4" class="glass-tile" data-index="4"><span class="numpad-hint">5</span><span class="order-badge"></span></div>
-          <div id="dtile-5" class="glass-tile" data-index="5"><span class="numpad-hint">6</span><span class="order-badge"></span></div>
-          <div id="dtile-6" class="glass-tile" data-index="6"><span class="numpad-hint">7</span><span class="order-badge"></span></div>
-          <div id="dtile-7" class="glass-tile" data-index="7"><span class="numpad-hint">8</span><span class="order-badge"></span></div>
-          <div id="dtile-8" class="glass-tile" data-index="8"><span class="numpad-hint">9</span><span class="order-badge"></span></div>
-        </div>
-      </div>
-
-      <div class="iq-meter-banner">
-        <span>TARGET: 10 PTS</span>
-        <span>WRONG TAP: 1.5S STUN</span>
-      </div>
-    </div>
-
-    <!-- =====================================================================
-         SCREEN 4: ONLINE ROOM SETUP
-         ===================================================================== -->
-    <div id="view-online-lobby" class="screen-view">
-      <div class="glass-modal-card lobby-modal-card">
-        <h2 class="kinetic-text">1V1 ROOM DUEL</h2>
-        <div id="lobbyDeviceBadge" class="device-pill-badge">[ DETECTING HARDWARE... ]</div>
-        <div style="font-size: 0.74rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 12px; letter-spacing: 0.04em;">
-          PLAY WITH A FRIEND ON MATCHING HARDWARE IN REAL-TIME
-        </div>
-
-        <!-- Room Code Display Box -->
-        <div class="lobby-code-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap;">
-            <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">HOST ROOM CODE:</span>
-            <div style="display: flex; gap: 6px;">
-              <button id="btnNewRoomCode" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">NEW CODE</button>
-              <button id="btnCopyRoomCode" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">COPY</button>
-              <button id="btnCopyInviteLink" class="btn-funky" style="padding: 4px 9px; font-size: 0.70rem;">SHARE LINK</button>
-            </div>
-          </div>
-          <div id="lblRoomCode" class="room-code-tag kinetic-text">MIND</div>
-          <div id="roomStatusText" class="room-status-indicator">
-            HOSTING ROOM // WAITING FOR OPPONENT...
-          </div>
-        </div>
-
-        <div style="border-top: var(--glass-border-subtle); padding-top: 12px; margin-top: 10px;">
-          <label style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">HAVE A CODE? JOIN ROOM:</label>
-          <input type="text" id="inputJoinRoom" class="glass-input-field" placeholder="ENTER 4-CHAR ALPHANUMERIC CODE" maxlength="4" autocomplete="off" autocapitalize="characters">
-          <div style="display: flex; gap: 8px;">
-            <button id="btnJoinRoomSubmit" class="btn-funky primary" style="flex: 1.2; height: 44px; font-weight: 800;">CONNECT ROOM</button>
-            <button id="btnPlayBot" class="btn-funky" style="flex: 1; height: 44px;">VS ROBOT</button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -511,10 +373,10 @@
        MODAL 1: OPERATOR PROFILE & AVATAR PICKER (ZERO EMOJIS)
        ======================================================================= -->
   <div id="modalProfile" class="glass-modal-backdrop">
-    <div class="glass-modal-card" style="width: 100%; max-width: 380px;">
-      <h2 class="kinetic-text">OPERATOR IDENTITY</h2>
+    <div class="glass-modal-card" style="width: 100%; max-width: 400px;">
+      <h2 class="kinetic-text">SPIDER REGISTRATION</h2>
       <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px;">
-        Select your handcrafted avatar and set your operative username.
+        Choose your Spider operative avatar and write your own custom name to enter the arena.
       </p>
 
       <!-- SVG Avatar Grid (Zero Emojis!) -->
@@ -522,14 +384,21 @@
         <!-- Injected via game.js -->
       </div>
 
-      <input type="text" id="inputPlayerHandle" class="glass-input-field" maxlength="12" placeholder="e.g. CHINTU_PRO">
+      <div style="margin-top: 10px; text-align: left;">
+        <label for="inputPlayerHandle" style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">
+          OPERATOR CODENAME:
+        </label>
+        <input type="text" id="inputPlayerHandle" class="glass-input-field" maxlength="16" placeholder="WRITE YOUR NAME (e.g. SPIDER_MILES)" autocomplete="off" autocapitalize="characters">
+        <div id="profileValidationMsg" style="font-size: 0.72rem; color: var(--color-danger); margin-top: 4px; display: none;"></div>
+      </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
-        <button id="btnSaveProfile" class="btn-funky primary" style="width: 100%;">SAVE PROFILE</button>
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
+        <button id="btnSaveProfile" class="btn-funky primary" style="width: 100%; height: 46px; font-weight: 800;">
+          CONFIRM CODENAME & ENTER
+        </button>
       </div>
     </div>
   </div>
-
 
   <!-- =======================================================================
        MODAL 3: RETRO HACKER / LO-FI CHILL RADIO TERMINAL (ZERO EMOJIS)
@@ -590,20 +459,6 @@
           [ PLAY IN BACKGROUND & RESUME GAME ]
         </button>
       </div>
-    </div>
-  </div>
-
-  <!-- Device Mismatch Notification Modal -->
-  <div id="modalDeviceMismatch" class="glass-modal-backdrop">
-    <div class="glass-modal-card" style="width: 100%; max-width: 380px; text-align: center;">
-      <h2 class="kinetic-text" style="color: var(--color-secondary);">DEVICE MISMATCH</h2>
-      <p id="mismatchDescHindi" style="font-size: 0.88rem; color: #FFFFFF; font-weight: 700; margin: 12px 0 6px;">
-        Ye room laptop ke liye hai. Phone se join nahi kar sakte.
-      </p>
-      <p id="mismatchDescEnglish" style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 16px;">
-        This room requires a matching device type. Please join from a matching device.
-      </p>
-      <button id="btnCloseMismatch" class="btn-funky primary" style="width: 100%;">UNDERSTOOD</button>
     </div>
   </div>
 

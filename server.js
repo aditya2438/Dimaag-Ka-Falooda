@@ -76,6 +76,12 @@ const MIME_TYPES = {
 };
 
 const KNOWN_AVATARS = [
+  'spider_mask',
+  'miles_stealth',
+  'web_slinger',
+  'spider_sense',
+  'iron_spider',
+  'spider_bot',
   'cutting_chai',
   'sharma_beta',
   'auto_rocket',

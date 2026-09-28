@@ -9,14 +9,21 @@
    SECTION 1: BESPOKE FUNNY DESI SVG AVATARS (ZERO EMOJIS)
    ========================================================================== */
 const AVATARS = {
-  cutting_chai: `<svg viewBox="0 0 24 24"><path fill="#F59E0B" d="M4 19h16v2H4z"/><path fill="#D97706" d="M6 7l1.5 10h9L18 7H6zm10 8H8l-1-6h10l-1 6z"/><path fill="#FCD34D" d="M9 3c0 1.5-1 2-1 3s1 1.5 1 3h2c0-1.5-1-2-1-3s1-1.5 1-3H9zm4 0c0 1.5-1 2-1 3s1 1.5 1 3h2c0-1.5-1-2-1-3s1-1.5 1-3h-2z"/></svg>`,
-  sharma_beta: `<svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="3.5" fill="none" stroke="#FACC15" stroke-width="2.2"/><circle cx="17" cy="12" r="3.5" fill="none" stroke="#FACC15" stroke-width="2.2"/><path fill="#FACC15" d="M10.5 12h3M7 7l5-4 5 4M12 16v3m-3 0h6"/></svg>`,
-  auto_rocket: `<svg viewBox="0 0 24 24"><path fill="#A3E635" d="M12 2L4 8v10h2v2h2v-2h8v2h2v-2h2V8l-8-6zm-4 8h8v4H8v-4zm4-6l5 4H7l5-4z"/><circle cx="8" cy="16" r="1.5" fill="#000"/><circle cx="16" cy="16" r="1.5" fill="#000"/></svg>`,
-  chintu_pro: `<svg viewBox="0 0 24 24"><path fill="#06B6D4" d="M12 2a9 9 0 0 0-9 9v4a4 4 0 0 0 4 4h2v-8H5v-0.5A7 7 0 0 1 12 4.5a7 7 0 0 1 7 7V12h-4v8h2a4 4 0 0 0 4-4v-4a9 9 0 0 0-9-9z"/><rect x="8" y="10" width="8" height="4" rx="2" fill="#FFFFFF"/></svg>`,
-  gabbar_mustache: `<svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="3" fill="#F43F5E"/><circle cx="17" cy="8" r="3" fill="#F43F5E"/><path fill="#FFFFFF" d="M10 8h4v1h-4z"/><path fill="#F43F5E" d="M12 14c-2.5-3-7-3-9 0 2.5 3 7 1 9 0zm0 0c2.5-3 7-3 9 0-2.5 3-7 1-9 0z"/></svg>`,
-  desi_alien: `<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="10" fill="#A855F7"/><circle cx="8" cy="11" r="2" fill="#000"/><circle cx="16" cy="11" r="2" fill="#000"/><circle cx="12" cy="7" r="1.5" fill="#F43F5E"/><path fill="none" stroke="#FFFFFF" stroke-width="2" d="M9 16c1.5 1.5 4.5 1.5 6 0"/></svg>`,
-  samosa_ninja: `<svg viewBox="0 0 24 24"><path fill="#EA580C" d="M12 3L2 19h20L12 3zm0 4.5L18.5 17H5.5L12 7.5z"/><rect x="6" y="11" width="12" height="3" fill="#1E293B"/><circle cx="9" cy="12.5" r="1" fill="#FFFFFF"/><circle cx="15" cy="12.5" r="1" fill="#FFFFFF"/></svg>`,
-  babu_rao: `<svg viewBox="0 0 24 24"><circle cx="7" cy="10" r="4" fill="none" stroke="#38BDF8" stroke-width="2.5"/><circle cx="17" cy="10" r="4" fill="none" stroke="#38BDF8" stroke-width="2.5"/><path fill="#38BDF8" d="M11 10h2M12 14v4M9 19h6"/><path fill="#FFFFFF" d="M10 15h4v1.5h-4z"/></svg>`
+  spider_mask: `<svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 3 6.5 3 12c0 4.5 3.5 9.5 9 10 5.5-.5 9-5.5 9-10 0-5.5-3.5-10-9-10z" fill="#E62429"/><path d="M5.5 11c2.5 3 6 4 7 4-1-2.5-2-5.5-2.5-7-1.5.5-3.5 1.5-4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1.2"/><path d="M18.5 11c-2.5 3-6 4-7 4 1-2.5 2-5.5 2.5-7 1.5.5 3.5 1.5 4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1.2"/><line x1="12" y1="2" x2="12" y2="22" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"/></svg>`,
+  miles_stealth: `<svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 3 6.5 3 12c0 4.5 3.5 9.5 9 10 5.5-.5 9-5.5 9-10 0-5.5-3.5-10-9-10z" fill="#0D0D14"/><path d="M5.5 11c2.5 3 6 4 7 4-1-2.5-2-5.5-2.5-7-1.5.5-3.5 1.5-4.5 3z" fill="#E62429" stroke="#FF1744" stroke-width="1.2"/><path d="M18.5 11c-2.5 3-6 4-7 4 1-2.5 2-5.5 2.5-7 1.5.5 3.5 1.5 4.5 3z" fill="#E62429" stroke="#FF1744" stroke-width="1.2"/></svg>`,
+  web_slinger: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#0A0A10" stroke="#E62429" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#00E5FF" stroke-width="1.2"/><path d="M12 2v20M2 12h20M5 5l14 14M5 19L19 5" stroke="rgba(0,229,255,0.4)" stroke-width="0.8"/><circle cx="12" cy="12" r="2.5" fill="#E62429"/></svg>`,
+  spider_sense: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="#E62429"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.2 2.2M16.2 16.2l2.2 2.2M5.6 18.4l2.2-2.2M16.2 7.8l2.2-2.2" stroke="#FFE600" stroke-width="2" stroke-linecap="round"/></svg>`,
+  iron_spider: `<svg viewBox="0 0 24 24"><path d="M12 2L4 6v12l8 4 8-4V6l-8-4z" fill="#8B0000" stroke="#FFD700" stroke-width="1.5"/><circle cx="12" cy="12" r="4" fill="#FFD700"/><path d="M12 5v14M6 9h12M6 15h12" stroke="#00E5FF" stroke-width="1"/></svg>`,
+  spider_bot: `<svg viewBox="0 0 24 24"><rect x="5" y="7" width="14" height="10" rx="3" fill="#1C1B24" stroke="#E62429" stroke-width="1.5"/><circle cx="9" cy="12" r="2" fill="#00E5FF"/><circle cx="15" cy="12" r="2" fill="#00E5FF"/><path d="M3 9l3 2M3 15l3-2M21 9l-3 2M21 15l-3-2M9 4l1 3M15 4l-1 3" stroke="#E62429" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+  // Legacy avatars fallback for compatibility
+  cutting_chai: `<svg viewBox="0 0 24 24"><path fill="#F59E0B" d="M4 19h16v2H4z"/><path fill="#D97706" d="M6 7l1.5 10h9L18 7H6zm10 8H8l-1-6h10l-1 6z"/></svg>`,
+  sharma_beta: `<svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="3.5" fill="none" stroke="#FACC15" stroke-width="2.2"/><circle cx="17" cy="12" r="3.5" fill="none" stroke="#FACC15" stroke-width="2.2"/></svg>`,
+  auto_rocket: `<svg viewBox="0 0 24 24"><path fill="#A3E635" d="M12 2L4 8v10h2v2h2v-2h8v2h2v-2h2V8l-8-6z"/></svg>`,
+  chintu_pro: `<svg viewBox="0 0 24 24"><path fill="#06B6D4" d="M12 2a9 9 0 0 0-9 9v4a4 4 0 0 0 4 4h2v-8H5v-0.5A7 7 0 0 1 12 4.5a7 7 0 0 1 7 7V12h-4v8h2a4 4 0 0 0 4-4v-4a9 9 0 0 0-9-9z"/></svg>`,
+  gabbar_mustache: `<svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="3" fill="#F43F5E"/><circle cx="17" cy="8" r="3" fill="#F43F5E"/></svg>`,
+  desi_alien: `<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="10" fill="#A855F7"/><circle cx="8" cy="11" r="2" fill="#000"/><circle cx="16" cy="11" r="2" fill="#000"/></svg>`,
+  samosa_ninja: `<svg viewBox="0 0 24 24"><path fill="#EA580C" d="M12 3L2 19h20L12 3z"/></svg>`,
+  babu_rao: `<svg viewBox="0 0 24 24"><circle cx="7" cy="10" r="4" fill="none" stroke="#38BDF8" stroke-width="2.5"/><circle cx="17" cy="10" r="4" fill="none" stroke="#38BDF8" stroke-width="2.5"/></svg>`
 };
 
 /* ==========================================================================
@@ -331,61 +338,61 @@ function getLevelConfig(level) {
   const hasDecoy = false; // Fake decoy tiles completely eliminated per client request
   let isReverse = false;
   let isGhost = false;
-  let timeLimitSec = 3.5;
+  let timeLimitSec = 5.5;
 
   if (level < 5) {
     // PHASE 1: FORWARD ORDER (Smooth onboarding & addictive flow curve)
     isReverse = false;
     if (level === 1) {
-      // Warm-up round: 3x3 grid, seq 3, 4.5s generous timer for instant positive feedback
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 4.5;
+      // Warm-up round: 3x3 grid, seq 3, 5.5s generous timer for instant positive feedback & addiction
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 5.5;
     } else if (level === 2) {
-      // Flow builder: 3x3 grid, seq 3, 4.0s timer to solidify rhythm and lock in combos
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 4.0;
+      // Flow builder: 3x3 grid, seq 3, 5.0s timer to solidify rhythm and lock in combos
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 5.0;
     } else if (level === 3) {
-      // Stepping up: 3x3 grid, seq 4, 3.4s timer to test memory without visual overload
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 3.4;
+      // Stepping up: 3x3 grid, seq 4, 5.2s timer to test memory without visual overload
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 5.2;
     } else if (level === 4) {
-      // Grid expansion: 3x4 grid (12 tiles), seq 4, 2.8s timer preparing for reverse phase
-      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 2.8;
+      // Grid expansion: 3x4 grid (12 tiles), seq 4. When grid increases, guessing time increases to 7.2s!
+      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 7.2;
     }
   } else {
     // PHASE 2: REVERSE ORDER MODE (Starts at Level 5!)
-    // Resets to 9 tiles, time to 2.0s, and hardness restarts progressive from base
+    // When grid expands, time scales up proportionally so it's always doable and addictive!
     isReverse = true;
     const revLevel = level - 4; // 1, 2, 3, 4, 5...
 
     if (revLevel === 1) {
-      // Level 5: Reverse Level 1 (9 tiles, seq 3, 2.0s)
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 2.0;
+      // Level 5: Reverse Level 1 (9 tiles, seq 3, 5.5s to get used to reverse thinking)
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 3; timeLimitSec = 5.5;
     } else if (revLevel === 2) {
-      // Level 6: Reverse Level 2 (9 tiles, seq 4, 1.9s)
-      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 1.9;
+      // Level 6: Reverse Level 2 (9 tiles, seq 4, 6.0s)
+      rows = 3; cols = 3; totalTiles = 9; sequenceLength = 4; timeLimitSec = 6.0;
     } else if (revLevel === 3) {
-      // Level 7: Reverse Level 3 (12 tiles, seq 4, 1.8s)
-      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 1.8;
+      // Level 7: Reverse Level 3 (12 tiles, seq 4) -> Grid increases -> Time increases to 7.8s
+      rows = 3; cols = 4; totalTiles = 12; sequenceLength = 4; timeLimitSec = 7.8;
     } else if (revLevel === 4) {
-      // Level 8: Reverse Level 4 (15 tiles, seq 5, 1.7s)
-      rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 1.7;
+      // Level 8: Reverse Level 4 (15 tiles, seq 5) -> Grid increases -> Time increases to 9.2s
+      rows = 3; cols = 5; totalTiles = 15; sequenceLength = 5; timeLimitSec = 9.2;
     } else if (revLevel === 5) {
-      // Level 9: Reverse Level 5 (20 tiles, seq 6, 1.6s)
-      rows = 4; cols = 5; totalTiles = 20; sequenceLength = 6; timeLimitSec = 1.6;
+      // Level 9: Reverse Level 5 (20 tiles, seq 6) -> Grid increases -> Time increases to 11.5s
+      rows = 4; cols = 5; totalTiles = 20; sequenceLength = 6; timeLimitSec = 11.5;
     } else if (revLevel === 6) {
-      // Level 10: Reverse Level 6 (20 tiles, seq 7, 1.5s)
-      rows = 4; cols = 5; totalTiles = 20; sequenceLength = 7; timeLimitSec = 1.5;
+      // Level 10: Reverse Level 6 (20 tiles, seq 7) -> Time increases to 12.5s
+      rows = 4; cols = 5; totalTiles = 20; sequenceLength = 7; timeLimitSec = 12.5;
     } else if (revLevel === 7) {
-      // Level 11: Reverse Level 7 (30 tiles, seq 8, 1.4s)
-      rows = 5; cols = 6; totalTiles = 30; sequenceLength = 8; timeLimitSec = 1.4;
+      // Level 11: Reverse Level 7 (30 tiles, seq 8) -> Grid increases -> Time increases to 15.0s
+      rows = 5; cols = 6; totalTiles = 30; sequenceLength = 8; timeLimitSec = 15.0;
     } else {
-      // Level 12+: Ultra Reflex Reverse Mode (40 tiles)
+      // Level 12+: Ultra Reflex Reverse Mode (40 tiles) -> Generous scaled timer (17.5s - 20s)
       rows = 5; cols = 8; totalTiles = 40;
       sequenceLength = Math.min(10, 8 + Math.floor((revLevel - 7) / 2));
-      timeLimitSec = Math.max(1.1, 1.4 - (revLevel - 7) * 0.05);
-      isGhost = revLevel >= 9;
+      timeLimitSec = Math.min(20.0, 16.5 + (sequenceLength - 8) * 1.5);
+      isGhost = revLevel >= 12;
     }
   }
 
-  return { rows, cols, totalTiles, sequenceLength, hasDecoy, isReverse, isGhost, timeLimitSec };
+  return { rows, cols, totalTiles, tiles: totalTiles, sequenceLength, hasDecoy, isReverse, isGhost, timeLimitSec, guessTime: timeLimitSec };
 }
 
 /* ==========================================================================
@@ -1250,10 +1257,18 @@ class LofiRadioEngine {
         const playPromise = this.audioEl.play();
         if (playPromise && typeof playPromise.then === 'function') {
           playPromise.then(() => {
-            // Stream is live! Switch off synth in AUTO mode
-            if (this.mode === 'AUTO') {
-              this.stopSynthPlayback();
-            }
+            // Check after a brief delay if stream is actually emitting audio
+            setTimeout(() => {
+              if (this.audioEl && !this.audioEl.paused && this.audioEl.currentTime > 0.3) {
+                if (this.mode === 'AUTO') {
+                  this.stopSynthPlayback();
+                }
+              } else {
+                if (!this.synthIntervalId && this.mode !== 'STREAM') {
+                  this.startSynthPlayback(this.currentTrack);
+                }
+              }
+            }, 600);
             this.updateRadioUI();
           }).catch(() => {
             // Stream blocked (autoplay policy or network) — synth keeps playing
@@ -1264,6 +1279,9 @@ class LofiRadioEngine {
         }
       } catch (e) {
         // Stream unavailable — synth already running
+        if (!this.synthIntervalId && this.mode !== 'STREAM') {
+          this.startSynthPlayback(this.currentTrack);
+        }
       }
     }
 
@@ -1383,6 +1401,23 @@ class LofiRadioEngine {
         sysLog.innerHTML = `> ACTIVE: [TRACK ${(this.currentTrack + 1).toString().padStart(2, '0')}] ${curTrack.name} (${engineLabel})<br>> ARTIST: ${curTrack.artist} // ${curTrack.sub}`;
       } else {
         sysLog.innerHTML = `> 108.4 FM: HINDI LO-FI STREAM (ARIJIT // TALWINDER // ADITYA RIKHARI)<br>> LIVE DJ BEAT SYNC ACTIVE ON TILE TAPS`;
+      }
+    }
+
+    // Live sync with in-game mini radio bar
+    const miniTrackTitle = document.getElementById('miniRadioTrackTitle');
+    const miniTrackArtist = document.getElementById('miniRadioTrackArtist');
+    const miniRadioBar = document.getElementById('miniRadioBar');
+    const miniPlayIcon = document.getElementById('miniRadioPlayIcon');
+
+    if (miniTrackTitle) miniTrackTitle.textContent = curTrack.name;
+    if (miniTrackArtist) miniTrackArtist.textContent = `${curTrack.artist} // ${curTrack.sub}`;
+    if (miniRadioBar) miniRadioBar.classList.toggle('playing', this.isPlaying);
+    if (miniPlayIcon) {
+      if (this.isPlaying) {
+        miniPlayIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>';
+      } else {
+        miniPlayIcon.innerHTML = '<path d="M8 5v14l11-7z" fill="currentColor"/>';
       }
     }
   }
@@ -1563,12 +1598,30 @@ function initAmbientCanvas() {
    ========================================================================== */
 const APP_STATE = {
   currentView: 'view-menu',
-  playerHandle: localStorage.getItem('bm_player_handle') || 'CHINTU_' + Math.floor(100 + Math.random() * 900),
-  playerAvatar: localStorage.getItem('bm_player_avatar') || 'cutting_chai',
+  playerHandle: localStorage.getItem('bm_player_handle') || '',
+  playerAvatar: localStorage.getItem('bm_player_avatar') || 'spider_mask',
+  playerId: (function() {
+    let id = localStorage.getItem('bm_player_id');
+    if (!id) {
+      id = 'spider_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9);
+      localStorage.setItem('bm_player_id', id);
+    }
+    return id;
+  })(),
   currentTheme: (function() {
     const saved = localStorage.getItem('bm_theme');
-    const legacyMap = { 'mango': 'desi-gold', 'bubblegum': 'cyberpunk', 'carnival': 'matrix', 'arcade': 'sunset' };
-    return legacyMap[saved] || saved || 'desi-gold';
+    const legacyMap = {
+      'mango': 'spider-red',
+      'desi-gold': 'spider-red',
+      'bubblegum': 'cyber-miles',
+      'cyberpunk': 'cyber-miles',
+      'carnival': 'symbiote',
+      'matrix': 'symbiote',
+      'arcade': 'iron-spider',
+      'sunset': 'iron-spider',
+      'aurora': 'stealth-black'
+    };
+    return legacyMap[saved] || saved || 'spider-red';
   })(),
   highScore: parseInt(localStorage.getItem('bm_high_score') || '0', 10),
   maxLevel: parseInt(localStorage.getItem('bm_max_level') || '1', 10),
@@ -1673,17 +1726,22 @@ function updateFunkyCapsule(text, styleClass) {
 
 function applyTheme(themeName) {
   const legacyMap = {
-    'mango': 'desi-gold',
-    'bubblegum': 'cyberpunk',
-    'carnival': 'matrix',
-    'arcade': 'sunset'
+    'mango': 'spider-red',
+    'desi-gold': 'spider-red',
+    'bubblegum': 'cyber-miles',
+    'cyberpunk': 'cyber-miles',
+    'carnival': 'symbiote',
+    'matrix': 'symbiote',
+    'arcade': 'iron-spider',
+    'sunset': 'iron-spider',
+    'aurora': 'stealth-black'
   };
   if (legacyMap[themeName]) {
     themeName = legacyMap[themeName];
   }
 
-  const allowed = ['desi-gold', 'cyberpunk', 'matrix', 'sunset', 'aurora'];
-  if (!allowed.includes(themeName)) themeName = 'desi-gold';
+  const allowed = ['spider-red', 'stealth-black', 'cyber-miles', 'symbiote', 'iron-spider'];
+  if (!allowed.includes(themeName)) themeName = 'spider-red';
 
   APP_STATE.currentTheme = themeName;
   localStorage.setItem('bm_theme', themeName);
@@ -1892,11 +1950,6 @@ class TilePool {
       tile.className = 'glass-tile hidden-tile';
       tile.setAttribute('data-index', i);
 
-      const hint = document.createElement('span');
-      hint.className = 'numpad-hint';
-      hint.textContent = i + 1;
-      tile.appendChild(hint);
-
       const badge = document.createElement('span');
       badge.className = 'order-badge';
       tile.appendChild(badge);
@@ -1985,6 +2038,18 @@ function showFloatingScore(tileIndex, text) {
    SECTION 9: SINGLE PLAYER GAMEPLAY LOOP (WITH 3 SHIELDS & FEVER MODE)
    ========================================================================== */
 function startSinglePlayerGame() {
+  if (!APP_STATE.playerHandle || APP_STATE.playerHandle.trim().length < 2) {
+    openProfileModal(true);
+    return;
+  }
+
+  // Guarantee background music starts reliably upon user entering the game
+  lofiRadio.ensureContext();
+  if (!lofiRadio.isPlaying) {
+    lofiRadio.playTrack(lofiRadio.currentTrack);
+  }
+  HapticEngine.start();
+
   AntiCheat.startRun();
 
   APP_STATE.singlePlay = {
@@ -3641,11 +3706,11 @@ function startBotBehavior() {
    SECTION 11: LEADERBOARD & REALTIME BROADCAST
    ========================================================================== */
 const DEFAULT_LEADERBOARD = [
-  { username: 'SHARMA_PRO',   avatar: 'sharma_beta',    high_score: 3600, max_level: 12 },
-  { username: 'CHAI_WALA',    avatar: 'cutting_chai',   high_score: 3100, max_level: 10 },
-  { username: 'GABBAR_SINGH', avatar: 'gabbar_mustache',high_score: 2600, max_level: 8 },
-  { username: 'BABU_RAO',     avatar: 'babu_rao',       high_score: 2150, max_level: 7 },
-  { username: 'SAMOSA_BOY',   avatar: 'samosa_ninja',   high_score: 1800, max_level: 6 }
+  { username: 'PETER_PARKER', avatar: 'spider_mask',   high_score: 4200, max_level: 14 },
+  { username: 'MILES_STEALTH',avatar: 'miles_stealth', high_score: 3600, max_level: 12 },
+  { username: 'WEB_SLINGER',  avatar: 'web_slinger',   high_score: 3100, max_level: 10 },
+  { username: 'SPIDER_SENSE', avatar: 'spider_sense',  high_score: 2600, max_level: 8 },
+  { username: 'IRON_SPIDER',  avatar: 'iron_spider',   high_score: 2150, max_level: 7 }
 ];
 
 function getLocalLeaderboard() {
@@ -3895,20 +3960,48 @@ function upsertScoreToLeaderboard(username, avatar, score, level) {
    SECTION 12: EVENT LISTENERS & SETUP
    ========================================================================== */
 function setupEventListeners() {
-  document.getElementById('btnNavMenu').addEventListener('click', () => switchView('view-menu'));
-  document.getElementById('btnStartSolo').addEventListener('click', startSinglePlayerGame);
-  document.getElementById('btnStartOnline').addEventListener('click', initDuelRoomLobby);
-  document.getElementById('btnRestartGame').addEventListener('click', startSinglePlayerGame);
-  document.getElementById('btnGameOverMenu').addEventListener('click', () => switchView('view-menu'));
+  document.getElementById('btnNavMenu').addEventListener('click', () => {
+    HapticEngine.button();
+    switchView('view-menu');
+  });
+
+  // Solo Start Action with Registration Check
+  const btnStartSolo = document.getElementById('btnStartSolo');
+  if (btnStartSolo) {
+    btnStartSolo.addEventListener('click', () => {
+      HapticEngine.button();
+      if (!APP_STATE.playerHandle || APP_STATE.playerHandle.trim().length < 2) {
+        openProfileModal(true);
+      } else {
+        startSinglePlayerGame();
+      }
+    });
+  }
+
+  document.getElementById('btnRestartGame').addEventListener('click', () => {
+    HapticEngine.button();
+    startSinglePlayerGame();
+  });
+
+  document.getElementById('btnGameOverMenu').addEventListener('click', () => {
+    HapticEngine.button();
+    switchView('view-menu');
+  });
 
   document.getElementById('btnOpenLeaderboard').addEventListener('click', () => {
+    HapticEngine.button();
     loadLeaderboard();
     switchView('view-leaderboard');
   });
-  document.getElementById('btnLeaderboardBack').addEventListener('click', () => switchView('view-menu'));
+
+  document.getElementById('btnLeaderboardBack').addEventListener('click', () => {
+    HapticEngine.button();
+    switchView('view-menu');
+  });
 
   // Animated Motion-Based Audio Toggle
   document.getElementById('btnSoundToggle').addEventListener('click', () => {
+    HapticEngine.button();
     audioVoice.isMuted = !audioVoice.isMuted;
     updateAudioToggleButton();
     if (!audioVoice.isMuted) {
@@ -3924,6 +4017,7 @@ function setupEventListeners() {
 
   if (btnRadioToggle && modalRadio) {
     btnRadioToggle.addEventListener('click', () => {
+      HapticEngine.button();
       modalRadio.classList.add('open');
       lofiRadio.ensureContext();
       if (!lofiRadio.isPlaying) {
@@ -3934,12 +4028,14 @@ function setupEventListeners() {
 
   if (btnCloseRadio && modalRadio) {
     btnCloseRadio.addEventListener('click', () => {
+      HapticEngine.button();
       modalRadio.classList.remove('open');
     });
   }
 
   if (btnMinimizeRadio && modalRadio) {
     btnMinimizeRadio.addEventListener('click', () => {
+      HapticEngine.button();
       modalRadio.classList.remove('open');
       if (!lofiRadio.isPlaying) {
         lofiRadio.playTrack(lofiRadio.currentTrack);
@@ -3950,6 +4046,7 @@ function setupEventListeners() {
   const btnPlayPause = document.getElementById('btnRadioPlayPause');
   if (btnPlayPause) {
     btnPlayPause.addEventListener('click', () => {
+      HapticEngine.button();
       lofiRadio.togglePlay();
     });
   }
@@ -3957,6 +4054,7 @@ function setupEventListeners() {
   const btnRadioNext = document.getElementById('btnRadioNext');
   if (btnRadioNext) {
     btnRadioNext.addEventListener('click', () => {
+      HapticEngine.button();
       lofiRadio.nextTrack();
     });
   }
@@ -3964,6 +4062,7 @@ function setupEventListeners() {
   const btnRadioPrev = document.getElementById('btnRadioPrev');
   if (btnRadioPrev) {
     btnRadioPrev.addEventListener('click', () => {
+      HapticEngine.button();
       lofiRadio.prevTrack();
     });
   }
@@ -3971,6 +4070,7 @@ function setupEventListeners() {
   const btnRadioEngineMode = document.getElementById('btnRadioEngineMode');
   if (btnRadioEngineMode) {
     btnRadioEngineMode.addEventListener('click', () => {
+      HapticEngine.button();
       lofiRadio.toggleEngineMode();
     });
   }
@@ -3982,63 +4082,52 @@ function setupEventListeners() {
     });
   }
 
+  // Floating Mini Radio Bar Controls inside Single Player Arena
+  const btnMiniPrev = document.getElementById('btnMiniRadioPrev');
+  if (btnMiniPrev) {
+    btnMiniPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      HapticEngine.button();
+      lofiRadio.prevTrack();
+    });
+  }
+
+  const btnMiniPlayPause = document.getElementById('btnMiniRadioPlayPause');
+  if (btnMiniPlayPause) {
+    btnMiniPlayPause.addEventListener('click', (e) => {
+      e.stopPropagation();
+      HapticEngine.button();
+      lofiRadio.togglePlay();
+    });
+  }
+
+  const btnMiniNext = document.getElementById('btnMiniRadioNext');
+  if (btnMiniNext) {
+    btnMiniNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      HapticEngine.button();
+      lofiRadio.nextTrack();
+    });
+  }
+
+  const openRadioDeckHandler = (e) => {
+    e.stopPropagation();
+    HapticEngine.button();
+    if (modalRadio) modalRadio.classList.add('open');
+    lofiRadio.ensureContext();
+    if (!lofiRadio.isPlaying) {
+      lofiRadio.playTrack(lofiRadio.currentTrack);
+    }
+  };
+
+  const btnMiniExpand = document.getElementById('btnMiniRadioExpand');
+  if (btnMiniExpand) btnMiniExpand.addEventListener('click', openRadioDeckHandler);
+
+  const miniRadioInfoBtn = document.getElementById('miniRadioInfoBtn');
+  if (miniRadioInfoBtn) miniRadioInfoBtn.addEventListener('click', openRadioDeckHandler);
+
   // Render 10 real Hindi Lo-Fi audio tracks into terminal
   lofiRadio.renderRadioTracks();
-
-  // Duel Tile Clicks with unified pointerdown/click and 60ms human debounce guard
-  let lastDuelTapTime = 0;
-  for (let i = 0; i < 9; i++) {
-    const tile = document.getElementById(`dtile-${i}`);
-    if (tile) {
-      const handleTap = (e) => {
-        const now = performance.now();
-        if (now - lastDuelTapTime < 60) return;
-        lastDuelTapTime = now;
-        handleDuelTileClick(i, e);
-      };
-      tile.addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        handleTap(e);
-      });
-      tile.addEventListener('click', (e) => {
-        handleTap(e);
-      });
-    }
-  }
-
-  // Active Duel Room Code Copy & Share Buttons
-  const btnDuelCopy = document.getElementById('btnDuelCopyCode');
-  if (btnDuelCopy) {
-    btnDuelCopy.addEventListener('click', () => {
-      const code = APP_STATE.duel.roomCode || 'MIND';
-      navigator.clipboard.writeText(code).then(() => {
-        const orig = btnDuelCopy.textContent;
-        btnDuelCopy.textContent = 'COPIED!';
-        setTimeout(() => { btnDuelCopy.textContent = orig; }, 1800);
-      }).catch(() => {});
-    });
-  }
-
-  const btnDuelShare = document.getElementById('btnDuelShareCode');
-  if (btnDuelShare) {
-    btnDuelShare.addEventListener('click', () => {
-      const code = APP_STATE.duel.roomCode || 'MIND';
-      const shareUrl = `${window.location.origin}${window.location.pathname}?room=${code}`;
-      if (navigator.share) {
-        navigator.share({
-          title: 'DIMAAG KA FALOODA - 1V1 DUEL',
-          text: `Join my 1v1 Room Duel in Dimaag Ka Falooda! Room Code: ${code}`,
-          url: shareUrl
-        }).catch(() => {});
-      } else {
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          const orig = btnDuelShare.textContent;
-          btnDuelShare.textContent = 'LINK COPIED!';
-          setTimeout(() => { btnDuelShare.textContent = orig; }, 1800);
-        }).catch(() => {});
-      }
-    });
-  }
 
   // 3 Jugaad Power-Up Buttons
   const btnChai = document.getElementById('btnPowerChai');
@@ -4050,133 +4139,74 @@ function setupEventListeners() {
   const btnThink = document.getElementById('btnPowerThink');
   if (btnThink) btnThink.addEventListener('click', useThinkFeature);
 
-  // Re-roll New Alphanumeric Room Code Button
-  const btnNewCode = document.getElementById('btnNewRoomCode');
-  if (btnNewCode) {
-    btnNewCode.addEventListener('click', () => {
-      const code = generateAlphanumericRoomCode();
-      APP_STATE.duel.roomCode = code;
-      const codeEl = document.getElementById('lblRoomCode');
-      if (codeEl) codeEl.textContent = code;
-      const statusEl = document.getElementById('roomStatusText');
-      if (statusEl) statusEl.textContent = 'NEW CODE: ' + code + ' // SHARE TO PLAY!';
-      hostRoomSupa(code);
-    });
-  }
-
-  // Copy Room Code Button
-  const btnCopy = document.getElementById('btnCopyRoomCode');
-  if (btnCopy) {
-    btnCopy.addEventListener('click', () => {
-      navigator.clipboard.writeText(APP_STATE.duel.roomCode).catch(() => {});
-      btnCopy.textContent = 'COPIED!';
-      setTimeout(() => btnCopy.textContent = 'COPY', 1500);
-    });
-  }
-
-  // Share Invite Link Button — sends URL with ?room=CODE so friend auto-joins
-  const btnInviteLink = document.getElementById('btnCopyInviteLink');
-  if (btnInviteLink) {
-    btnInviteLink.addEventListener('click', () => {
-      const url = `${window.location.origin}${window.location.pathname}?room=${APP_STATE.duel.roomCode}`;
-      if (navigator.share) {
-        navigator.share({ title: 'DIMAAG KA FALOODA: 1v1 DUEL', url }).catch(() => {
-          navigator.clipboard.writeText(url).catch(() => {});
-        });
-      } else {
-        navigator.clipboard.writeText(url).catch(() => {});
-        btnInviteLink.textContent = 'LINK COPIED!';
-        setTimeout(() => btnInviteLink.textContent = 'SHARE LINK', 2000);
-      }
-    });
-  }
-
-  // Duel Helpers
-  document.getElementById('btnPlayBot').addEventListener('click', () => startOnlineDuelMatch(true));
-
-  const inputJoin = document.getElementById('inputJoinRoom');
-  if (inputJoin) {
-    inputJoin.addEventListener('input', () => {
-      const val = inputJoin.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
-      inputJoin.value = val;
-      if (val.length === 4) {
-        const codeEl = document.getElementById('lblRoomCode');
-        if (codeEl) codeEl.textContent = val;
-      }
-    });
-    inputJoin.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const btn = document.getElementById('btnJoinRoomSubmit');
-        if (btn) btn.click();
-      }
-    });
-  }
-
-  // Click on main room code display block to copy
-  const lblMainCode = document.getElementById('lblRoomCode');
-  if (lblMainCode) {
-    lblMainCode.style.cursor = 'pointer';
-    lblMainCode.setAttribute('title', 'Click to copy code');
-    lblMainCode.addEventListener('click', () => {
-      const code = APP_STATE.duel.roomCode || lblMainCode.textContent.trim() || 'MIND';
-      navigator.clipboard.writeText(code).then(() => {
-        const orig = lblMainCode.textContent;
-        lblMainCode.textContent = 'COPIED!';
-        setTimeout(() => { lblMainCode.textContent = orig; }, 1400);
-      }).catch(() => {});
-    });
-  }
-
-  document.getElementById('btnJoinRoomSubmit').addEventListener('click', () => {
-    const code = document.getElementById('inputJoinRoom').value.trim().toUpperCase();
-    if (code.length === 4) {
-      APP_STATE.duel.roomCode = code;
-      const codeEl = document.getElementById('lblRoomCode');
-      if (codeEl) codeEl.textContent = code;
-      const duelRoomCodeEl = document.getElementById('duelActiveRoomCode');
-      if (duelRoomCodeEl) duelRoomCodeEl.textContent = code;
-
-      const statusEl = document.getElementById('roomStatusText');
-      if (statusEl) statusEl.textContent = 'CONNECTING TO ROOM ' + code + '...';
-      // Use Supabase Realtime for cross-device join
-      joinRoomSupa(code);
-    } else {
-      const joinInput = document.getElementById('inputJoinRoom');
-      if (joinInput) joinInput.focus();
-    }
-  });
-
-  // Device Mismatch Modal Close
-  const btnCloseMismatch = document.getElementById('btnCloseMismatch');
-  if (btnCloseMismatch) {
-    btnCloseMismatch.addEventListener('click', hideDeviceMismatchModal);
-  }
-
   // Theme Switcher Pills
   document.querySelectorAll('.theme-pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      HapticEngine.button();
       const theme = btn.getAttribute('data-theme');
       applyTheme(theme);
     });
   });
 
-  // Profile Modal
+  // Profile Modal & User Registration
   renderAvatarOptions();
   updateProfileUI();
 
+  let pendingGameStart = false;
+  window.openProfileModal = function(startGameOnSuccess = false) {
+    pendingGameStart = startGameOnSuccess;
+    const modal = document.getElementById('modalProfile');
+    const input = document.getElementById('inputPlayerHandle');
+    const msg = document.getElementById('profileValidationMsg');
+    if (msg) msg.style.display = 'none';
+    if (input) {
+      input.value = APP_STATE.playerHandle || '';
+      input.focus();
+    }
+    if (modal) modal.classList.add('open');
+  };
+  window.openRegistrationModal = window.openProfileModal;
+
   document.getElementById('btnEditProfile').addEventListener('click', () => {
-    document.getElementById('inputPlayerHandle').value = APP_STATE.playerHandle;
-    document.getElementById('modalProfile').classList.add('open');
+    HapticEngine.button();
+    window.openProfileModal(false);
   });
 
   document.getElementById('btnSaveProfile').addEventListener('click', () => {
-    const val = document.getElementById('inputPlayerHandle').value.trim().toUpperCase();
-    if (val.length >= 3) {
-      APP_STATE.playerHandle = val;
-      localStorage.setItem('bm_player_handle', val);
-      localStorage.setItem('bm_player_avatar', APP_STATE.playerAvatar);
-      updateProfileUI();
-      document.getElementById('modalProfile').classList.remove('open');
+    HapticEngine.button();
+    const input = document.getElementById('inputPlayerHandle');
+    const msg = document.getElementById('profileValidationMsg');
+    const val = input ? input.value.trim().toUpperCase() : '';
+
+    if (!val || val.length < 2) {
+      if (msg) {
+        msg.textContent = 'Please write a name of at least 2 characters.';
+        msg.style.display = 'block';
+      }
+      return;
+    }
+    if (!/^[A-Za-z0-9_]{2,16}$/.test(val)) {
+      if (msg) {
+        msg.textContent = 'Only letters, numbers, and underscores allowed.';
+        msg.style.display = 'block';
+      }
+      return;
+    }
+
+    APP_STATE.playerHandle = val;
+    localStorage.setItem('bm_player_handle', val);
+    localStorage.setItem('bm_player_avatar', APP_STATE.playerAvatar);
+    if (!localStorage.getItem('bm_player_id')) {
+      localStorage.setItem('bm_player_id', APP_STATE.playerId);
+    }
+    updateProfileUI();
+
+    const modal = document.getElementById('modalProfile');
+    if (modal) modal.classList.remove('open');
+
+    if (pendingGameStart) {
+      pendingGameStart = false;
+      startSinglePlayerGame();
     }
   });
 
@@ -4240,11 +4270,15 @@ function renderAvatarOptions() {
 
 function updateProfileUI() {
   const handleEl = document.getElementById('lblPlayerHandle');
-  if (handleEl) handleEl.textContent = APP_STATE.playerHandle;
+  if (handleEl) {
+    handleEl.textContent = APP_STATE.playerHandle || 'CLICK TO SET CODENAME';
+  }
   const dtHandle = document.getElementById('dtPlayerHandle');
-  if (dtHandle) dtHandle.textContent = APP_STATE.playerHandle;
+  if (dtHandle) {
+    dtHandle.textContent = APP_STATE.playerHandle || 'RECRUIT';
+  }
 
-  const svgContent = AVATARS[APP_STATE.playerAvatar] || AVATARS.cutting_chai;
+  const svgContent = AVATARS[APP_STATE.playerAvatar] || AVATARS.spider_mask;
   const preview = document.getElementById('lblPlayerAvatarPreview');
   if (preview) {
     preview.innerHTML = svgContent;
@@ -4268,6 +4302,15 @@ window.addEventListener('DOMContentLoaded', () => {
   AntiCheat.initProtection();
   initWebSocket();
   initSupabase();
+
+  // If user hasn't registered a custom codename yet, prompt them to write their own name!
+  if (!APP_STATE.playerHandle || APP_STATE.playerHandle.trim().length < 2) {
+    setTimeout(() => {
+      if (typeof window.openProfileModal === 'function') {
+        window.openProfileModal(false);
+      }
+    }, 350);
+  }
 
   // Throttled window resize listener to avoid layout thrashing
   let resizeThrottle = null;
@@ -4300,23 +4343,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // URL deep-link: ?room=CODE — auto-open lobby and pre-fill join code
-  const urlParams = new URLSearchParams(window.location.search);
-  const roomParam = urlParams.get('room');
-  if (roomParam && /^[A-Z0-9]{4}$/i.test(roomParam)) {
-    // Open lobby after Supabase has a moment to initialize
-    setTimeout(() => {
-      initDuelRoomLobby();
-      const joinInput = document.getElementById('inputJoinRoom');
-      if (joinInput) {
-        joinInput.value = roomParam.toUpperCase();
-        // Auto-submit join so friend connects immediately
-        const statusEl = document.getElementById('roomStatusText');
-        if (statusEl) statusEl.textContent = 'FOUND INVITE LINK // TAP CONNECT ROOM';
-      }
-    }, 800);
-  }
-
-  console.log("DIMAAG KA FALOODA: BEAT RUN 3.0 (Fortress Edition) Bootstrapped.");
+  console.log("DIMAAG KA FALOODA: SPIDER BEAT RUN (Single Player Edition) Bootstrapped.");
 });
 

@@ -4,6 +4,12 @@ const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 
 const KNOWN_AVATARS = [
+  'spider_mask',
+  'miles_stealth',
+  'web_slinger',
+  'spider_sense',
+  'iron_spider',
+  'spider_bot',
   'cutting_chai',
   'sharma_beta',
   'auto_rocket',
