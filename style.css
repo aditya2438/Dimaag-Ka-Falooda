@@ -890,24 +890,7 @@ header.funky-header {
   display: none !important;
 }
 
-/* 6-Tile Fixed Grid Layout (3 Columns x 2 Rows) */
-.matrix-grid-dynamic[data-total-tiles="6"],
-.matrix-grid-dynamic {
-  grid-template-columns: repeat(3, 1fr) !important;
-  grid-template-rows: repeat(2, 1fr) !important;
-  max-width: min(100%, 54vh, 460px);
-  max-height: min(100%, 36vh, 320px);
-  aspect-ratio: 3 / 2;
-  gap: 12px;
-}
-.matrix-grid-dynamic[data-total-tiles="6"] .glass-tile,
-.matrix-grid-dynamic .glass-tile {
-  border-radius: 18px;
-  aspect-ratio: auto;
-}
-.matrix-grid-dynamic[data-total-tiles="6"] .glass-tile .order-badge {
-  font-size: 2.1rem;
-}
+
 
 /* Dynamic density scaling based on total tiles */
 #duelMatrixGrid,

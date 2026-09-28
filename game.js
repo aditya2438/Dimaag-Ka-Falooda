@@ -337,57 +337,51 @@ const AntiCheat = {
    Zero fake/decoy blinking across all levels.
    ========================================================================== */
 function getLevelConfig(level) {
-  // Grid size strictly locked to 6 tiles (3 cols x 2 rows) across ALL levels
-  const rows = 2;
+  // Grid locked to 3x3 = 9 tiles across ALL levels
+  const rows = 3;
   const cols = 3;
-  const totalTiles = 6;
+  const totalTiles = 9;
   const hasDecoy = false; // Zero fake decoy blinks
   let sequenceLength = 3;
   let isReverse = false;
   let isGhost = false;
-  let timeLimitSec = 14.0;
+  let timeLimitSec = 15.0;
 
-  // Progression: Basic & Simple (generous time) -> Medium -> Reverse Challenge -> Master
+  // Difficulty Curve (all on 9-tile 3x3 grid):
+  //   Lvl 1-4  : Forward recall. Simple -> Medium. Generous time.
+  //   Lvl 5-10 : Reverse mode! Exciting memory challenge.
+  //   Lvl 11+  : Ghost stealth (tiles vanish mid-sequence). Extreme.
   if (level === 1) {
-    // Level 1: Basic & Simple Tutorial - 3 tiles, 14.0s generous timer (peaceful, instant win)
-    sequenceLength = 3; timeLimitSec = 14.0; isReverse = false;
+    sequenceLength = 3; timeLimitSec = 15.0; isReverse = false;
   } else if (level === 2) {
-    // Level 2: Easy Flow - 3 tiles, 12.5s
-    sequenceLength = 3; timeLimitSec = 12.5; isReverse = false;
+    sequenceLength = 4; timeLimitSec = 14.0; isReverse = false;
   } else if (level === 3) {
-    // Level 3: Confidence Step - 4 tiles, 12.0s
-    sequenceLength = 4; timeLimitSec = 12.0; isReverse = false;
+    sequenceLength = 5; timeLimitSec = 14.0; isReverse = false;
   } else if (level === 4) {
-    // Level 4: Speed Touch - 4 tiles, 11.0s
-    sequenceLength = 4; timeLimitSec = 11.0; isReverse = false;
+    sequenceLength = 6; timeLimitSec = 13.5; isReverse = false;
   } else if (level === 5) {
-    // Level 5: Reverse Mode Arrival - 4 tiles, 13.0s (exciting reverse challenge within 6 tiles!)
-    sequenceLength = 4; timeLimitSec = 13.0; isReverse = true;
+    // Reverse mode unlocks!
+    sequenceLength = 4; timeLimitSec = 14.0; isReverse = true;
   } else if (level === 6) {
-    // Level 6: 5-Tile Flow - 5 tiles, 13.5s, forward recall
-    sequenceLength = 5; timeLimitSec = 13.5; isReverse = false;
-  } else if (level === 7) {
-    // Level 7: 5-Tile Reverse - 5 tiles, 14.0s, reverse recall
     sequenceLength = 5; timeLimitSec = 14.0; isReverse = true;
+  } else if (level === 7) {
+    sequenceLength = 6; timeLimitSec = 14.5; isReverse = true;
   } else if (level === 8) {
-    // Level 8: Max 6-Tile Blitz - 6 tiles, 14.5s, forward recall
-    sequenceLength = 6; timeLimitSec = 14.5; isReverse = false;
+    sequenceLength = 7; timeLimitSec = 15.0; isReverse = true;
   } else if (level === 9) {
-    // Level 9: Max 6-Tile Reverse - 6 tiles, 15.0s, reverse recall
-    sequenceLength = 6; timeLimitSec = 15.0; isReverse = true;
+    sequenceLength = 8; timeLimitSec = 15.5; isReverse = true;
   } else if (level === 10) {
-    // Level 10: Dynamic Reflex - 6 tiles, 14.0s, reverse recall
-    sequenceLength = 6; timeLimitSec = 14.0; isReverse = true;
+    sequenceLength = 9; timeLimitSec = 16.0; isReverse = true;
   } else {
-    // Level 11+: Avengers Master - 6 tiles, 13.5s, reverse recall + Ghost Stealth
-    sequenceLength = 6;
-    timeLimitSec = Math.max(12.0, 14.0 - Math.min(2.0, (level - 10) * 0.2));
+    // Level 11+: Ghost Stealth mode. Tiles vanish. Extreme challenge.
+    sequenceLength = Math.min(9, 6 + Math.floor((level - 10) / 2));
+    timeLimitSec = Math.max(13.0, 16.0 - Math.min(3.0, (level - 10) * 0.3));
     isReverse = true;
     isGhost = level >= 12;
   }
 
-  // Double safety guarantee: sequenceLength CANNOT exceed 6, totalTiles CANNOT exceed 6
-  sequenceLength = Math.min(6, Math.max(3, sequenceLength));
+  // Safety clamp: sequence cannot exceed total tiles
+  sequenceLength = Math.min(totalTiles, Math.max(3, sequenceLength));
 
   return { rows, cols, totalTiles, tiles: totalTiles, sequenceLength, hasDecoy, isReverse, isGhost, timeLimitSec, guessTime: timeLimitSec };
 }
