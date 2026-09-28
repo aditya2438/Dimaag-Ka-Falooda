@@ -90,6 +90,19 @@ const DeviceProfile = {
   get() {
     if (!this._cached) this._cached = this.detect();
     return this._cached;
+  },
+  applyDeviceClasses() {
+    const dev = this.get();
+    if (typeof document !== 'undefined') {
+      if (document.documentElement) {
+        document.documentElement.classList.remove('is-laptop', 'is-phone', 'is-tablet');
+        document.documentElement.classList.add(`is-${dev}`);
+      }
+      if (document.body) {
+        document.body.classList.remove('is-laptop', 'is-phone', 'is-tablet');
+        document.body.classList.add(`is-${dev}`);
+      }
+    }
   }
 };
 
@@ -878,7 +891,7 @@ class LofiRadioEngine {
         name: "KESARIYA",
         artist: "Arijit Singh",
         sub: "Brahmastra // Warm Saffron Love Song",
-        url: "https://archive.org/download/best-of-2022-bollywood-songs/Brahmastra%20%282022%29%20-%20Kesariya.mp3",
+        url: "https://ia801403.us.archive.org/26/items/best-of-2022-bollywood-songs/Brahmastra%20%282022%29%20-%20Kesariya.mp3",
         bpm: 78,
         chords: [
           [146.83, 185.00, 220.00, 293.66], // D Major
@@ -894,7 +907,7 @@ class LofiRadioEngine {
         name: "APNA BANA LE",
         artist: "Arijit Singh",
         sub: "Bhediya // Soulful Romantic Melody",
-        url: "https://archive.org/download/best-of-2022-bollywood-songs/Bhediya%20%282022%29%20-%20Apna%20Bana%20Le.mp3",
+        url: "https://ia801403.us.archive.org/26/items/best-of-2022-bollywood-songs/Bhediya%20%282022%29%20-%20Apna%20Bana%20Le.mp3",
         bpm: 74,
         chords: [
           [174.61, 220.00, 261.63, 349.23], // F Major
@@ -910,7 +923,7 @@ class LofiRadioEngine {
         name: "TUM HI HO",
         artist: "Arijit Singh",
         sub: "Aashiqui 2 // Iconic Love Anthem",
-        url: "https://archive.org/download/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Tum%20Hi%20Ho%20myfreemp3.vip%20.mp3",
+        url: "https://dn710006.ca.archive.org/0/items/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Tum%20Hi%20Ho%20myfreemp3.vip%20.mp3",
         bpm: 72,
         chords: [
           [164.81, 196.00, 246.94, 329.63], // E Minor
@@ -926,7 +939,7 @@ class LofiRadioEngine {
         name: "CHANNA MEREYA",
         artist: "Arijit Singh",
         sub: "ADHM // Melancholy Acoustic Soul",
-        url: "https://archive.org/download/07-channa-mereya-arijit-singh-320-kbps/07%20Channa%20Mereya%20-%20Arijit%20Singh%20320Kbps.mp3",
+        url: "https://dn711305.ca.archive.org/0/items/07-channa-mereya-arijit-singh-320-kbps/07%20Channa%20Mereya%20-%20Arijit%20Singh%20320Kbps.mp3",
         bpm: 72,
         chords: [
           [98.00,  116.54, 146.83, 196.00], // G Minor
@@ -942,7 +955,7 @@ class LofiRadioEngine {
         name: "RAABTA",
         artist: "Arijit Singh",
         sub: "Agent Vinod // Serene Midnight Groove",
-        url: "https://archive.org/download/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Raabta%20myfreemp3.vip%20.mp3",
+        url: "https://dn710006.ca.archive.org/0/items/arijit-singh-tum-hi-ho-myfreemp-3.vip/Arijit%20Singh%20-%20Raabta%20myfreemp3.vip%20.mp3",
         bpm: 76,
         chords: [
           [130.81, 164.81, 196.00, 261.63], // C Major
@@ -958,7 +971,7 @@ class LofiRadioEngine {
         name: "DHUNDHALA",
         artist: "Talwinder & Yashraj",
         sub: "Talwinder // Chill Hypnotic Vibes",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3",
+        url: "https://ia600905.us.archive.org/21/items/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3",
         bpm: 82,
         chords: [
           [110.00, 130.81, 164.81, 220.00], // Am
@@ -974,7 +987,7 @@ class LofiRadioEngine {
         name: "HASEEN",
         artist: "Talwinder",
         sub: "Talwinder // Smooth Romantic Lo-Fi",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3",
+        url: "https://dn721903.ca.archive.org/0/items/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3",
         bpm: 75,
         chords: [
           [146.83, 174.61, 220.00, 293.66], // Dm
@@ -990,7 +1003,7 @@ class LofiRadioEngine {
         name: "SAHIBA",
         artist: "Aditya Rikhari",
         sub: "Aditya Rikhari // Soulful Acoustic Love",
-        url: "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3",
+        url: "https://dn721903.ca.archive.org/0/items/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3",
         bpm: 76,
         chords: [
           [98.00,  123.47, 146.83, 196.00], // G
@@ -1006,7 +1019,7 @@ class LofiRadioEngine {
         name: "SAMJHO NA",
         artist: "Aditya Rikhari",
         sub: "Aditya Rikhari // Peaceful Melodious Flow",
-        url: "https://archive.org/download/aditya-rikhari-samjho-na-nasamajh-mp-3-160-k/Aditya%20Rikhari%20-%20SAMJHO%20NA%20%28%20NASAMAJH%20%29%28MP3_160K%29.mp3",
+        url: "https://dn711303.ca.archive.org/0/items/aditya-rikhari-samjho-na-nasamajh-mp-3-160-k/Aditya%20Rikhari%20-%20SAMJHO%20NA%20%28%20NASAMAJH%20%29%28MP3_160K%29.mp3",
         bpm: 78,
         chords: [
           [164.81, 207.65, 246.94, 329.63], // E Major
@@ -1022,7 +1035,7 @@ class LofiRadioEngine {
         name: "FAASLE",
         artist: "Aditya Rikhari",
         sub: "Aditya Rikhari // Heartfelt Reflection",
-        url: "https://archive.org/download/aditya-rikhari-faasle/Aditya%20Rikhari%20-%20FAASLE.mp3",
+        url: "https://ia800704.us.archive.org/10/items/aditya-rikhari-faasle/Aditya%20Rikhari%20-%20FAASLE.mp3",
         bpm: 70,
         chords: [
           [123.47, 146.83, 185.00, 246.94], // Bm
@@ -1232,7 +1245,6 @@ class LofiRadioEngine {
       try {
         if (this.audioEl.src !== track.url) {
           this.audioEl.src = track.url;
-          this.audioEl.load();
         }
         this.audioEl.volume = this.volume;
         const playPromise = this.audioEl.play();
@@ -2568,6 +2580,14 @@ function handleServerWebSocketMessage(msg) {
     case 'player_joined': {
       DUEL_RT.opponentHandle = msg.handle || 'GUEST';
       APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
+      if (msg.code || msg.roomCode) {
+        const c = msg.code || msg.roomCode;
+        APP_STATE.duel.roomCode = c;
+        const codeEl = document.getElementById('lblRoomCode');
+        if (codeEl) codeEl.textContent = c;
+        const duelCodeEl = document.getElementById('duelActiveRoomCode');
+        if (duelCodeEl) duelCodeEl.textContent = c;
+      }
       const statusText = document.getElementById('roomStatusText');
       if (statusText) statusText.textContent = `CONNECTED WITH ${DUEL_RT.opponentHandle}! STARTING MATCH...`;
       audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
@@ -2580,6 +2600,14 @@ function handleServerWebSocketMessage(msg) {
     case 'room_ready': {
       DUEL_RT.opponentHandle = msg.hostHandle || 'HOST';
       APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
+      if (msg.code || msg.roomCode) {
+        const c = msg.code || msg.roomCode;
+        APP_STATE.duel.roomCode = c;
+        const codeEl = document.getElementById('lblRoomCode');
+        if (codeEl) codeEl.textContent = c;
+        const duelCodeEl = document.getElementById('duelActiveRoomCode');
+        if (duelCodeEl) duelCodeEl.textContent = c;
+      }
       const statusText = document.getElementById('roomStatusText');
       if (statusText) statusText.textContent = `CONNECTED WITH ${DUEL_RT.opponentHandle}! STARTING MATCH...`;
       audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
@@ -2592,6 +2620,14 @@ function handleServerWebSocketMessage(msg) {
     case 'opponent_joined': {
       DUEL_RT.opponentHandle = msg.opponentHandle || 'GUEST';
       APP_STATE.duel.opponentHandle = DUEL_RT.opponentHandle;
+      if (msg.code || msg.roomCode) {
+        const c = msg.code || msg.roomCode;
+        APP_STATE.duel.roomCode = c;
+        const codeEl = document.getElementById('lblRoomCode');
+        if (codeEl) codeEl.textContent = c;
+        const duelCodeEl = document.getElementById('duelActiveRoomCode');
+        if (duelCodeEl) duelCodeEl.textContent = c;
+      }
       const statusText = document.getElementById('roomStatusText');
       if (statusText) statusText.textContent = `CONNECTED WITH ${DUEL_RT.opponentHandle}! STARTING MATCH...`;
       audioVoice.speakHindi(["Opponent connect ho gaya, duel shuru!"]);
@@ -2602,16 +2638,7 @@ function handleServerWebSocketMessage(msg) {
       break;
     }
 
-    case 'round_started': {
-      if (APP_STATE.duel && APP_STATE.duel.active && !APP_STATE.duel.isVsBot) {
-        if (JSON.stringify(APP_STATE.duel.targetSequence) !== JSON.stringify(msg.targetSequence)) {
-          APP_STATE.duel.targetSequence = msg.targetSequence;
-          startSynchronizedDuelRound();
-        }
-      }
-      break;
-    }
-
+    case 'duel_tap':
     case 'opponent_progress': {
       if (duel.active) {
         duel.oppProgress = msg.progress;
@@ -2621,11 +2648,13 @@ function handleServerWebSocketMessage(msg) {
           oppTile.classList.add('flash-active');
           setTimeout(() => oppTile.classList.remove('flash-active'), 250);
         }
+        audioFX.playBlip(msg.tileIndex);
         updateDuelHUD();
       }
       break;
     }
 
+    case 'duel_stun':
     case 'opponent_stunned': {
       if (duel.active) {
         duel.oppStunnedUntil = performance.now() + 1500;
@@ -2634,9 +2663,43 @@ function handleServerWebSocketMessage(msg) {
       break;
     }
 
+    case 'duel_round_win': {
+      if (duel.active) {
+        duel.oppScore = Number(msg.score) || (duel.oppScore + 2);
+        duel.phase = 'ROUND_OVER';
+        audioVoice.playMoyeMoyeTune();
+        updateDuelHUD();
+
+        if (duel.oppScore >= duel.targetScore) {
+          finishDuelMatch(false);
+        } else if (duel.isHost) {
+          setTimeout(() => {
+            if (APP_STATE.duel && APP_STATE.duel.active) {
+              startNewDuelRound();
+              sendDuelEvent('duel_next_round', { sequence: APP_STATE.duel.targetSequence });
+            }
+          }, 1100);
+        }
+      }
+      break;
+    }
+
+    case 'duel_next_round':
+    case 'round_started': {
+      if (APP_STATE.duel && APP_STATE.duel.active && !APP_STATE.duel.isVsBot) {
+        const nextSeq = msg.sequence || msg.targetSequence || msg.roundSeq;
+        if (Array.isArray(nextSeq) && nextSeq.length) {
+          APP_STATE.duel.targetSequence = nextSeq;
+          startSynchronizedDuelRound();
+        }
+      }
+      break;
+    }
+
+    case 'duel_match_won':
     case 'match_over': {
       if (duel.active) {
-        finishDuelMatch(msg.winner === (duel.isHost ? 1 : 2));
+        finishDuelMatch(false);
       }
       break;
     }
@@ -2724,22 +2787,7 @@ function sendDuelEvent(event, payload = {}) {
   // Also send over local WebSocket if active
   if (APP_STATE.ws && APP_STATE.ws.readyState === WebSocket.OPEN) {
     try {
-      if (event === 'duel_tap') {
-        APP_STATE.ws.send(JSON.stringify({
-          action: 'tap_progress',
-          tileIndex: payload.tileIndex,
-          progress: payload.progress,
-          score: payload.score
-        }));
-      } else if (event === 'duel_stun') {
-        APP_STATE.ws.send(JSON.stringify({ action: 'player_stun' }));
-      } else if (event === 'duel_next_round' || event === 'sync_round') {
-        APP_STATE.ws.send(JSON.stringify({ action: 'sync_round', roundSeq: payload.sequence || payload.roundSeq }));
-      } else if (event === 'duel_match_won') {
-        APP_STATE.ws.send(JSON.stringify({ action: 'duel_victory' }));
-      } else {
-        APP_STATE.ws.send(JSON.stringify({ action: event, ...payload }));
-      }
+      APP_STATE.ws.send(JSON.stringify({ action: event, ...payload }));
     } catch (e) {}
   }
 }
@@ -3027,7 +3075,10 @@ function joinRoomSupa(code) {
 }
 
 function initDuelRoomLobby(prefillCode) {
-  const code = generateAlphanumericRoomCode();
+  const code = (prefillCode && /^[A-Z0-9]{4}$/i.test(prefillCode))
+    ? prefillCode.toUpperCase()
+    : generateAlphanumericRoomCode();
+
   APP_STATE.duel.roomCode = code;
   const codeEl = document.getElementById('lblRoomCode');
   if (codeEl) codeEl.textContent = code;
@@ -3042,18 +3093,37 @@ function initDuelRoomLobby(prefillCode) {
   if (prefillCode && /^[A-Z0-9]{4}$/i.test(prefillCode)) {
     const joinInput = document.getElementById('inputJoinRoom');
     if (joinInput) joinInput.value = prefillCode.toUpperCase();
+    joinRoomSupa(code);
+  } else {
+    // Host room over both Supabase Realtime AND local WebSocket
+    hostRoomSupa(code);
   }
-
-  // Host room over both Supabase Realtime AND local WebSocket
-  hostRoomSupa(code);
 
   switchView('view-online-lobby');
 }
 
 function clearAllDuelTimeouts() {
-  if (APP_STATE.duel && Array.isArray(APP_STATE.duel.flashTimeouts)) {
-    APP_STATE.duel.flashTimeouts.forEach(id => clearTimeout(id));
-    APP_STATE.duel.flashTimeouts = [];
+  if (APP_STATE.duel) {
+    if (APP_STATE.duel.countdownTimer) {
+      clearInterval(APP_STATE.duel.countdownTimer);
+      APP_STATE.duel.countdownTimer = null;
+    }
+    if (APP_STATE.duel.botInterval) {
+      clearInterval(APP_STATE.duel.botInterval);
+      APP_STATE.duel.botInterval = null;
+    }
+    if (APP_STATE.duel.animFrameId) {
+      cancelAnimationFrame(APP_STATE.duel.animFrameId);
+      APP_STATE.duel.animFrameId = null;
+    }
+    if (Array.isArray(APP_STATE.duel.flashTimeouts)) {
+      APP_STATE.duel.flashTimeouts.forEach(id => clearTimeout(id));
+      APP_STATE.duel.flashTimeouts = [];
+    }
+  }
+  if (DUEL_RT.retryTimer) {
+    clearInterval(DUEL_RT.retryTimer);
+    DUEL_RT.retryTimer = null;
   }
 }
 
@@ -3132,8 +3202,13 @@ function startDuelCountdown(onComplete) {
   }
   audioVoice.playPop();
 
+  if (APP_STATE.duel && APP_STATE.duel.countdownTimer) {
+    clearInterval(APP_STATE.duel.countdownTimer);
+    APP_STATE.duel.countdownTimer = null;
+  }
+
   const timer = setInterval(() => {
-    if (!APP_STATE.duel.active) {
+    if (!APP_STATE.duel || !APP_STATE.duel.active) {
       clearInterval(timer);
       return;
     }
@@ -3145,23 +3220,34 @@ function startDuelCountdown(onComplete) {
       audioVoice.playPop();
     } else {
       clearInterval(timer);
+      if (APP_STATE.duel) APP_STATE.duel.countdownTimer = null;
       if (status) {
         status.textContent = 'MEMORIZE DUEL PATTERN';
         status.className = 'phase-pill-badge memorize';
       }
       audioVoice.playBoing();
-      setTimeout(() => {
-        if (APP_STATE.duel.active) {
+      const t = setTimeout(() => {
+        if (APP_STATE.duel && APP_STATE.duel.active) {
           onComplete();
         }
       }, 300);
+      if (APP_STATE.duel && Array.isArray(APP_STATE.duel.flashTimeouts)) {
+        APP_STATE.duel.flashTimeouts.push(t);
+      }
     }
   }, 700);
+
+  if (APP_STATE.duel) {
+    APP_STATE.duel.countdownTimer = timer;
+  }
 }
 
 function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null) {
-  if (APP_STATE.duel && APP_STATE.duel.active && !isVsBot && initialSeq && APP_STATE.duel.phase === 'MEMORIZE') {
-    APP_STATE.duel.targetSequence = initialSeq;
+  // Prevent duplicate starts or race conditions from multiple connection events
+  if (APP_STATE.duel && APP_STATE.duel.active) {
+    if (initialSeq && Array.isArray(initialSeq) && initialSeq.length) {
+      APP_STATE.duel.targetSequence = initialSeq;
+    }
     return;
   }
 
@@ -3180,11 +3266,15 @@ function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null)
     oppProgress: 0,
     myStunnedUntil: 0,
     oppStunnedUntil: 0,
+    roundNumber: 1,
+    cumulativeScore: 0,
+    roundStartTime: 0,
     targetSequence: seq,
     phase: 'IDLE',
     isVsBot: isVsBot,
     botInterval: null,
     animFrameId: null,
+    countdownTimer: null,
     flashTimeouts: []
   };
 
@@ -3213,7 +3303,7 @@ function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null)
   });
 
   function duelLoop(now) {
-    if (!APP_STATE.duel.active) return;
+    if (!APP_STATE.duel || !APP_STATE.duel.active) return;
     const duel = APP_STATE.duel;
 
     const p1Card = document.getElementById('duelP1Card');
@@ -3229,7 +3319,10 @@ function startOnlineDuelMatch(isVsBot = false, isHost = true, initialSeq = null)
 
 function startNewDuelRound() {
   const duel = APP_STATE.duel;
-  duel.targetSequence = generatePattern(4);
+  duel.roundNumber = (duel.roundNumber || 1) + 1;
+  // Scaled sequence length within 3x3 grid (4 to 7 tiles)
+  const seqLen = Math.min(7, 4 + Math.floor((duel.roundNumber - 1) / 2));
+  duel.targetSequence = generatePattern(seqLen);
   startSynchronizedDuelRound();
 }
 
@@ -3239,13 +3332,17 @@ function startSynchronizedDuelRound() {
   duel.myProgress = 0;
   duel.oppProgress = 0;
   duel.phase = 'MEMORIZE';
+  duel.roundStartTime = performance.now();
 
   setupDuelGrid();
   resetDuelTilesUI();
   updateDuelHUD();
 
+  // Speed scaling per round: from 420ms down to 220ms for fast reflex scaling within 3x3 grid
+  const flashSpeed = Math.max(220, 420 - ((duel.roundNumber || 1) - 1) * 35);
+
   flashDuelSequence(duel.targetSequence, () => {
-    if (!APP_STATE.duel.active) return;
+    if (!APP_STATE.duel || !APP_STATE.duel.active) return;
     duel.phase = 'RECALL';
     const status = document.getElementById('duelPhaseStatus');
     if (status) {
@@ -3253,7 +3350,7 @@ function startSynchronizedDuelRound() {
       status.className = 'phase-pill-badge recall kinetic-pulse';
     }
     audioVoice.playBoing();
-  });
+  }, flashSpeed);
 }
 
 function resetDuelTilesUI() {
@@ -3267,7 +3364,7 @@ function resetDuelTilesUI() {
   }
 }
 
-function flashDuelSequence(sequence, onComplete) {
+function flashDuelSequence(sequence, onComplete, flashSpeed = 420) {
   clearAllDuelTimeouts();
   const validSeq = (Array.isArray(sequence) && sequence.length) ? sequence : generatePattern(4);
   let step = 0;
@@ -3278,7 +3375,7 @@ function flashDuelSequence(sequence, onComplete) {
   }
 
   function stepFlash() {
-    if (!APP_STATE.duel.active) return;
+    if (!APP_STATE.duel || !APP_STATE.duel.active) return;
 
     if (step < validSeq.length) {
       const tileIndex = validSeq[step];
@@ -3297,13 +3394,14 @@ function flashDuelSequence(sequence, onComplete) {
           if (badge) badge.textContent = '';
         }
         step++;
-        const t2 = setTimeout(stepFlash, 150);
+        const gap = Math.max(100, Math.round(flashSpeed * 0.35));
+        const t2 = setTimeout(stepFlash, gap);
         if (APP_STATE.duel && APP_STATE.duel.flashTimeouts) APP_STATE.duel.flashTimeouts.push(t2);
-      }, 450);
+      }, flashSpeed);
       if (APP_STATE.duel && APP_STATE.duel.flashTimeouts) APP_STATE.duel.flashTimeouts.push(t1);
     } else {
       const t3 = setTimeout(() => {
-        if (!APP_STATE.duel.active) return;
+        if (!APP_STATE.duel || !APP_STATE.duel.active) return;
         onComplete();
       }, 200);
       if (APP_STATE.duel && APP_STATE.duel.flashTimeouts) APP_STATE.duel.flashTimeouts.push(t3);
@@ -3316,7 +3414,7 @@ function flashDuelSequence(sequence, onComplete) {
 
 function handleDuelTileClick(tileIndex, event) {
   const duel = APP_STATE.duel;
-  if (!duel.active) return;
+  if (!duel || !duel.active) return;
 
   const tileEl = document.getElementById(`dtile-${tileIndex}`);
 
@@ -3347,6 +3445,9 @@ function handleDuelTileClick(tileIndex, event) {
     triggerHaptic([30]);
 
     duel.myProgress++;
+    // Shadow anti-cheat verification for duel
+    AntiCheat.recordTap(tileIndex, duel.roundNumber || 1, duel.cumulativeScore || 100);
+
     if (tileEl) {
       tileEl.classList.add('correct-tap');
       const badge = tileEl.querySelector('.order-badge');
@@ -3366,6 +3467,10 @@ function handleDuelTileClick(tileIndex, event) {
 
     if (duel.myProgress === duel.targetSequence.length) {
       duel.myScore += 2;
+      const elapsed = performance.now() - (duel.roundStartTime || performance.now());
+      const speedBonus = Math.max(50, 400 - Math.round(elapsed * 0.08));
+      duel.cumulativeScore = (duel.cumulativeScore || 0) + 400 + speedBonus;
+
       duel.phase = 'ROUND_OVER';
       audioVoice.playBoing();
       audioVoice.speakHindi(audioVoice.phrasesWin);
@@ -3383,13 +3488,11 @@ function handleDuelTileClick(tileIndex, event) {
       } else {
         if (duel.isHost || duel.isVsBot) {
           setTimeout(() => {
-            if (duel.active) {
-              const nextSeq = generatePattern(4);
-              duel.targetSequence = nextSeq;
+            if (APP_STATE.duel && APP_STATE.duel.active) {
+              startNewDuelRound();
               if (!duel.isVsBot) {
-                sendDuelEvent('duel_next_round', { sequence: nextSeq });
+                sendDuelEvent('duel_next_round', { sequence: APP_STATE.duel.targetSequence });
               }
-              startSynchronizedDuelRound();
             }
           }, 1100);
         }
@@ -3428,14 +3531,23 @@ function handleDuelTileClick(tileIndex, event) {
 function finishDuelMatch(isWinner) {
   const duel = APP_STATE.duel;
   duel.active = false;
-  if (duel.botInterval) clearInterval(duel.botInterval);
-  if (duel.animFrameId) cancelAnimationFrame(duel.animFrameId);
+  clearAllDuelTimeouts();
 
   if (isWinner) {
     audioVoice.playBhangraFanfare();
     audioVoice.speakHindi(['Bawaal macha diya! You won the duel!']);
     const p1Label = document.getElementById('duelP1Label');
     if (p1Label) p1Label.textContent = 'VICTORY!';
+
+    // Submit duel score to leaderboard
+    const finalDuelScore = Math.max(2500, duel.cumulativeScore || 2800);
+    submitRun({
+      username: APP_STATE.playerHandle,
+      avatar: APP_STATE.playerAvatar,
+      score: finalDuelScore,
+      level: duel.roundNumber || 5,
+      mode: 'duel'
+    });
   } else {
     audioVoice.playMoyeMoyeTune();
     audioVoice.speakHindi(['Moye Moye! Opponent won the duel!']);
@@ -3447,6 +3559,7 @@ function finishDuelMatch(isWinner) {
 
 function updateDuelHUD() {
   const duel = APP_STATE.duel;
+  if (!duel) return;
   const p1ScoreEl = document.getElementById('duelP1Score');
   if (p1ScoreEl) p1ScoreEl.textContent = `${duel.myScore} / ${duel.targetScore}`;
   const p2ScoreEl = document.getElementById('duelP2Score');
@@ -3466,19 +3579,28 @@ function startBotBehavior() {
 
     const isCorrect = Math.random() < 0.78;
     if (isCorrect) {
+      const tileIndex = duel.targetSequence[duel.oppProgress];
       duel.oppProgress++;
+
+      const oppTile = document.getElementById(`dtile-${tileIndex}`);
+      if (oppTile) {
+        oppTile.classList.add('flash-active');
+        setTimeout(() => oppTile.classList.remove('flash-active'), 250);
+      }
+      audioFX.playBlip(tileIndex);
       updateDuelHUD();
 
       if (duel.oppProgress === duel.targetSequence.length) {
         duel.oppScore += 2;
         duel.phase = 'ROUND_OVER';
+        audioVoice.playMoyeMoyeTune();
         updateDuelHUD();
 
         if (duel.oppScore >= duel.targetScore) {
           finishDuelMatch(false);
         } else {
           setTimeout(() => {
-            if (duel.active) {
+            if (APP_STATE.duel && APP_STATE.duel.active) {
               startNewDuelRound();
             }
           }, 1100);
@@ -3591,6 +3713,12 @@ async function loadLeaderboard() {
     nameSpan.style.fontWeight = '800';
     nameSpan.textContent = String(row.username || 'PLAYER'); // XSS prevention: strict text node escaping
     userBlock.appendChild(nameSpan);
+
+    const modeStr = (row.mode || 'solo').toUpperCase();
+    const modeBadge = document.createElement('span');
+    modeBadge.className = `lb-mode-badge ${modeStr.toLowerCase()}`;
+    modeBadge.textContent = modeStr;
+    userBlock.appendChild(modeBadge);
 
     li.appendChild(userBlock);
 
@@ -3941,6 +4069,40 @@ function setupEventListeners() {
 
   // Duel Helpers
   document.getElementById('btnPlayBot').addEventListener('click', () => startOnlineDuelMatch(true));
+
+  const inputJoin = document.getElementById('inputJoinRoom');
+  if (inputJoin) {
+    inputJoin.addEventListener('input', () => {
+      const val = inputJoin.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+      inputJoin.value = val;
+      if (val.length === 4) {
+        const codeEl = document.getElementById('lblRoomCode');
+        if (codeEl) codeEl.textContent = val;
+      }
+    });
+    inputJoin.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const btn = document.getElementById('btnJoinRoomSubmit');
+        if (btn) btn.click();
+      }
+    });
+  }
+
+  // Click on main room code display block to copy
+  const lblMainCode = document.getElementById('lblRoomCode');
+  if (lblMainCode) {
+    lblMainCode.style.cursor = 'pointer';
+    lblMainCode.setAttribute('title', 'Click to copy code');
+    lblMainCode.addEventListener('click', () => {
+      const code = APP_STATE.duel.roomCode || lblMainCode.textContent.trim() || 'MIND';
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = lblMainCode.textContent;
+        lblMainCode.textContent = 'COPIED!';
+        setTimeout(() => { lblMainCode.textContent = orig; }, 1400);
+      }).catch(() => {});
+    });
+  }
+
   document.getElementById('btnJoinRoomSubmit').addEventListener('click', () => {
     const code = document.getElementById('inputJoinRoom').value.trim().toUpperCase();
     if (code.length === 4) {
@@ -4073,6 +4235,7 @@ function updateProfileUI() {
    SECTION 13: ENGINE BOOTSTRAP
    ========================================================================== */
 window.addEventListener('DOMContentLoaded', () => {
+  DeviceProfile.applyDeviceClasses();
   initAmbientCanvas();
   applyTheme(APP_STATE.currentTheme);
   updateDesiTaunt();
@@ -4081,6 +4244,17 @@ window.addEventListener('DOMContentLoaded', () => {
   AntiCheat.initProtection();
   initWebSocket();
   initSupabase();
+
+  // Throttled window resize listener to avoid layout thrashing
+  let resizeThrottle = null;
+  window.addEventListener('resize', () => {
+    if (resizeThrottle) return;
+    resizeThrottle = setTimeout(() => {
+      resizeThrottle = null;
+      DeviceProfile._cached = DeviceProfile.detect();
+      DeviceProfile.applyDeviceClasses();
+    }, 200);
+  }, { passive: true });
 
   // Initialize Zero-Allocation Tile Object Pool
   singleTilePool = new TilePool('singleMatrixGrid', 60);

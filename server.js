@@ -553,6 +553,23 @@ function handleWebSocketMessage(socket, msg) {
 
   const action = msg.action || msg.type;
 
+  // Real-time Leaderboard broadcast over WebSocket (<1s sync across all clients)
+  if (action === 'leaderboard_update') {
+    if (msg.record && msg.record.username) {
+      broadcastAll({
+        type: 'leaderboard_sync',
+        record: {
+          username: String(msg.record.username).substring(0, 32),
+          avatar: String(msg.record.avatar || 'cutting_chai').substring(0, 32),
+          high_score: Number(msg.record.high_score) || 0,
+          max_level: Number(msg.record.max_level) || 1,
+          mode: String(msg.record.mode || 'solo').substring(0, 16)
+        }
+      });
+    }
+    return;
+  }
+
   // 1. Join room with device-type homogenization check
   if (action === 'join_room') {
     const code = (msg.roomCode || '').toUpperCase().trim();
@@ -650,26 +667,26 @@ function handleWebSocketMessage(socket, msg) {
     const opponent = socket === room.p1 ? room.p2 : room.p1;
     if (!opponent || opponent.destroyed || !opponent.writable) return;
 
-    if (action === 'duel_tap') {
+    if (action === 'duel_tap' || action === 'tap_progress') {
       sendWsText(opponent, JSON.stringify({
         type: 'duel_tap',
         tileIndex: Number(msg.tileIndex) || 0,
         progress: Number(msg.progress) || 0,
         score: Number(msg.score) || 0
       }));
-    } else if (action === 'duel_stun') {
+    } else if (action === 'duel_stun' || action === 'player_stun') {
       sendWsText(opponent, JSON.stringify({ type: 'duel_stun' }));
-    } else if (action === 'duel_round_win') {
+    } else if (action === 'duel_round_win' || action === 'round_win') {
       sendWsText(opponent, JSON.stringify({
         type: 'duel_round_win',
         score: Number(msg.score) || 0
       }));
-    } else if (action === 'duel_next_round') {
+    } else if (action === 'duel_next_round' || action === 'sync_round') {
       sendWsText(opponent, JSON.stringify({
         type: 'duel_next_round',
-        sequence: Array.isArray(msg.sequence) ? msg.sequence : [0, 1, 2, 3]
+        sequence: Array.isArray(msg.sequence) ? msg.sequence : (Array.isArray(msg.roundSeq) ? msg.roundSeq : [0, 1, 2, 3])
       }));
-    } else if (action === 'duel_match_won') {
+    } else if (action === 'duel_match_won' || action === 'duel_victory') {
       sendWsText(opponent, JSON.stringify({ type: 'duel_match_won' }));
     }
   }

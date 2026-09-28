@@ -37,7 +37,7 @@
   --text-muted: #94A3B8;
 
   --font-display: 'Outfit', 'Space Grotesk', sans-serif;
-  --font-main: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  --font-main: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, monospace;
 
   --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -940,7 +940,8 @@ header.funky-header {
   overflow: hidden;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
   backface-visibility: hidden;
 }
 .glass-tile:hover {
@@ -1242,6 +1243,27 @@ header.funky-header {
 .lb-avatar-box { width: 30px; height: 30px; border-radius: 10px; background: rgba(255, 255, 255, 0.09); display: flex; align-items: center; justify-content: center; }
 .lb-avatar-box svg { width: 20px; height: 20px; }
 .lb-score-val { font-family: var(--font-display); font-size: 1.15rem; font-weight: 900; color: var(--color-primary); }
+.lb-mode-badge {
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.06em;
+  margin-left: 6px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.lb-mode-badge.solo {
+  background: rgba(0, 245, 255, 0.14);
+  color: var(--color-primary);
+  border: 1px solid rgba(0, 245, 255, 0.35);
+}
+.lb-mode-badge.duel {
+  background: rgba(255, 0, 127, 0.14);
+  color: var(--color-secondary);
+  border: 1px solid rgba(255, 0, 127, 0.35);
+}
 
 /* Modals */
 .glass-modal-backdrop { position: fixed; inset: 0; background: rgba(3, 19, 38, 0.85); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 14px; }
