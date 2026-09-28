@@ -1399,16 +1399,10 @@ class LofiRadioEngine {
 
     try {
       const targetSrc = track.url;
-      const curSrc = this.audioEl.src || '';
-      const isSameTrack = curSrc.endsWith(targetSrc.replace('./', ''));
-
-      if (!isSameTrack || this.audioEl.ended || this.audioEl.paused) {
-        if (!isSameTrack) {
-          this.audioEl.src = targetSrc;
-        }
-        this.audioEl.volume = this.volume;
-        this.audioEl.load();
-      }
+      // Always assign src + load to prevent stale media state on mobile/Vercel
+      this.audioEl.src = targetSrc;
+      this.audioEl.volume = this.volume;
+      this.audioEl.load();
 
       const p = this.audioEl.play();
       if (p && typeof p.then === 'function') {
@@ -1417,11 +1411,15 @@ class LofiRadioEngine {
           this.updateRadioUI();
           this.startVisualizer();
         }).catch((err) => {
-          console.warn('[LofiRadio] HTML5 Audio waiting for user gesture:', err.message);
+          console.warn('[LofiRadio] Autoplay blocked — waiting for user gesture:', err.message);
           const unlock = () => {
-            if (this.isPlaying && this.audioEl && this.audioEl.paused) {
-              this.audioEl.play().catch(() => {});
-            }
+            this.audioEl.src = targetSrc;
+            this.audioEl.load();
+            this.audioEl.play().then(() => {
+              this.isPlaying = true;
+              this.updateRadioUI();
+              this.startVisualizer();
+            }).catch(() => {});
             window.removeEventListener('click', unlock);
             window.removeEventListener('touchstart', unlock);
             window.removeEventListener('pointerdown', unlock);
