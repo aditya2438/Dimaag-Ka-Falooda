@@ -530,6 +530,7 @@ class AudioAndVoiceEngine {
      DJ RHYTHMIC EXTRA BEATS LAYER (SYNCS DYNAMICALLY WITH BACKGROUND TRACKS)
      ======================================================================== */
   playDJTileBeat(stepIndex) {
+    if (typeof lofiRadio !== "undefined" && lofiRadio && lofiRadio.isPlaying) return; // Keep songs pure and relaxing
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
@@ -796,6 +797,7 @@ class AudioAndVoiceEngine {
   }
 
   playFlashNote(step) {
+    if (typeof lofiRadio !== "undefined" && lofiRadio && lofiRadio.isPlaying) return; // Never clash with real songs
     if (this.isMuted || !this.ctx) return;
     try {
       const now = this.ctx.currentTime;
@@ -881,15 +883,10 @@ class LofiRadioEngine {
     this.audioEngine = audioEngine;
     this.isPlaying = false;
     this.currentTrack = 0;
-    this.volume = 0.70;
+    this.volume = 0.75;
     this.vizAnimId = null;
-    this.mode = 'STREAM'; // Direct audio streaming for 100% real songs
-    this.synthIntervalId = null;
-    this.synthMasterGain = null;
-    this.synthStep = 0;
 
-    // Top 10 Melodious, Romantic & Peaceful Hindi Songs (Local zero-latency MP3s + verified high-speed streams)
-        // Curated 50 Soulful & Peaceful Hindi Lo-Fi Songs
+    // 50 Curated Soulful & Peaceful Hindi Lo-Fi Songs (Direct high-bitrate local audio)
     this.tracks = [
   {
     "id": 0,
@@ -897,8 +894,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Brahmastra // Warm Saffron Love Song",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 72
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 1,
@@ -906,8 +902,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Bhediya // Soulful Romantic Melody",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 73
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 2,
@@ -915,8 +910,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Sanam Re // Relaxing Acoustic Lo-Fi",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 74
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 3,
@@ -924,8 +918,7 @@ class LofiRadioEngine {
     "artist": "Aditya Rikhari",
     "sub": "Aditya Rikhari // Heartfelt Reflection",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 75
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 4,
@@ -933,53 +926,47 @@ class LofiRadioEngine {
     "artist": "Aditya Rikhari",
     "sub": "Aditya Rikhari // Peaceful Melodious Flow",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 76
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 5,
     "name": "ISHQ MUBARAK (LOFI)",
     "artist": "Arijit Singh",
     "sub": "Tum Bin 2 // Soulful Slowed Reverb",
-    "url": "https://archive.org/download/ishq-mubarak-slowed-reverb-arijit-singh-love-story-song-lofi-music-channel/Ishq%20Mubarak%20%28Slowed%20%20Reverb%29%20Arijit%20Singh%20%20Love%20Story%20Song%20%28Lofi%20Music%20Channel%29.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 77
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 6,
     "name": "SAHIBA",
     "artist": "Aditya Rikhari",
     "sub": "Aditya Rikhari // Soulful Acoustic Love",
-    "url": "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Sahiba%20-%20Aditya%20Rikhari.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 78
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 7,
     "name": "DHUNDHALA",
     "artist": "Talwinder & Yashraj",
     "sub": "Talwinder // Chill Hypnotic Vibes",
-    "url": "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Dhundhala%20-%20Yashraj.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 79
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 8,
     "name": "HASEEN",
     "artist": "Talwinder",
     "sub": "Talwinder // Smooth Romantic Lo-Fi",
-    "url": "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Haseen%20-%20Talwiinder.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 80
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 9,
     "name": "SONI SONI",
     "artist": "Darshan Raval",
     "sub": "Ishq Vishk Rebound // Romantic Chill",
-    "url": "https://archive.org/download/sahiba-by-aditya-rikhari/SpotiDownloader.com%20-%20Soni%20Soni%20%28From%20_Ishq%20Vishk%20Rebound_%29%20-%20Darshan%20Raval.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 81
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 10,
@@ -987,8 +974,7 @@ class LofiRadioEngine {
     "artist": "Anuv Jain",
     "sub": "Acoustic Guitar Soul & Soft Humming",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 82
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 11,
@@ -996,8 +982,7 @@ class LofiRadioEngine {
     "artist": "Anuv Jain",
     "sub": "Gentle Fingerstyle Heartstrings",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 83
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 12,
@@ -1005,8 +990,7 @@ class LofiRadioEngine {
     "artist": "Anuv Jain",
     "sub": "Soft Whispers & Golden Sunset Echoes",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 72
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 13,
@@ -1014,8 +998,7 @@ class LofiRadioEngine {
     "artist": "Anuv Jain",
     "sub": "Cloud Drift Acoustic Reverie",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 73
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 14,
@@ -1023,8 +1006,7 @@ class LofiRadioEngine {
     "artist": "Anuv Jain",
     "sub": "Sweet Melodic Nostalgia",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 74
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 15,
@@ -1032,8 +1014,7 @@ class LofiRadioEngine {
     "artist": "Prateek Kuhad",
     "sub": "Intimate Bedroom Acoustic Reverie",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 75
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 16,
@@ -1041,8 +1022,7 @@ class LofiRadioEngine {
     "artist": "Prateek Kuhad",
     "sub": "Soft Heart Strings & Acoustic Warmth",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 76
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 17,
@@ -1050,8 +1030,7 @@ class LofiRadioEngine {
     "artist": "Prateek Kuhad",
     "sub": "Gentle Warm Breeze & Piano Chords",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 77
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 18,
@@ -1059,8 +1038,7 @@ class LofiRadioEngine {
     "artist": "Jasleen Royal & Prateek",
     "sub": "Baar Baar Dekho // Ethereal Midnight Drift",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 78
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 19,
@@ -1068,8 +1046,7 @@ class LofiRadioEngine {
     "artist": "Jasleen Royal",
     "sub": "Warm Dreamy Echoes & Soft Drums",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 79
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 20,
@@ -1077,8 +1054,7 @@ class LofiRadioEngine {
     "artist": "Jasleen Royal",
     "sub": "Phillauri // Serene Acoustic Devotion",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 80
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 21,
@@ -1086,8 +1062,7 @@ class LofiRadioEngine {
     "artist": "Udit Narayan & Sadhana",
     "sub": "Jo Jeeta Wohi Sikandar // Nostalgic First Love",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 81
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 22,
@@ -1095,8 +1070,7 @@ class LofiRadioEngine {
     "artist": "Mohit Chauhan",
     "sub": "Jab We Met // Rainy Day Windowpane Chill",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 82
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 23,
@@ -1104,8 +1078,7 @@ class LofiRadioEngine {
     "artist": "Mohit Chauhan",
     "sub": "Tamasha // Joyful Wanderlust Strings",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 83
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 24,
@@ -1113,8 +1086,7 @@ class LofiRadioEngine {
     "artist": "Mohit Chauhan",
     "sub": "Jab Harry Met Sejal // Calm Evening Flow",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 72
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 25,
@@ -1122,8 +1094,7 @@ class LofiRadioEngine {
     "artist": "Mohit Chauhan",
     "sub": "Soulful Yearning & Mountain Winds",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 73
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 26,
@@ -1131,8 +1102,7 @@ class LofiRadioEngine {
     "artist": "Atif Aslam",
     "sub": "Ajab Prem Ki Ghazab Kahani // Gentle Romance",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 74
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 27,
@@ -1140,8 +1110,7 @@ class LofiRadioEngine {
     "artist": "Atif Aslam",
     "sub": "Badlapur // Melancholic Heartstrings",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 75
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 28,
@@ -1149,8 +1118,7 @@ class LofiRadioEngine {
     "artist": "Atif Aslam",
     "sub": "Soft Midnight Guitar Reverie",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 76
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 29,
@@ -1158,8 +1126,7 @@ class LofiRadioEngine {
     "artist": "Atif Aslam",
     "sub": "Tiger Zinda Hai // Pure Candlelit Romance",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 77
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 30,
@@ -1167,8 +1134,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Chhichhore // Soulful Nostalgic Echoes",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 78
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 31,
@@ -1176,8 +1142,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Ae Dil Hai Mushkil // Melodic Solitude",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 79
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 32,
@@ -1185,8 +1150,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Aashiqui 2 // Deep Night Rain Acoustic",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 80
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 33,
@@ -1194,8 +1158,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Jab Harry Met Sejal // Gentle Summer Breeze",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 81
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 34,
@@ -1203,8 +1166,7 @@ class LofiRadioEngine {
     "artist": "Arijit & Alka Yagnik",
     "sub": "Tamasha // Melancholic Rainstrings",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 82
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 35,
@@ -1212,8 +1174,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Agent Vinod // Tender Midnight Serenade",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 83
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 36,
@@ -1221,8 +1182,7 @@ class LofiRadioEngine {
     "artist": "Arijit Singh",
     "sub": "Love Aaj Kal // Tender Acoustic Warmth",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 72
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 37,
@@ -1230,8 +1190,7 @@ class LofiRadioEngine {
     "artist": "Arijit & Harshdeep",
     "sub": "Yeh Jawaani Hai Deewani // Wanderer Rest",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 73
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 38,
@@ -1239,8 +1198,7 @@ class LofiRadioEngine {
     "artist": "Sreerama Chandra",
     "sub": "Yeh Jawaani Hai Deewani // Snowfall Whispers",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 74
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 39,
@@ -1248,8 +1206,7 @@ class LofiRadioEngine {
     "artist": "Kavita Seth & Amitabh",
     "sub": "Wake Up Sid // Serene Dawn Reflections",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 75
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 40,
@@ -1257,8 +1214,7 @@ class LofiRadioEngine {
     "artist": "A.R. Rahman",
     "sub": "Guru // Ethereal Desert Breeze",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 76
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 41,
@@ -1266,8 +1222,7 @@ class LofiRadioEngine {
     "artist": "A.R. Rahman & Javed Ali",
     "sub": "Rockstar // Spiritual Peace & Tranquility",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 77
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 42,
@@ -1275,8 +1230,7 @@ class LofiRadioEngine {
     "artist": "Lucky Ali",
     "sub": "Sunoh // Vintage Nostalgic Wanderer",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 78
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 43,
@@ -1284,8 +1238,7 @@ class LofiRadioEngine {
     "artist": "Lucky Ali",
     "sub": "Kaho Naa Pyaar Hai // Soft Piano Dream",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 79
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 44,
@@ -1293,8 +1246,7 @@ class LofiRadioEngine {
     "artist": "Vishal Dadlani",
     "sub": "Dostana // Sunny Carefree Afternoon",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 80
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 45,
@@ -1302,8 +1254,7 @@ class LofiRadioEngine {
     "artist": "Roop Kumar Rathod",
     "sub": "Anwar // Sacred Love & Ambient Sitar",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/kesariya.mp3",
-    "bpm": 81
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 46,
@@ -1311,8 +1262,7 @@ class LofiRadioEngine {
     "artist": "Mohit Chauhan",
     "sub": "Once Upon a Time in Mumbaai // Sweet Melody",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/apna_bana_le.mp3",
-    "bpm": 82
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 47,
@@ -1320,8 +1270,7 @@ class LofiRadioEngine {
     "artist": "Darshan Raval",
     "sub": "Indie Pop // Soft Heartbreak Reverie",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3",
-    "bpm": 83
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 48,
@@ -1329,8 +1278,7 @@ class LofiRadioEngine {
     "artist": "Darshan Raval",
     "sub": "Whimsical Warm Breeze & Fingerpicking",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/faasle.mp3",
-    "bpm": 72
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 49,
@@ -1338,45 +1286,53 @@ class LofiRadioEngine {
     "artist": "Darshan Raval",
     "sub": "Unrequited Love // Acoustic Rain Piano",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/samjho_na.mp3",
-    "bpm": 73
+    "fallback": "./audio/kesariya.mp3"
   }
 ];
 
-    // Native HTML5 Audio (Direct hardware speaker streaming)
-    this.audioEl = new Audio();
-    this.audioEl.preload = "auto";
-    this.audioEl.setAttribute('playsinline', '');
-    this.audioEl.setAttribute('webkit-playsinline', '');
-    this.audioEl.volume = this.volume;
+    // Native HTML5 Audio element pinned to DOM for uninterrupted background execution
+    let el = (typeof document !== 'undefined') ? document.getElementById('bgLofiAudioPlayer') : null;
+    if (!el && typeof document !== 'undefined') {
+      el = document.createElement('audio');
+      el.id = 'bgLofiAudioPlayer';
+      el.preload = 'auto';
+      el.setAttribute('playsinline', '');
+      el.setAttribute('webkit-playsinline', '');
+      el.style.display = 'none';
+      document.body.appendChild(el);
+    }
+    this.audioEl = el || (typeof Audio !== 'undefined' ? new Audio() : {});
+    if (this.audioEl && this.audioEl.addEventListener) {
+      this.audioEl.volume = this.volume;
 
-    this.audioEl.addEventListener('playing', () => {
-      this.isPlaying = true;
-      this.stopSynthPlayback(); // Never play piano synth over real songs!
-      this.updateRadioUI();
-      this.startVisualizer();
-    });
+      this.audioEl.addEventListener('playing', () => {
+        this.isPlaying = true;
+        this.updateRadioUI();
+        this.startVisualizer();
+      });
 
-    this.audioEl.addEventListener('ended', () => {
-      this.nextTrack();
-    });
+      this.audioEl.addEventListener('pause', () => {
+        this.isPlaying = false;
+        this.updateRadioUI();
+      });
 
-    this.audioEl.addEventListener('error', (e) => {
-      console.warn('[LofiRadio] Track error, switching to fallback or next track:', e);
-      const cur = this.tracks[this.currentTrack];
-      if (cur && cur.fallback && this.audioEl.src !== cur.fallback) {
-        this.audioEl.src = cur.fallback;
-        this.audioEl.play().catch(() => {
-          if (this.isPlaying) this.nextTrack();
-        });
-      } else {
-        if (this.isPlaying) {
-          setTimeout(() => this.nextTrack(), 500);
+      this.audioEl.addEventListener('ended', () => {
+        this.nextTrack();
+      });
+
+      this.audioEl.addEventListener('error', (e) => {
+        console.warn('[LofiRadio] Track playback rollover:', e);
+        const nextIdx = (this.currentTrack + 1) % this.tracks.length;
+        this.currentTrack = nextIdx;
+        const cur = this.tracks[this.currentTrack];
+        if (cur && this.audioEl) {
+          this.audioEl.src = cur.url;
+          this.audioEl.load();
+          this.audioEl.play().catch(() => {});
         }
-      }
-    });
+      });
+    }
   }
-
 
   ensureContext() {
     if (this.audioEngine) {
@@ -1384,108 +1340,6 @@ class LofiRadioEngine {
       if (this.audioEngine.ctx && this.audioEngine.ctx.state === 'suspended') {
         this.audioEngine.ctx.resume().catch(() => {});
       }
-    }
-  }
-
-  startSynthPlayback(trackIndex) {
-    this.ensureContext();
-    const ctx = this.audioEngine ? this.audioEngine.ctx : null;
-    if (!ctx) return;
-    this.stopSynthPlayback();
-
-    const track = this.tracks[trackIndex !== undefined ? trackIndex : this.currentTrack];
-    if (!track || !track.chords) return;
-
-    this.synthMasterGain = ctx.createGain();
-    this.synthMasterGain.gain.setValueAtTime(this.volume * 0.38, ctx.currentTime);
-    this.synthMasterGain.connect(ctx.destination);
-
-    this.synthStep = 0;
-    const stepDurationMs = Math.round((60 / (track.bpm || 75)) * 1000);
-
-    const playChordStep = () => {
-      if (!this.isPlaying || !this.synthMasterGain) return;
-      const now = ctx.currentTime;
-      const chordIndex = this.synthStep % track.chords.length;
-      const chordNotes = track.chords[chordIndex];
-      const bassNote = track.bass ? track.bass[chordIndex % track.bass.length] : 65.41;
-      const melNote = track.melody ? track.melody[this.synthStep % track.melody.length] : null;
-
-      // Warm Polyphonic Lo-Fi Chords
-      chordNotes.forEach((freq, idx) => {
-        try {
-          const osc = ctx.createOscillator();
-          const g = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.035);
-
-          const dur = (stepDurationMs / 1000) * 1.8;
-          g.gain.setValueAtTime(0.001, now);
-          g.gain.linearRampToValueAtTime(0.12, now + 0.08);
-          g.gain.exponentialRampToValueAtTime(0.001, now + dur);
-
-          const filter = ctx.createBiquadFilter();
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(1400, now);
-
-          osc.connect(filter);
-          filter.connect(g);
-          g.connect(this.synthMasterGain);
-
-          osc.start(now + idx * 0.035);
-          osc.stop(now + dur + 0.1);
-        } catch (e) {}
-      });
-
-      // Warm Acoustic Sub Bass
-      if (bassNote) {
-        try {
-          const bOsc = ctx.createOscillator();
-          const bGain = ctx.createGain();
-          bOsc.type = 'sine';
-          bOsc.frequency.setValueAtTime(bassNote, now);
-          bGain.gain.setValueAtTime(0.35, now);
-          bGain.gain.exponentialRampToValueAtTime(0.001, now + (stepDurationMs / 1000) * 1.5);
-          bOsc.connect(bGain);
-          bGain.connect(this.synthMasterGain);
-          bOsc.start(now);
-          bOsc.stop(now + (stepDurationMs / 1000) * 1.6);
-        } catch (e) {}
-      }
-
-      // Soulful Nylon Guitar / Piano Lead Melody Note
-      if (melNote) {
-        try {
-          const mOsc = ctx.createOscillator();
-          const mGain = ctx.createGain();
-          mOsc.type = 'sine';
-          mOsc.frequency.setValueAtTime(melNote, now + 0.12);
-          mGain.gain.setValueAtTime(0.001, now + 0.12);
-          mGain.gain.linearRampToValueAtTime(0.22, now + 0.16);
-          mGain.gain.exponentialRampToValueAtTime(0.001, now + (stepDurationMs / 1000));
-          mOsc.connect(mGain);
-          mGain.connect(this.synthMasterGain);
-          mOsc.start(now + 0.12);
-          mOsc.stop(now + (stepDurationMs / 1000) + 0.1);
-        } catch (e) {}
-      }
-
-      this.synthStep++;
-    };
-
-    playChordStep();
-    this.synthIntervalId = setInterval(playChordStep, stepDurationMs);
-  }
-
-  stopSynthPlayback() {
-    if (this.synthIntervalId) {
-      clearInterval(this.synthIntervalId);
-      this.synthIntervalId = null;
-    }
-    if (this.synthMasterGain && this.audioEngine && this.audioEngine.ctx) {
-      try {
-        this.synthMasterGain.gain.linearRampToValueAtTime(0.001, this.audioEngine.ctx.currentTime + 0.3);
-      } catch (e) {}
     }
   }
 
@@ -1536,7 +1390,6 @@ class LofiRadioEngine {
 
   playTrack(index) {
     this.ensureContext();
-    this.stopSynthPlayback(); // NEVER play piano synth when streaming real songs!
 
     if (index !== undefined && index >= 0 && index < this.tracks.length) {
       this.currentTrack = index;
@@ -1551,27 +1404,37 @@ class LofiRadioEngine {
     }
 
     try {
-      const srcUrl = track.url;
-      if (this.audioEl.src !== srcUrl && !this.audioEl.src.endsWith(srcUrl.replace('./', ''))) {
-        this.audioEl.src = srcUrl;
+      const targetSrc = track.url;
+      const curSrc = this.audioEl.src || '';
+      const isSameTrack = curSrc.endsWith(targetSrc.replace('./', ''));
+
+      if (!isSameTrack || this.audioEl.ended || this.audioEl.paused) {
+        if (!isSameTrack) {
+          this.audioEl.src = targetSrc;
+        }
+        this.audioEl.volume = this.volume;
+        this.audioEl.load();
       }
-      this.audioEl.volume = this.volume;
-      const playPromise = this.audioEl.play();
-      if (playPromise && typeof playPromise.then === 'function') {
-        playPromise.then(() => {
+
+      const p = this.audioEl.play();
+      if (p && typeof p.then === 'function') {
+        p.then(() => {
+          this.isPlaying = true;
           this.updateRadioUI();
           this.startVisualizer();
         }).catch((err) => {
           console.warn('[LofiRadio] HTML5 Audio waiting for user gesture:', err.message);
           const unlock = () => {
-            if (this.isPlaying && this.audioEl.paused) {
+            if (this.isPlaying && this.audioEl && this.audioEl.paused) {
               this.audioEl.play().catch(() => {});
             }
             window.removeEventListener('click', unlock);
             window.removeEventListener('touchstart', unlock);
+            window.removeEventListener('pointerdown', unlock);
           };
           window.addEventListener('click', unlock, { once: true });
           window.addEventListener('touchstart', unlock, { once: true });
+          window.addEventListener('pointerdown', unlock, { once: true });
         });
       }
     } catch (e) {
@@ -1582,14 +1445,12 @@ class LofiRadioEngine {
     this.startVisualizer();
   }
 
-
   pauseTrack() {
     if (this.audioEl) {
       try { this.audioEl.pause(); } catch (e) {}
     }
-    this.stopSynthPlayback();
     this.isPlaying = false;
-    this.audioEngine.isSpeechMuted = false;
+    if (this.audioEngine) this.audioEngine.isSpeechMuted = false;
     this.updateRadioUI();
     if (this.vizAnimId) {
       cancelAnimationFrame(this.vizAnimId);
@@ -1620,39 +1481,14 @@ class LofiRadioEngine {
     if (this.audioEl) {
       this.audioEl.volume = this.volume;
     }
-    if (this.synthMasterGain && this.audioEngine && this.audioEngine.ctx) {
-      try {
-        this.synthMasterGain.gain.setValueAtTime(this.volume * 0.38, this.audioEngine.ctx.currentTime);
-      } catch (e) {}
-    }
-  }
-
-  toggleEngineMode() {
-    if (this.mode === 'AUTO') {
-      this.mode = 'STREAM';
-      this.stopSynthPlayback();
-      if (this.isPlaying && this.audioEl) this.audioEl.play().catch(() => {});
-    } else if (this.mode === 'STREAM') {
-      this.mode = 'SYNTH';
-      if (this.audioEl) this.audioEl.pause();
-      if (this.isPlaying) this.startSynthPlayback(this.currentTrack);
-    } else {
-      this.mode = 'AUTO';
-      if (this.isPlaying) this.playTrack(this.currentTrack);
-    }
-    this.updateRadioUI();
   }
 
   updateRadioUI() {
     const btnToggle = document.getElementById('btnRadioToggle');
     const txtStatus = document.getElementById('radioStatusText');
     const playPauseBtn = document.getElementById('btnRadioPlayPause');
-    const modeBtn = document.getElementById('btnRadioEngineMode');
     const curTrack = this.tracks[this.currentTrack];
-
-    if (modeBtn) {
-      modeBtn.textContent = `[ AUDIO: ${this.mode} ]`;
-    }
+    if (!curTrack) return;
 
     if (this.isPlaying) {
       if (btnToggle) btnToggle.classList.add('radio-playing');
@@ -1683,11 +1519,9 @@ class LofiRadioEngine {
     const sysLog = document.getElementById('terminalSysLog');
     if (sysLog) {
       if (this.isPlaying) {
-        const isStreamPlaying = this.audioEl && !this.audioEl.paused && this.audioEl.currentTime > 0;
-        const engineLabel = isStreamPlaying ? 'DIRECT STREAM' : 'ACOUSTIC SYNTH';
-        sysLog.innerHTML = `> ACTIVE: [TRACK ${(this.currentTrack + 1).toString().padStart(2, '0')}] ${curTrack.name} (${engineLabel})<br>> ARTIST: ${curTrack.artist} // ${curTrack.sub}`;
+        sysLog.innerHTML = `> ACTIVE: [TRACK ${(this.currentTrack + 1).toString().padStart(2, '0')}] ${curTrack.name} (108.4 FM STREAM)<br>> ARTIST: ${curTrack.artist} // ${curTrack.sub}`;
       } else {
-        sysLog.innerHTML = `> 108.4 FM: HINDI LO-FI STREAM (ARIJIT // TALWINDER // ADITYA RIKHARI)<br>> LIVE DJ BEAT SYNC ACTIVE ON TILE TAPS`;
+        sysLog.innerHTML = `> 108.4 FM: 50 SOULFUL HINDI LO-FI SONGS // PLAYING IN BACKGROUND<br>> CLICK ANY SONG BELOW OR HIT [ PLAY ] TO ENJOY WHILE GAMING`;
       }
     }
 

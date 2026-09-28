@@ -1699,6 +1699,28 @@ header.funky-header {
   }
 }
 
+/* ULTRA-WIDE PC & BIG SCREEN COMMAND POST (min-width: 1400px) */
+@media (min-width: 1400px) {
+  #app {
+    max-width: 960px;
+    height: 90vh;
+    max-height: 920px;
+    padding: 20px 32px;
+    border-radius: 32px;
+  }
+  .funky-hero-card h2 {
+    font-size: 3.2rem;
+  }
+  .matrix-grid-dynamic {
+    max-width: min(540px, 58vh) !important;
+    max-height: min(360px, 40vh) !important;
+    gap: 16px;
+  }
+  .glass-tile {
+    border-radius: 22px;
+  }
+}
+
 /* ==========================================================================
    SECTION 14: RETRO-TERMINAL HINDI LO-FI CHILL RADIO & MINI RADIO DECK
    ========================================================================== */
