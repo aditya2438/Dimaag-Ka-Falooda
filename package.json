@@ -1,6 +1,6 @@
 {
   "name": "dimaag-ka-falooda",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "High-stakes spatial memory reflex web game with dynamic matrix grid scaling, retro radio terminal, real Hindi Lo-Fi audio, and live DJ beat synchronizer.",
   "main": "server.js",
   "repository": {
@@ -9,7 +9,9 @@
   },
   "homepage": "https://aditya2438.github.io/Dimaag-Ka-Falooda/",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "playwright test",
+    "test:load": "k6 run tests/load.k6.js"
   },
   "keywords": [
     "dimaag-ka-falooda",

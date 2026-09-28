@@ -1424,10 +1424,30 @@ class LofiRadioEngine {
 
 const lofiRadio = new LofiRadioEngine(audioVoice);
 
+/* ==========================================================================
+   SECTION 4B: HAPTIC ENGINE (RESPONSIVE PHYSICAL VIBRATIONS)
+   ========================================================================== */
+const HapticEngine = {
+  enabled: true,
+  vibrate(pattern) {
+    if (!this.enabled || typeof navigator === 'undefined' || !navigator.vibrate) return;
+    try {
+      navigator.vibrate(pattern);
+    } catch (e) {}
+  },
+  tap() { this.vibrate([35]); },
+  tick() { this.vibrate([18]); },
+  countdown() { this.vibrate([45]); },
+  start() { this.vibrate([85]); },
+  fever() { this.vibrate([60, 40, 70]); },
+  wrong() { this.vibrate([120, 60, 160]); },
+  victory() { this.vibrate([70, 40, 70, 40, 140]); },
+  power() { this.vibrate([45, 25, 75]); },
+  button() { this.vibrate([22]); }
+};
+
 function triggerHaptic(pattern) {
-  if (navigator.vibrate) {
-    try { navigator.vibrate(pattern); } catch (e) { }
-  }
+  HapticEngine.vibrate(pattern);
 }
 
 /* ==========================================================================
@@ -3207,6 +3227,8 @@ function startDuelCountdown(onComplete) {
     APP_STATE.duel.countdownTimer = null;
   }
 
+  HapticEngine.countdown();
+
   const timer = setInterval(() => {
     if (!APP_STATE.duel || !APP_STATE.duel.active) {
       clearInterval(timer);
@@ -3218,8 +3240,10 @@ function startDuelCountdown(onComplete) {
         status.textContent = `MATCH STARTING IN ${count}...`;
       }
       audioVoice.playPop();
+      HapticEngine.countdown();
     } else {
       clearInterval(timer);
+      HapticEngine.start();
       if (APP_STATE.duel) APP_STATE.duel.countdownTimer = null;
       if (status) {
         status.textContent = 'MEMORIZE DUEL PATTERN';
