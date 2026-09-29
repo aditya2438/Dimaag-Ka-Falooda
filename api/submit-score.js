@@ -102,8 +102,8 @@ function validatePayload(body) {
 
       // Motor reflex rate analysis
       for (let i = 1; i < actionChain.length; i++) {
-        const prevTime = actionChain[i - 1][3];
-        const currTime = actionChain[i][3];
+        const prevTime = actionChain[i - 1].t;
+        const currTime = actionChain[i].t;
         if (typeof prevTime === 'number' && typeof currTime === 'number') {
           if (currTime - prevTime < 35) {
             return { valid: false, error: 'Human motor reflex limit violation detected (<35ms)' };

@@ -927,7 +927,7 @@ class LofiRadioEngine {
     "name": "ISHQ MUBARAK (LOFI)",
     "artist": "Arijit Singh",
     "sub": "Tum Bin 2 // Soulful Slowed Reverb",
-    "url": "./audio/kesariya.mp3",
+    "url": "./audio/ishq_mubarak.mp3",
     "fallback": "./audio/apna_bana_le.mp3"
   },
   {
@@ -935,7 +935,7 @@ class LofiRadioEngine {
     "name": "SAHIBA",
     "artist": "Aditya Rikhari",
     "sub": "Aditya Rikhari // Soulful Acoustic Love",
-    "url": "./audio/apna_bana_le.mp3",
+    "url": "./audio/sahiba.mp3",
     "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
@@ -943,7 +943,7 @@ class LofiRadioEngine {
     "name": "DHUNDHALA",
     "artist": "Talwinder & Yashraj",
     "sub": "Talwinder // Chill Hypnotic Vibes",
-    "url": "./audio/sanam_re_lofi.mp3",
+    "url": "./audio/dhundhala.mp3",
     "fallback": "./audio/faasle.mp3"
   },
   {
@@ -951,7 +951,7 @@ class LofiRadioEngine {
     "name": "HASEEN",
     "artist": "Talwinder",
     "sub": "Talwinder // Smooth Romantic Lo-Fi",
-    "url": "./audio/faasle.mp3",
+    "url": "./audio/haseen.mp3",
     "fallback": "./audio/samjho_na.mp3"
   },
   {
@@ -959,328 +959,328 @@ class LofiRadioEngine {
     "name": "SONI SONI",
     "artist": "Darshan Raval",
     "sub": "Ishq Vishk Rebound // Romantic Chill",
-    "url": "./audio/samjho_na.mp3",
+    "url": "./audio/soni_soni.mp3",
     "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 10,
-    "name": "BAAZIGAR (CHILL LOFI)",
+    "name": "JO TUM MERE HO",
     "artist": "Anuv Jain",
-    "sub": "Acoustic Guitar Soul & Soft Humming",
-    "url": "./audio/kesariya.mp3",
+    "sub": "Soft Whispers & Golden Sunset Echoes",
+    "url": "./audio/jo_tum_mere_ho.mp3",
     "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 11,
-    "name": "HUSN",
-    "artist": "Anuv Jain",
-    "sub": "Gentle Fingerstyle Heartstrings",
-    "url": "./audio/apna_bana_le.mp3",
+    "name": "KHO GAYE HUM KAHAN",
+    "artist": "Jasleen Royal & Prateek",
+    "sub": "Baar Baar Dekho // Ethereal Midnight Drift",
+    "url": "./audio/kho_gaye_hum_kahan.mp3",
     "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 12,
-    "name": "JO TUM MERE HO",
-    "artist": "Anuv Jain",
-    "sub": "Soft Whispers & Golden Sunset Echoes",
-    "url": "./audio/sanam_re_lofi.mp3",
+    "name": "SUNDARI",
+    "artist": "Sanju Rathod",
+    "sub": "Warm Folk Acoustic Lo-Fi Melody",
+    "url": "./audio/sundari.mp3",
     "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 13,
-    "name": "ALAG AASMAAN",
+    "name": "BAAZIGAR (CHILL LOFI)",
     "artist": "Anuv Jain",
-    "sub": "Cloud Drift Acoustic Reverie",
-    "url": "./audio/faasle.mp3",
+    "sub": "Acoustic Guitar Soul & Soft Humming",
+    "url": "./audio/kesariya.mp3",
     "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 14,
+    "name": "HUSN",
+    "artist": "Anuv Jain",
+    "sub": "Gentle Fingerstyle Heartstrings",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/ishq_mubarak.mp3"
+  },
+  {
+    "id": 15,
+    "name": "ALAG AASMAAN",
+    "artist": "Anuv Jain",
+    "sub": "Cloud Drift Acoustic Reverie",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/sahiba.mp3"
+  },
+  {
+    "id": 16,
     "name": "MISHRI",
     "artist": "Anuv Jain",
     "sub": "Sweet Melodic Nostalgia",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/kesariya.mp3"
-  },
-  {
-    "id": 15,
-    "name": "COLD/MESS",
-    "artist": "Prateek Kuhad",
-    "sub": "Intimate Bedroom Acoustic Reverie",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
-  },
-  {
-    "id": 16,
-    "name": "KASOOR",
-    "artist": "Prateek Kuhad",
-    "sub": "Soft Heart Strings & Acoustic Warmth",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "fallback": "./audio/dhundhala.mp3"
   },
   {
     "id": 17,
+    "name": "COLD/MESS",
+    "artist": "Prateek Kuhad",
+    "sub": "Intimate Bedroom Acoustic Reverie",
+    "url": "./audio/ishq_mubarak.mp3",
+    "fallback": "./audio/haseen.mp3"
+  },
+  {
+    "id": 18,
+    "name": "KASOOR",
+    "artist": "Prateek Kuhad",
+    "sub": "Soft Heart Strings & Acoustic Warmth",
+    "url": "./audio/sahiba.mp3",
+    "fallback": "./audio/soni_soni.mp3"
+  },
+  {
+    "id": 19,
     "name": "TUNE KAHA",
     "artist": "Prateek Kuhad",
     "sub": "Gentle Warm Breeze & Piano Chords",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/faasle.mp3"
-  },
-  {
-    "id": 18,
-    "name": "KHO GAYE HUM KAHAN",
-    "artist": "Jasleen Royal & Prateek",
-    "sub": "Baar Baar Dekho // Ethereal Midnight Drift",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/samjho_na.mp3"
-  },
-  {
-    "id": 19,
-    "name": "NIT NIT (LOFI CHILL)",
-    "artist": "Jasleen Royal",
-    "sub": "Warm Dreamy Echoes & Soft Drums",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "fallback": "./audio/jo_tum_mere_ho.mp3"
   },
   {
     "id": 20,
-    "name": "DIN SHAGNA DA",
+    "name": "NIT NIT (LOFI CHILL)",
     "artist": "Jasleen Royal",
-    "sub": "Phillauri // Serene Acoustic Devotion",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "sub": "Warm Dreamy Echoes & Soft Drums",
+    "url": "./audio/dhundhala.mp3",
+    "fallback": "./audio/kho_gaye_hum_kahan.mp3"
   },
   {
     "id": 21,
-    "name": "PEHLA NASHA (LOFI)",
-    "artist": "Udit Narayan & Sadhana",
-    "sub": "Jo Jeeta Wohi Sikandar // Nostalgic First Love",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "name": "DIN SHAGNA DA",
+    "artist": "Jasleen Royal",
+    "sub": "Phillauri // Serene Acoustic Devotion",
+    "url": "./audio/haseen.mp3",
+    "fallback": "./audio/sundari.mp3"
   },
   {
     "id": 22,
-    "name": "TUM SE HI",
-    "artist": "Mohit Chauhan",
-    "sub": "Jab We Met // Rainy Day Windowpane Chill",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/faasle.mp3"
-  },
-  {
-    "id": 23,
-    "name": "MATARGASHTI (ACOUSTIC)",
-    "artist": "Mohit Chauhan",
-    "sub": "Tamasha // Joyful Wanderlust Strings",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/samjho_na.mp3"
-  },
-  {
-    "id": 24,
-    "name": "PHOORR (CHILLOUT)",
-    "artist": "Mohit Chauhan",
-    "sub": "Jab Harry Met Sejal // Calm Evening Flow",
-    "url": "./audio/samjho_na.mp3",
+    "name": "PEHLA NASHA (LOFI)",
+    "artist": "Udit Narayan & Sadhana",
+    "sub": "Jo Jeeta Wohi Sikandar // Nostalgic First Love",
+    "url": "./audio/soni_soni.mp3",
     "fallback": "./audio/kesariya.mp3"
   },
   {
+    "id": 23,
+    "name": "TUM SE HI",
+    "artist": "Mohit Chauhan",
+    "sub": "Jab We Met // Rainy Day Windowpane Chill",
+    "url": "./audio/jo_tum_mere_ho.mp3",
+    "fallback": "./audio/apna_bana_le.mp3"
+  },
+  {
+    "id": 24,
+    "name": "MATARGASHTI (ACOUSTIC)",
+    "artist": "Mohit Chauhan",
+    "sub": "Tamasha // Joyful Wanderlust Strings",
+    "url": "./audio/kho_gaye_hum_kahan.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3"
+  },
+  {
     "id": 25,
+    "name": "PHOORR (CHILLOUT)",
+    "artist": "Mohit Chauhan",
+    "sub": "Jab Harry Met Sejal // Calm Evening Flow",
+    "url": "./audio/sundari.mp3",
+    "fallback": "./audio/faasle.mp3"
+  },
+  {
+    "id": 26,
     "name": "DOBAARA",
     "artist": "Mohit Chauhan",
     "sub": "Soulful Yearning & Mountain Winds",
     "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
-    "id": 26,
+    "id": 27,
     "name": "TERA HONE LAGA HOON",
     "artist": "Atif Aslam",
     "sub": "Ajab Prem Ki Ghazab Kahani // Gentle Romance",
     "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "fallback": "./audio/ishq_mubarak.mp3"
   },
   {
-    "id": 27,
+    "id": 28,
     "name": "JEENA JEENA",
     "artist": "Atif Aslam",
     "sub": "Badlapur // Melancholic Heartstrings",
     "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "fallback": "./audio/sahiba.mp3"
   },
   {
-    "id": 28,
+    "id": 29,
     "name": "TU JAANE NA (LOFI)",
     "artist": "Atif Aslam",
     "sub": "Soft Midnight Guitar Reverie",
     "url": "./audio/faasle.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "fallback": "./audio/dhundhala.mp3"
   },
   {
-    "id": 29,
+    "id": 30,
     "name": "DIL DIYAN GALLAN",
     "artist": "Atif Aslam",
     "sub": "Tiger Zinda Hai // Pure Candlelit Romance",
     "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/kesariya.mp3"
-  },
-  {
-    "id": 30,
-    "name": "KHAIRIYAT (LOFI)",
-    "artist": "Arijit Singh",
-    "sub": "Chhichhore // Soulful Nostalgic Echoes",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "fallback": "./audio/haseen.mp3"
   },
   {
     "id": 31,
-    "name": "CHANNA MEREYA (LOFI)",
+    "name": "KHAIRIYAT (LOFI)",
     "artist": "Arijit Singh",
-    "sub": "Ae Dil Hai Mushkil // Melodic Solitude",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "sub": "Chhichhore // Soulful Nostalgic Echoes",
+    "url": "./audio/ishq_mubarak.mp3",
+    "fallback": "./audio/soni_soni.mp3"
   },
   {
     "id": 32,
-    "name": "TUM HI HO (SLOWED)",
+    "name": "CHANNA MEREYA (LOFI)",
     "artist": "Arijit Singh",
-    "sub": "Aashiqui 2 // Deep Night Rain Acoustic",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "sub": "Ae Dil Hai Mushkil // Melodic Solitude",
+    "url": "./audio/sahiba.mp3",
+    "fallback": "./audio/jo_tum_mere_ho.mp3"
   },
   {
     "id": 33,
-    "name": "HAWAAYEIN",
+    "name": "TUM HI HO (SLOWED)",
     "artist": "Arijit Singh",
-    "sub": "Jab Harry Met Sejal // Gentle Summer Breeze",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "sub": "Aashiqui 2 // Deep Night Rain Acoustic",
+    "url": "./audio/dhundhala.mp3",
+    "fallback": "./audio/kho_gaye_hum_kahan.mp3"
   },
   {
     "id": 34,
-    "name": "AGAR TUM SAATH HO",
-    "artist": "Arijit & Alka Yagnik",
-    "sub": "Tamasha // Melancholic Rainstrings",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "name": "HAWAAYEIN",
+    "artist": "Arijit Singh",
+    "sub": "Jab Harry Met Sejal // Gentle Summer Breeze",
+    "url": "./audio/haseen.mp3",
+    "fallback": "./audio/sundari.mp3"
   },
   {
     "id": 35,
-    "name": "RAABTA (LOFI REVERB)",
-    "artist": "Arijit Singh",
-    "sub": "Agent Vinod // Tender Midnight Serenade",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "name": "AGAR TUM SAATH HO",
+    "artist": "Arijit & Alka Yagnik",
+    "sub": "Tamasha // Melancholic Rainstrings",
+    "url": "./audio/soni_soni.mp3",
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 36,
-    "name": "SHAYAD",
+    "name": "RAABTA (LOFI REVERB)",
     "artist": "Arijit Singh",
-    "sub": "Love Aaj Kal // Tender Acoustic Warmth",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "sub": "Agent Vinod // Tender Midnight Serenade",
+    "url": "./audio/jo_tum_mere_ho.mp3",
+    "fallback": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 37,
-    "name": "KABIRA (ACOUSTIC)",
-    "artist": "Arijit & Harshdeep",
-    "sub": "Yeh Jawaani Hai Deewani // Wanderer Rest",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "name": "SHAYAD",
+    "artist": "Arijit Singh",
+    "sub": "Love Aaj Kal // Tender Acoustic Warmth",
+    "url": "./audio/kho_gaye_hum_kahan.mp3",
+    "fallback": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 38,
-    "name": "SUBHANALLAH",
-    "artist": "Sreerama Chandra",
-    "sub": "Yeh Jawaani Hai Deewani // Snowfall Whispers",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "name": "KABIRA (ACOUSTIC)",
+    "artist": "Arijit & Harshdeep",
+    "sub": "Yeh Jawaani Hai Deewani // Wanderer Rest",
+    "url": "./audio/sundari.mp3",
+    "fallback": "./audio/faasle.mp3"
   },
   {
     "id": 39,
-    "name": "IKTARA",
-    "artist": "Kavita Seth & Amitabh",
-    "sub": "Wake Up Sid // Serene Dawn Reflections",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "name": "SUBHANALLAH",
+    "artist": "Sreerama Chandra",
+    "sub": "Yeh Jawaani Hai Deewani // Snowfall Whispers",
+    "url": "./audio/kesariya.mp3",
+    "fallback": "./audio/samjho_na.mp3"
   },
   {
     "id": 40,
-    "name": "TERE BINA",
-    "artist": "A.R. Rahman",
-    "sub": "Guru // Ethereal Desert Breeze",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "name": "IKTARA",
+    "artist": "Kavita Seth & Amitabh",
+    "sub": "Wake Up Sid // Serene Dawn Reflections",
+    "url": "./audio/apna_bana_le.mp3",
+    "fallback": "./audio/ishq_mubarak.mp3"
   },
   {
     "id": 41,
-    "name": "KUN FAYA KUN",
-    "artist": "A.R. Rahman & Javed Ali",
-    "sub": "Rockstar // Spiritual Peace & Tranquility",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "name": "TERE BINA",
+    "artist": "A.R. Rahman",
+    "sub": "Guru // Ethereal Desert Breeze",
+    "url": "./audio/sanam_re_lofi.mp3",
+    "fallback": "./audio/sahiba.mp3"
   },
   {
     "id": 42,
-    "name": "O SANAM",
-    "artist": "Lucky Ali",
-    "sub": "Sunoh // Vintage Nostalgic Wanderer",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "name": "KUN FAYA KUN",
+    "artist": "A.R. Rahman & Javed Ali",
+    "sub": "Rockstar // Spiritual Peace & Tranquility",
+    "url": "./audio/faasle.mp3",
+    "fallback": "./audio/dhundhala.mp3"
   },
   {
     "id": 43,
-    "name": "NA TUM JANO NA HUM",
+    "name": "O SANAM",
     "artist": "Lucky Ali",
-    "sub": "Kaho Naa Pyaar Hai // Soft Piano Dream",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "sub": "Sunoh // Vintage Nostalgic Wanderer",
+    "url": "./audio/samjho_na.mp3",
+    "fallback": "./audio/haseen.mp3"
   },
   {
     "id": 44,
-    "name": "JAANE KYUN",
-    "artist": "Vishal Dadlani",
-    "sub": "Dostana // Sunny Carefree Afternoon",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "name": "NA TUM JANO NA HUM",
+    "artist": "Lucky Ali",
+    "sub": "Kaho Naa Pyaar Hai // Soft Piano Dream",
+    "url": "./audio/ishq_mubarak.mp3",
+    "fallback": "./audio/soni_soni.mp3"
   },
   {
     "id": 45,
-    "name": "MAULA MERE MAULA",
-    "artist": "Roop Kumar Rathod",
-    "sub": "Anwar // Sacred Love & Ambient Sitar",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "name": "JAANE KYUN",
+    "artist": "Vishal Dadlani",
+    "sub": "Dostana // Sunny Carefree Afternoon",
+    "url": "./audio/sahiba.mp3",
+    "fallback": "./audio/jo_tum_mere_ho.mp3"
   },
   {
     "id": 46,
-    "name": "PEE LOON",
-    "artist": "Mohit Chauhan",
-    "sub": "Once Upon a Time in Mumbaai // Sweet Melody",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "name": "MAULA MERE MAULA",
+    "artist": "Roop Kumar Rathod",
+    "sub": "Anwar // Sacred Love & Ambient Sitar",
+    "url": "./audio/dhundhala.mp3",
+    "fallback": "./audio/kho_gaye_hum_kahan.mp3"
   },
   {
     "id": 47,
-    "name": "ASAL MEIN",
-    "artist": "Darshan Raval",
-    "sub": "Indie Pop // Soft Heartbreak Reverie",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "name": "PEE LOON",
+    "artist": "Mohit Chauhan",
+    "sub": "Once Upon a Time in Mumbaai // Sweet Melody",
+    "url": "./audio/haseen.mp3",
+    "fallback": "./audio/sundari.mp3"
   },
   {
     "id": 48,
-    "name": "HAWA BANKE",
+    "name": "ASAL MEIN",
     "artist": "Darshan Raval",
-    "sub": "Whimsical Warm Breeze & Fingerpicking",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "sub": "Indie Pop // Soft Heartbreak Reverie",
+    "url": "./audio/soni_soni.mp3",
+    "fallback": "./audio/kesariya.mp3"
   },
   {
     "id": 49,
-    "name": "EK TARFA",
+    "name": "HAWA BANKE",
     "artist": "Darshan Raval",
-    "sub": "Unrequited Love // Acoustic Rain Piano",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "sub": "Whimsical Warm Breeze & Fingerpicking",
+    "url": "./audio/jo_tum_mere_ho.mp3",
+    "fallback": "./audio/apna_bana_le.mp3"
   }
 ];
 
@@ -1601,6 +1601,8 @@ function triggerHaptic(pattern) {
 /* ==========================================================================
    SECTION 5: INTERACTIVE AMBIENT PARTICLES (FUNKY FLOATING DOODADS)
    ========================================================================== */
+let ambientParticleEngine = null;
+
 function initAmbientCanvas() {
   const canvas = document.getElementById('ambientCanvas');
   if (!canvas) return;
@@ -1609,101 +1611,160 @@ function initAmbientCanvas() {
   let width = (canvas.width = window.innerWidth);
   let height = (canvas.height = window.innerHeight);
 
+  let mouse = { x: -1000, y: -1000, radius: 130, active: false };
+
   window.addEventListener('resize', () => {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-  });
+  }, { passive: true });
 
-  const shapes = [];
-  const COUNT = 32;
-  const shapeTypes = ['circle', 'ring', 'star', 'diamond'];
+  const updatePointer = (clientX, clientY) => {
+    mouse.x = clientX;
+    mouse.y = clientY;
+    mouse.active = true;
+  };
+
+  window.addEventListener('pointermove', (e) => updatePointer(e.clientX, e.clientY), { passive: true });
+  window.addEventListener('pointerdown', (e) => updatePointer(e.clientX, e.clientY), { passive: true });
+  window.addEventListener('pointerleave', () => { mouse.active = false; }, { passive: true });
+
+  const THEME_PALETTES = {
+    'spiderman': {
+      colors: ['#e62429', '#00e5ff', '#ffffff', '#ff1744'],
+      glow: 'rgba(230, 36, 41, 0.45)',
+      lineColor: 'rgba(230, 36, 41, 0.22)',
+      highlightLine: 'rgba(0, 229, 255, 0.42)',
+      maxDist: 110
+    },
+    'captain-america': {
+      colors: ['#1e88e5', '#d32f2f', '#ffffff', '#90caf9'],
+      glow: 'rgba(30, 136, 229, 0.45)',
+      lineColor: 'rgba(30, 136, 229, 0.22)',
+      highlightLine: 'rgba(255, 255, 255, 0.40)',
+      maxDist: 115
+    },
+    'thor': {
+      colors: ['#00e5ff', '#ffd700', '#ffffff', '#80d8ff'],
+      glow: 'rgba(0, 229, 255, 0.50)',
+      lineColor: 'rgba(0, 229, 255, 0.24)',
+      highlightLine: 'rgba(255, 215, 0, 0.45)',
+      maxDist: 125
+    },
+    'loki': {
+      colors: ['#00e676', '#ffc107', '#69f0ae', '#ffd54f'],
+      glow: 'rgba(0, 230, 118, 0.45)',
+      lineColor: 'rgba(0, 230, 118, 0.24)',
+      highlightLine: 'rgba(255, 193, 7, 0.40)',
+      maxDist: 115
+    },
+    'deadpool': {
+      colors: ['#ff1744', '#ffea00', '#ffffff', '#d50000'],
+      glow: 'rgba(255, 23, 68, 0.50)',
+      lineColor: 'rgba(255, 23, 68, 0.24)',
+      highlightLine: 'rgba(255, 234, 0, 0.42)',
+      maxDist: 110
+    },
+    'ironman': {
+      colors: ['#e53935', '#ffd54f', '#00e5ff', '#ffb300'],
+      glow: 'rgba(255, 213, 79, 0.45)',
+      lineColor: 'rgba(229, 57, 53, 0.24)',
+      highlightLine: 'rgba(0, 229, 255, 0.45)',
+      maxDist: 120
+    }
+  };
+
+  const isMobile = window.innerWidth < 600;
+  const COUNT = isMobile ? 24 : 40;
+  const particles = [];
 
   for (let i = 0; i < COUNT; i++) {
-    shapes.push({
+    particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      size: Math.random() * 8 + 4,
-      rotation: Math.random() * Math.PI * 2,
-      vRot: (Math.random() - 0.5) * 0.02,
-      type: shapeTypes[Math.floor(Math.random() * shapeTypes.length)],
-      alpha: Math.random() * 0.25 + 0.1
+      vx: (Math.random() - 0.5) * 0.55,
+      vy: (Math.random() - 0.5) * 0.55,
+      baseRadius: Math.random() * 2.8 + 1.2,
+      radius: 2,
+      colorIdx: Math.floor(Math.random() * 4),
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: Math.random() * 0.025 + 0.015,
+      type: Math.random() > 0.72 ? 'node' : 'dot'
     });
   }
 
-  function drawStar(cx, cy, spikes, outerRadius, innerRadius) {
-    let rot = (Math.PI / 2) * 3;
-    let x = cx;
-    let y = cy;
-    const step = Math.PI / spikes;
-
-    ctx.beginPath();
-    ctx.moveTo(cx, cy - outerRadius);
-    for (let i = 0; i < spikes; i++) {
-      x = cx + Math.cos(rot) * outerRadius;
-      y = cy + Math.sin(rot) * outerRadius;
-      ctx.lineTo(x, y);
-      rot += step;
-
-      x = cx + Math.cos(rot) * innerRadius;
-      y = cy + Math.sin(rot) * innerRadius;
-      ctx.lineTo(x, y);
-      rot += step;
-    }
-    ctx.lineTo(cx, cy - outerRadius);
-    ctx.closePath();
-  }
-
-  function animate() {
+  function render() {
     ctx.clearRect(0, 0, width, height);
 
+    const activeTheme = APP_STATE.currentTheme || 'spiderman';
+    const theme = THEME_PALETTES[activeTheme] || THEME_PALETTES['spiderman'];
+
     for (let i = 0; i < COUNT; i++) {
-      const s = shapes[i];
-      s.x += s.vx;
-      s.y += s.vy;
-      s.rotation += s.vRot;
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.pulse += p.pulseSpeed;
 
-      if (s.x < -20) s.x = width + 20;
-      if (s.x > width + 20) s.x = -20;
-      if (s.y < -20) s.y = height + 20;
-      if (s.y > height + 20) s.y = -20;
+      if (p.x < -10) p.x = width + 10;
+      if (p.x > width + 10) p.x = -10;
+      if (p.y < -10) p.y = height + 10;
+      if (p.y > height + 10) p.y = -10;
 
-      ctx.save();
-      ctx.translate(s.x, s.y);
-      ctx.rotate(s.rotation);
-      ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
-      ctx.strokeStyle = `rgba(255, 255, 255, ${s.alpha * 1.5})`;
-      ctx.lineWidth = 1.5;
-
-      if (s.type === 'circle') {
-        ctx.beginPath();
-        ctx.arc(0, 0, s.size, 0, Math.PI * 2);
-        ctx.fill();
-      } else if (s.type === 'ring') {
-        ctx.beginPath();
-        ctx.arc(0, 0, s.size, 0, Math.PI * 2);
-        ctx.stroke();
-      } else if (s.type === 'star') {
-        drawStar(0, 0, 4, s.size, s.size * 0.45);
-        ctx.fill();
-      } else if (s.type === 'diamond') {
-        ctx.beginPath();
-        ctx.moveTo(0, -s.size);
-        ctx.lineTo(s.size * 0.7, 0);
-        ctx.lineTo(0, s.size);
-        ctx.lineTo(-s.size * 0.7, 0);
-        ctx.closePath();
-        ctx.stroke();
+      if (mouse.active) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const distMouse = Math.sqrt(dx * dx + dy * dy);
+        if (distMouse < mouse.radius && distMouse > 1) {
+          const force = (mouse.radius - distMouse) / mouse.radius;
+          p.x += (dx / distMouse) * force * 2.4;
+          p.y += (dy / distMouse) * force * 2.4;
+        }
       }
 
+      p.radius = p.baseRadius + Math.sin(p.pulse) * 0.7;
+      const color = theme.colors[p.colorIdx % theme.colors.length];
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(1, p.radius), 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.shadowColor = theme.glow;
+      ctx.shadowBlur = p.type === 'node' ? 10 : 4;
+      ctx.globalAlpha = 0.65 + Math.sin(p.pulse) * 0.25;
+      ctx.fill();
+
+      if (p.type === 'node') {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius + 3.5, 0, Math.PI * 2);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 0.75;
+        ctx.globalAlpha = 0.35;
+        ctx.stroke();
+      }
       ctx.restore();
+
+      for (let j = i + 1; j < COUNT; j++) {
+        const p2 = particles[j];
+        const dx = p.x - p2.x;
+        const dy = p.y - p2.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < theme.maxDist) {
+          const alpha = (1 - dist / theme.maxDist) * 0.42;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = (dist < 50) ? theme.highlightLine : theme.lineColor;
+          ctx.lineWidth = dist < 50 ? 1.0 : 0.6;
+          ctx.globalAlpha = alpha;
+          ctx.stroke();
+        }
+      }
     }
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(render);
   }
 
-  animate();
+  requestAnimationFrame(render);
 }
 
 /* ==========================================================================
@@ -2391,6 +2452,7 @@ function startSpeedTimer() {
 
     const pct = Math.max(0, (sp.remainingTimeSec / sp.timeLimitSec) * 100);
     const fill = document.getElementById('spTimerFill');
+    if (!fill) { sp.animFrameId = requestAnimationFrame(timerLoop); return; }
     fill.style.width = pct + '%';
 
     if (sp.isTimerFrozen) {
@@ -4203,13 +4265,6 @@ function setupEventListeners() {
     });
   }
 
-  const btnRadioEngineMode = document.getElementById('btnRadioEngineMode');
-  if (btnRadioEngineMode) {
-    btnRadioEngineMode.addEventListener('click', () => {
-      HapticEngine.button();
-      lofiRadio.toggleEngineMode();
-    });
-  }
 
   const volSlider = document.getElementById('radioVolumeSlider');
   if (volSlider) {
@@ -4321,14 +4376,14 @@ function setupEventListeners() {
     const msg = document.getElementById('profileValidationMsg');
     const val = input ? input.value.trim().toUpperCase() : '';
 
-    if (!val || val.length < 2) {
+    if (!val || val.length < 3) {
       if (msg) {
-        msg.textContent = 'Please write a name of at least 2 characters.';
+        msg.textContent = 'Please write a name of at least 3 characters.';
         msg.style.display = 'block';
       }
       return;
     }
-    if (!/^[A-Za-z0-9_]{2,16}$/.test(val)) {
+    if (!/^[A-Za-z0-9_]{3,16}$/.test(val)) {
       if (msg) {
         msg.textContent = 'Only letters, numbers, and underscores allowed.';
         msg.style.display = 'block';
