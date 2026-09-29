@@ -401,7 +401,7 @@ header.funky-header {
 
 /* Screen Views */
 .screen-view {
-  display: none;
+  display: none !important;
   flex-direction: column;
   flex: 1;
   min-height: 0;
@@ -409,7 +409,7 @@ header.funky-header {
 }
 
 .screen-view.active {
-  display: flex;
+  display: flex !important;
 }
 
 /* 5. VIEW: MAIN LOBBY */
@@ -1170,14 +1170,17 @@ header.funky-header {
 .metric-cell-val { font-family: var(--font-display); font-size: 1.35rem; font-weight: 900; }
 
 #view-leaderboard {
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 8px;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#view-leaderboard.active {
   display: flex !important;
-  flex-direction: column !important;
-  justify-content: flex-start !important;
-  gap: 8px !important;
-  height: 100% !important;
-  max-height: 100% !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
 }
 
 .leaderboard-glass-box {
