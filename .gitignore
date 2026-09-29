@@ -11,3 +11,9 @@ yarn-error.log*
 # OS Metadata
 .DS_Store
 Thumbs.db
+
+# Mobile Build outputs
+www/
+android/
+output/
+*.apk
