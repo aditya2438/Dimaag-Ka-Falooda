@@ -3968,10 +3968,23 @@ function renderLeaderboardRows(records, listEl) {
     records = getLocalLeaderboard();
   }
 
-  records.sort((a, b) => (Number(b.high_score) || 0) - (Number(a.high_score) || 0));
+  // Filter out any test records and deduplicate player high scores
+  const uniqueMap = new Map();
+  records.forEach(r => {
+    const uname = String(r.username || '').trim();
+    if (!uname || uname.startsWith('TEST_') || uname.startsWith('Test_')) return;
+    const currentScore = Number(r.high_score) || 0;
+    if (!uniqueMap.has(uname) || currentScore > (Number(uniqueMap.get(uname).high_score) || 0)) {
+      uniqueMap.set(uname, r);
+    }
+  });
+
+  const cleanRecords = Array.from(uniqueMap.values());
+  // Strict descending numerical sort
+  cleanRecords.sort((a, b) => (Number(b.high_score) || 0) - (Number(a.high_score) || 0));
 
   listEl.innerHTML = '';
-  records.slice(0, 10).forEach((row, index) => {
+  cleanRecords.slice(0, 10).forEach((row, index) => {
     const isMe = row.username === APP_STATE.playerHandle;
     const avatarKey = (row.avatar && AVATARS[row.avatar]) ? row.avatar : 'spider_mask';
     const avatarSvg = AVATARS[avatarKey] || AVATARS['spider_mask'];
@@ -3979,11 +3992,13 @@ function renderLeaderboardRows(records, listEl) {
     const li = document.createElement('li');
     li.className = `lb-row-item rank-${index + 1} ${isMe ? 'current-player' : ''}`;
 
+    // 1. Rank Badge Column (Fixed width)
     const rankBadge = document.createElement('span');
     rankBadge.className = 'lb-rank-badge';
     rankBadge.textContent = `#${index + 1}`;
     li.appendChild(rankBadge);
 
+    // 2. Player Identification Column (Avatar + Username + Mode)
     const userBlock = document.createElement('div');
     userBlock.className = 'lb-user-block';
 
@@ -3993,7 +4008,7 @@ function renderLeaderboardRows(records, listEl) {
     userBlock.appendChild(avatarBox);
 
     const nameSpan = document.createElement('span');
-    nameSpan.style.fontWeight = '800';
+    nameSpan.className = 'lb-user-name';
     nameSpan.textContent = String(row.username || 'PLAYER'); // XSS prevention
     userBlock.appendChild(nameSpan);
 
@@ -4005,18 +4020,18 @@ function renderLeaderboardRows(records, listEl) {
 
     li.appendChild(userBlock);
 
+    // 3. Score Column (Right aligned, fixed position)
     const scoreBlock = document.createElement('div');
-    scoreBlock.style.textAlign = 'right';
+    scoreBlock.className = 'lb-score-block';
 
     const scoreVal = document.createElement('div');
     scoreVal.className = 'lb-score-val';
-    scoreVal.textContent = `${Number(row.high_score) || 0} PTS`;
+    const numScore = Number(row.high_score) || 0;
+    scoreVal.textContent = `${numScore.toLocaleString()} PTS`;
     scoreBlock.appendChild(scoreVal);
 
     const lvlVal = document.createElement('div');
-    lvlVal.style.fontSize = '0.7rem';
-    lvlVal.style.color = 'var(--text-muted)';
-    lvlVal.style.fontFamily = 'var(--font-mono)';
+    lvlVal.className = 'lb-lvl-val';
     lvlVal.textContent = `LVL ${Number(row.max_level) || 1}`;
     scoreBlock.appendChild(lvlVal);
 

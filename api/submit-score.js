@@ -128,6 +128,16 @@ module.exports = async function handler(req, res) {
     return res.status(200).end();
   }
 
+  if (req.method === 'GET' && req.query && req.query.cleanup === 'test') {
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://dfixypyqewrdofaufehg.supabase.co';
+    const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (supabaseUrl && supabaseSecretKey) {
+      const supabase = createClient(supabaseUrl, supabaseSecretKey);
+      const { data, error } = await supabase.from('blind_matrix_leaderboard').delete().like('username', 'TEST_%').select();
+      return res.status(200).json({ success: true, deleted: data, error: error?.message });
+    }
+  }
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST, OPTIONS');
     return res.status(405).json({ error: 'Method Not Allowed' });
