@@ -3905,7 +3905,7 @@ async function loadLeaderboard() {
         clearInterval(leaderboardPollingTimer);
         leaderboardPollingTimer = null;
       }
-    }, 4000);
+    }, 2500);
   }
 
   // Load and render
@@ -3968,7 +3968,7 @@ function renderLeaderboardRows(records, listEl) {
     records = getLocalLeaderboard();
   }
 
-  // Filter out any test records and deduplicate player high scores
+  // Filter out any test accounts and deduplicate by player handle
   const uniqueMap = new Map();
   records.forEach(r => {
     const uname = String(r.username || '').trim();
@@ -3980,62 +3980,82 @@ function renderLeaderboardRows(records, listEl) {
   });
 
   const cleanRecords = Array.from(uniqueMap.values());
-  // Strict descending numerical sort
+  // Strict numerical descending order
   cleanRecords.sort((a, b) => (Number(b.high_score) || 0) - (Number(a.high_score) || 0));
 
   listEl.innerHTML = '';
   cleanRecords.slice(0, 10).forEach((row, index) => {
+    const rankNum = index + 1;
     const isMe = row.username === APP_STATE.playerHandle;
     const avatarKey = (row.avatar && AVATARS[row.avatar]) ? row.avatar : 'spider_mask';
     const avatarSvg = AVATARS[avatarKey] || AVATARS['spider_mask'];
 
     const li = document.createElement('li');
-    li.className = `lb-row-item rank-${index + 1} ${isMe ? 'current-player' : ''}`;
+    li.className = `lb-row-item rank-${rankNum} ${isMe ? 'current-player' : ''}`;
 
-    // 1. Rank Badge Column (Fixed width)
+    // 1. Rank Column
+    const rankCol = document.createElement('div');
+    rankCol.className = 'lb-col-rank';
     const rankBadge = document.createElement('span');
     rankBadge.className = 'lb-rank-badge';
-    rankBadge.textContent = `#${index + 1}`;
-    li.appendChild(rankBadge);
+    rankBadge.textContent = `#${rankNum}`;
+    rankCol.appendChild(rankBadge);
+    li.appendChild(rankCol);
 
-    // 2. Player Identification Column (Avatar + Username + Mode)
-    const userBlock = document.createElement('div');
-    userBlock.className = 'lb-user-block';
-
+    // 2. Avatar Column
+    const avatarCol = document.createElement('div');
+    avatarCol.className = 'lb-col-avatar';
     const avatarBox = document.createElement('div');
     avatarBox.className = 'lb-avatar-box';
     avatarBox.innerHTML = avatarSvg;
-    userBlock.appendChild(avatarBox);
+    avatarCol.appendChild(avatarBox);
+    li.appendChild(avatarCol);
+
+    // 3. Player Info Column (Username + Top 3 Medals)
+    const playerCol = document.createElement('div');
+    playerCol.className = 'lb-col-player';
 
     const nameSpan = document.createElement('span');
     nameSpan.className = 'lb-user-name';
-    nameSpan.textContent = String(row.username || 'PLAYER'); // XSS prevention
-    userBlock.appendChild(nameSpan);
+    nameSpan.textContent = String(row.username || 'PLAYER');
+    playerCol.appendChild(nameSpan);
 
-    const modeStr = (row.mode || 'solo').toUpperCase();
-    const modeBadge = document.createElement('span');
-    modeBadge.className = `lb-mode-badge ${modeStr.toLowerCase()}`;
-    modeBadge.textContent = modeStr;
-    userBlock.appendChild(modeBadge);
+    // Top 3 Medals
+    if (rankNum === 1) {
+      const medal = document.createElement('span');
+      medal.className = 'lb-medal-badge gold-medal';
+      medal.textContent = '👑 GOLD';
+      playerCol.appendChild(medal);
+    } else if (rankNum === 2) {
+      const medal = document.createElement('span');
+      medal.className = 'lb-medal-badge silver-medal';
+      medal.textContent = '🥈 SILVER';
+      playerCol.appendChild(medal);
+    } else if (rankNum === 3) {
+      const medal = document.createElement('span');
+      medal.className = 'lb-medal-badge bronze-medal';
+      medal.textContent = '🥉 BRONZE';
+      playerCol.appendChild(medal);
+    }
 
-    li.appendChild(userBlock);
+    li.appendChild(playerCol);
 
-    // 3. Score Column (Right aligned, fixed position)
-    const scoreBlock = document.createElement('div');
-    scoreBlock.className = 'lb-score-block';
+    // 4. Score Column (Fixed Right Aligned)
+    const scoreCol = document.createElement('div');
+    scoreCol.className = 'lb-col-score';
 
     const scoreVal = document.createElement('div');
     scoreVal.className = 'lb-score-val';
     const numScore = Number(row.high_score) || 0;
     scoreVal.textContent = `${numScore.toLocaleString()} PTS`;
-    scoreBlock.appendChild(scoreVal);
+    scoreCol.appendChild(scoreVal);
 
     const lvlVal = document.createElement('div');
     lvlVal.className = 'lb-lvl-val';
     lvlVal.textContent = `LVL ${Number(row.max_level) || 1}`;
-    scoreBlock.appendChild(lvlVal);
+    scoreCol.appendChild(lvlVal);
 
-    li.appendChild(scoreBlock);
+    li.appendChild(scoreCol);
     listEl.appendChild(li);
   });
 }

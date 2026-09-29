@@ -1,5 +1,5 @@
 // sw.js - Service Worker for Offline Mobile Play & Real-Time Sync
-const CACHE_NAME = 'spider-falooda-v3.3';
+const CACHE_NAME = 'spider-falooda-v3.4';
 
 const ASSETS_TO_CACHE = [
   '/',

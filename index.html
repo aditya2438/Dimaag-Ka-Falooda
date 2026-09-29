@@ -42,7 +42,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
   <!-- Funky Fluid Glassmorphism Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=3.3.0">
+  <link rel="stylesheet" href="style.css?v=3.4.0">
 
   <!-- Supabase JS Client for Realtime Global Leaderboard (Pinned with SRI integrity verification) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"
@@ -385,21 +385,25 @@
     <!-- =====================================================================
          SCREEN 6: TOP 10 LEADERBOARD (LIVE REALTIME SYNC)
          ===================================================================== -->
-    <div id="view-leaderboard" class="screen-view">
+        <div id="view-leaderboard" class="screen-view">
       <div class="leaderboard-glass-box">
         <div class="lb-header-row">
           <h2 class="kinetic-text">TOP 10 OPERATORS</h2>
+          <span id="lbSyncBadge" style="font-size: 0.72rem; color: var(--color-accent); font-family: var(--font-mono); font-weight: 800;">
+            LIVE REALTIME SYNC
+          </span>
         </div>
-        <div style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 6px; display: flex; justify-content: space-between;">
+        <div class="lb-subheader-row">
           <span>GLOBAL HIGH SCORES</span>
-          <span style="color: var(--color-accent);">ALL 10 RANKS LIVE</span>
+          <span style="color: var(--color-accent);">TOP 10 RANKS LIVE</span>
+        </div>
 
         <ul id="leaderboardList" class="lb-rows-container">
-          <!-- Populated via game.js -->
+          <!-- Populated dynamically via game.js -->
         </ul>
       </div>
 
-      <button id="btnLeaderboardBack" class="btn-funky" style="height: 44px;">
+      <button id="btnLeaderboardBack" class="btn-funky" style="height: 42px;">
         BACK TO MENU
       </button>
     </div>
@@ -505,6 +509,6 @@
   </div>
 
   <!-- External Master Game Engine Script -->
-  <script src="game.js?v=3.3.0" defer></script>
+  <script src="game.js?v=3.4.0" defer></script>
 </body>
 </html>
