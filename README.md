@@ -4,6 +4,21 @@
 
 ---
 
+## 📱 ANDROID APK DIRECT DOWNLOAD
+Download and install the mobile app directly on any Android phone or tablet:
+
+- 📥 **[Direct Repository Download (Spider-Beat-Run.apk)](https://github.com/aditya2438/Dimaag-Ka-Falooda/raw/main/Spider-Beat-Run.apk)**
+- 🚀 **[GitHub Releases High-Speed Download (v3.0.0-apk)](https://github.com/aditya2438/Dimaag-Ka-Falooda/releases/download/v3.0.0-apk/Spider-Beat-Run.apk)**
+- 🌐 **[Play Online Live Web App (Vercel)](https://dimaag-ka-falooda.vercel.app/)**
+
+### How to Install on Android:
+1. Tap on any of the download links above to download `Spider-Beat-Run.apk` (88.6 MB).
+2. Open the downloaded file on your Android phone or tablet.
+3. If prompted with *"Install unknown apps"*, tap **Allow** / **Settings -> Allow from this source**.
+4. Tap **Install** and enjoy smooth, lag-free gameplay with full offline Hindi Lo-Fi music and real-time score updates!
+
+---
+
 ## 1. Dynamic Escalating Block Scaling (9 -> 12 -> 15 -> 20 -> 30 -> 40 -> 60 Blocks)
 
 As players progress through the campaign, the toughness level and spatial complexity escalate dynamically:
