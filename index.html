@@ -100,8 +100,8 @@
         <div>
           <h2 class="kinetic-text">DIMAAG KA FALOODA</h2>
           <div class="hero-chips-row">
-            <span class="chip-tag">AVENGERS ASSEMBLE</span>
-            <span class="chip-tag">6-BLOCK REFLEX</span>
+            <span class="chip-tag">SPIDER-MAN EDITION</span>
+            <span class="chip-tag">9-TILE REFLEX (3x3)</span>
             <span class="chip-tag">50 HINDI LO-FI SONGS</span>
           </div>
 
@@ -119,11 +119,11 @@
               <!-- Injected via game.js -->
             </div>
             <div style="text-align: left;">
-              <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">ACTIVE HERO OPERATIVE</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">ACTIVE SPIDER-MAN OPERATIVE</div>
               <div id="lblPlayerHandle" class="operator-handle kinetic-text-gold">REGISTER_NAME</div>
             </div>
           </div>
-          <button id="btnEditProfile" class="btn-funky" style="padding: 6px 11px; font-size: 0.78rem;">HERO IDENTITY</button>
+          <button id="btnEditProfile" class="btn-funky" style="padding: 6px 11px; font-size: 0.78rem;">SPIDER IDENTITY</button>
         </div>
       </div>
 
@@ -137,23 +137,33 @@
               <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
             </div>
             <div class="mode-details">
-              <span class="mode-badge">AVENGERS CAMPAIGN // 9-TILE MATRIX (3x3)</span>
+              <span class="mode-badge">SPIDER-MAN CAMPAIGN // 9-TILE MATRIX (3x3)</span>
               <div class="mode-name">START MISSION</div>
-              <div class="mode-desc">6-Tile High Stakes Arena & 50 Peaceful Hindi Lo-Fi Songs</div>
+              <div class="mode-desc">9-Tile Stark Neural Matrix & 50 Peaceful Hindi Lo-Fi Songs</div>
             </div>
           </div>
         </div>
 
         <!-- Avengers Super Hero Themes Selector -->
-        <div class="theme-selector-box">
-          <div class="theme-label-header">AVENGERS HERO PROTOCOL:</div>
-          <div class="theme-selector-row">
-            <button class="theme-pill-btn active" data-theme="spiderman">SPIDER-MAN</button>
-            <button class="theme-pill-btn" data-theme="captain-america">CAPTAIN AMERICA</button>
-            <button class="theme-pill-btn" data-theme="thor">THOR</button>
-            <button class="theme-pill-btn" data-theme="loki">LOKI</button>
-            <button class="theme-pill-btn" data-theme="deadpool">DEADPOOL</button>
-            <button class="theme-pill-btn" data-theme="ironman">IRON MAN</button>
+        <div class="spiderman-suit-card">
+          <div class="spider-suit-header">
+            <div class="spider-lens-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.5 2 3 6.5 3 12c0 4.5 3.5 9.5 9 10 5.5-.5 9-5.5 9-10 0-5.5-3.5-10-9-10z" fill="#E62429"/>
+                <path d="M5.5 11c2.5 3 6 4 7 4-1-2.5-2-5.5-2.5-7-1.5.5-3.5 1.5-4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1.2"/>
+                <path d="M18.5 11c-2.5 3-6 4-7 4 1-2.5 2-5.5 2.5-7 1.5.5 3.5 1.5 4.5 3z" fill="#FFFFFF" stroke="#000" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <div class="suit-text-block">
+              <div class="suit-title kinetic-text">STARK NANOTECH SUIT // MARK IV</div>
+              <div class="suit-sub">100% SPIDER-MAN PROTOCOL // SPIDER-SENSE &amp; WEB-SLINGER</div>
+            </div>
+          </div>
+          <div class="spider-telemetry-chips">
+            <span class="spider-chip"><span class="spider-dot pulse"></span> WEB-ZIP CHRONO</span>
+            <span class="spider-chip"><span class="spider-dot"></span> 3x3 NEURAL MATRIX</span>
+            <span class="spider-chip"><span class="spider-dot"></span> PETER TINGLE</span>
+            <span class="spider-chip"><span class="spider-dot pulse"></span> 108.4 FM RADIO</span>
           </div>
         </div>
 
@@ -238,28 +248,28 @@
 
           <!-- 3 Desi Jugaad Powers -->
           <div class="jugaad-powers-row">
-            <button id="btnPowerChai" class="power-btn" title="Freeze speed timer for 2.5 seconds (Key: C)">
+            <button id="btnPowerChai" class="power-btn spider-power-btn" title="Web-Zip: Snare the speed timer for 2.5s! (Key: C)">
               <svg viewBox="0 0 24 24">
-                <path class="steam-path" d="M9 3c0 1.5-1 2-1 3s1 1.5 1 3M14 3c0 1.5-1 2-1 3s1 1.5 1 3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-                <path d="M4 19h16v2H4zM6 9l1.5 10h9L18 9H6zm10 8H8l-1-6h10l-1 6z"/>
+                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+                <path d="M12 3v18M3 12h18M5.5 5.5l13 13M5.5 18.5l13-13" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
               </svg>
-              CHAI [C]
+              WEB-ZIP [C]
             </button>
-            <button id="btnPowerChashma" class="power-btn" title="Peek next tile for 450ms (Key: V)">
+            <button id="btnPowerChashma" class="power-btn spider-power-btn" title="Spider-Sense: Tingle peek the next tile for 450ms! (Key: V)">
               <svg viewBox="0 0 24 24">
-                <circle cx="7" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2.2"/>
-                <circle cx="17" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2.2"/>
-                <path class="lens-gleam" d="M6 10l2 4M16 10l2 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                <path fill="currentColor" d="M10.5 12h3M7 7l5-4 5 4"/>
+                <circle cx="12" cy="12" r="3.5" fill="currentColor"/>
+                <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2.2 2.2M16.8 16.8l2.2 2.2M5 19l2.2-2.2M16.8 7.2l2.2-2.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
-              4K PEEK [V]
+              SENSE [V]
             </button>
-            <!-- The "Think Feature" ("Dimag Ki Batti") -->
-            <button id="btnPowerThink" class="power-btn think-btn" title="Dimag Ki Batti: Focus highlight next step! (Key: T)">
+            <button id="btnPowerThink" class="power-btn think-btn spider-power-btn" title="Peter Tingle: Spider instinct reveals the step! (Key: T)">
               <svg class="bulb-rays" viewBox="0 0 24 24">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm-3 18v1c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9zm1-3v-1h4v1h-4z"/>
+                <path d="M12 2C6.5 2 3 6.5 3 12c0 4.5 3.5 9.5 9 10 5.5-.5 9-5.5 9-10 0-5.5-3.5-10-9-10z" fill="currentColor"/>
+                <path d="M6 11c2 2.5 5 3.2 6 3.2-0.8-2-1.6-4.5-2-5.7-1.2 0.4-2.8 1.2-4 2.5z" fill="#000"/>
+                <path d="M18 11c-2.5 3-6 4-7 4 1-2.5 2-5.5 2.5-7 1.5.5 3.5 1.5 4.5 3z" fill="#000"/>
               </svg>
-              THINK [T]
+              TINGLE [T]
             </button>
           </div>
 
@@ -375,7 +385,7 @@
        ======================================================================= -->
   <div id="modalProfile" class="glass-modal-backdrop">
     <div class="glass-modal-card" style="width: 100%; max-width: 400px;">
-      <h2 class="kinetic-text">AVENGERS HERO PROTOCOL</h2>
+      <h2 class="kinetic-text">SPIDER-VERSE SUIT PROTOCOL</h2>
       <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px;">
         Choose your Superhero operative avatar and write your own custom callsign to enter the 9-Tile 3x3 Matrix.
       </p>
@@ -387,9 +397,9 @@
 
       <div style="margin-top: 10px; text-align: left;">
         <label for="inputPlayerHandle" style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">
-          HERO CODENAME:
+          SPIDER CODENAME:
         </label>
-        <input type="text" id="inputPlayerHandle" class="glass-input-field" maxlength="16" placeholder="WRITE YOUR NAME (e.g. CAPTAIN_STEVE)" autocomplete="off" autocapitalize="characters">
+        <input type="text" id="inputPlayerHandle" class="glass-input-field" maxlength="16" placeholder="WRITE YOUR NAME (e.g. SPIDER_PETER)" autocomplete="off" autocapitalize="characters">
         <div id="profileValidationMsg" style="font-size: 0.72rem; color: var(--color-danger); margin-top: 4px; display: none;"></div>
       </div>
 

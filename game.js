@@ -36,15 +36,18 @@ const AVATARS = {
    SECTION 2: FUNNY DESI TAUNTS & BRAIN IQ TITLES (ZERO EMOJIS)
    ========================================================================== */
 const DESI_TAUNTS = [
-  "Arey Sharma ji ke ladke ko dekho!",
-  "Full 200 IQ Baazigar mode on!",
-  "Dimag ghas charne toh nahi gaya?!",
-  "Beta tumse na ho payega!",
-  "Khel shuru, kursi ki peti baandh lo!",
-  "Bawaal cheez hai be tu!",
-  "Jalwa hai hamara yahan!",
-  "Moye Moye se bacho!",
-  "Ekdum jhakaas memory!"
+  "Friendly neighborhood Spider-Man yahan hai!",
+  "With great power comes Sharma ji ka ladka!",
+  "Spider-sense chal raha hai ya falooda ban gaya?!",
+  "Peter Parker bhi sharma jaye aisi memory dekh ke!",
+  "Web-slinger mode activated! Full speed!",
+  "Sharma ji ke ladke ka web shoot ho gaya!",
+  "Jalwa hai hamara Spider-Verse mein!",
+  "Moye Moye se bacho, Green Goblin dekh raha hai!",
+  "Ekdum supersonic spider reflexes!",
+  "Peter Tingle ne next move bata diya!",
+  "Stark Nanotech Suit Mark IV fully charged!",
+  "Baazigar Spider-Man in action!"
 ];
 
 function getBrainIQInfo(level, score) {
@@ -79,23 +82,24 @@ const CONFIG = {
 
 const DeviceProfile = {
   detect() {
+    const ua = navigator.userAgent ? navigator.userAgent.toLowerCase() : '';
     const hasTouch = (navigator.maxTouchPoints || 0) > 0;
     const w = window.screen ? window.screen.width : window.innerWidth;
     const h = window.screen ? window.screen.height : window.innerHeight;
     const maxDim = Math.max(w, h);
     const minDim = Math.min(w, h);
-    const ua = navigator.userAgent ? navigator.userAgent.toLowerCase() : '';
 
-    if (hasTouch && (minDim < 600 || maxDim < 900) && (ua.includes('mobile') || ua.includes('android'))) {
-      return 'phone';
-    }
-    if (hasTouch && minDim >= 600 && maxDim <= 1366) {
-      return 'tablet';
+    const isTvUserAgent = /tv|smart-tv|googletv|appletv|hbbtv|tizen|webos|viera|bravia|netcast|crkey|roku|playstation|xbox|nintendo/i.test(ua);
+    if (isTvUserAgent || (!hasTouch && maxDim >= 2560 && minDim >= 1440 && !ua.includes('macintosh'))) {
+      return 'tv';
     }
     if (!hasTouch && maxDim >= 1024) {
       return 'laptop';
     }
-    if (hasTouch && maxDim < 900) {
+    if (hasTouch && minDim >= 600 && maxDim <= 1366) {
+      return 'tablet';
+    }
+    if (hasTouch || minDim < 600) {
       return 'phone';
     }
     return 'laptop';
@@ -107,14 +111,13 @@ const DeviceProfile = {
   applyDeviceClasses() {
     const dev = this.get();
     if (typeof document !== 'undefined') {
-      if (document.documentElement) {
-        document.documentElement.classList.remove('is-laptop', 'is-phone', 'is-tablet');
-        document.documentElement.classList.add(`is-${dev}`);
-      }
-      if (document.body) {
-        document.body.classList.remove('is-laptop', 'is-phone', 'is-tablet');
-        document.body.classList.add(`is-${dev}`);
-      }
+      const classes = ['is-phone', 'is-tablet', 'is-laptop', 'is-tv'];
+      classes.forEach(c => {
+        if (document.documentElement) document.documentElement.classList.remove(c);
+        if (document.body) document.body.classList.remove(c);
+      });
+      if (document.documentElement) document.documentElement.classList.add(`is-${dev}`);
+      if (document.body) document.body.classList.add(`is-${dev}`);
     }
   }
 };
@@ -1782,26 +1785,7 @@ const APP_STATE = {
     }
     return id;
   })(),
-  currentTheme: (function() {
-    const saved = localStorage.getItem('bm_theme');
-    const legacyMap = {
-      'spider-red': 'spiderman',
-      'stealth-black': 'deadpool',
-      'cyber-miles': 'ironman',
-      'symbiote': 'thor',
-      'iron-spider': 'ironman',
-      'mango': 'spiderman',
-      'desi-gold': 'spiderman',
-      'bubblegum': 'loki',
-      'cyberpunk': 'thor',
-      'carnival': 'deadpool',
-      'matrix': 'loki',
-      'arcade': 'captain-america',
-      'sunset': 'ironman',
-      'aurora': 'captain-america'
-    };
-    return legacyMap[saved] || saved || 'spiderman';
-  })(),
+  currentTheme: 'spiderman',
   highScore: parseInt(localStorage.getItem('bm_high_score') || '0', 10),
   maxLevel: parseInt(localStorage.getItem('bm_max_level') || '1', 10),
 
@@ -1903,38 +1887,14 @@ function updateFunkyCapsule(text, styleClass) {
   if (txt) txt.textContent = text;
 }
 
-function applyTheme(themeName) {
-  const legacyMap = {
-    'spider-red': 'spiderman',
-    'stealth-black': 'deadpool',
-    'cyber-miles': 'ironman',
-    'symbiote': 'thor',
-    'iron-spider': 'ironman',
-    'mango': 'spiderman',
-    'desi-gold': 'spiderman',
-    'bubblegum': 'loki',
-    'cyberpunk': 'thor',
-    'carnival': 'deadpool',
-    'matrix': 'loki',
-    'arcade': 'captain-america',
-    'sunset': 'ironman',
-    'aurora': 'captain-america'
-  };
-  if (legacyMap[themeName]) {
-    themeName = legacyMap[themeName];
-  }
-
-  const allowed = ['spiderman', 'captain-america', 'thor', 'loki', 'deadpool', 'ironman'];
-  if (!allowed.includes(themeName)) themeName = 'spiderman';
-
+function applyTheme() {
+  const themeName = 'spiderman';
   APP_STATE.currentTheme = themeName;
   localStorage.setItem('bm_theme', themeName);
-
   document.body.setAttribute('data-theme', themeName);
-
-  document.querySelectorAll('.theme-pill-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
-  });
+  if (document.documentElement) {
+    document.documentElement.setAttribute('data-theme', themeName);
+  }
 }
 
 /* ==========================================================================
@@ -1942,94 +1902,58 @@ function applyTheme(themeName) {
    ========================================================================== */
 const ROUND_PALETTES = [
   {
-    name: "ROYAL DESI GOLD",
-    primary: "#FFB703",
-    primaryGlow: "rgba(255, 183, 3, 0.55)",
-    secondary: "#FF006E",
-    secondaryGlow: "rgba(255, 0, 110, 0.55)",
+    name: "CLASSIC PETER PARKER",
+    primary: "#E62429",
+    primaryGlow: "rgba(230, 36, 41, 0.65)",
+    secondary: "#00E5FF",
+    secondaryGlow: "rgba(0, 229, 255, 0.55)",
+    accent: "#FFFFFF",
+    accentGlow: "rgba(255, 255, 255, 0.50)"
+  },
+  {
+    name: "MILES MORALES STEALTH",
+    primary: "#FF1744",
+    primaryGlow: "rgba(255, 23, 68, 0.65)",
+    secondary: "#E62429",
+    secondaryGlow: "rgba(230, 36, 41, 0.55)",
+    accent: "#00E5FF",
+    accentGlow: "rgba(0, 229, 255, 0.50)"
+  },
+  {
+    name: "SPIDER-SENSE TINGLE",
+    primary: "#FFE600",
+    primaryGlow: "rgba(255, 230, 0, 0.70)",
+    secondary: "#E62429",
+    secondaryGlow: "rgba(230, 36, 41, 0.55)",
     accent: "#00F5D4",
     accentGlow: "rgba(0, 245, 212, 0.50)"
   },
   {
-    name: "ELECTRIC CYBERPUNK",
+    name: "IRON SPIDER NANOTECH",
+    primary: "#E53935",
+    primaryGlow: "rgba(229, 57, 53, 0.65)",
+    secondary: "#FFD700",
+    secondaryGlow: "rgba(255, 215, 0, 0.60)",
+    accent: "#00E5FF",
+    accentGlow: "rgba(0, 229, 255, 0.50)"
+  },
+  {
+    name: "2099 CYBER SPIDER",
     primary: "#00F0FF",
-    primaryGlow: "rgba(0, 240, 255, 0.55)",
-    secondary: "#FF007F",
-    secondaryGlow: "rgba(255, 0, 127, 0.55)",
+    primaryGlow: "rgba(0, 240, 255, 0.65)",
+    secondary: "#FF0055",
+    secondaryGlow: "rgba(255, 0, 85, 0.55)",
     accent: "#7928CA",
     accentGlow: "rgba(121, 40, 202, 0.50)"
   },
   {
-    name: "RADIOACTIVE MATRIX",
-    primary: "#00FF87",
-    primaryGlow: "rgba(0, 255, 135, 0.55)",
-    secondary: "#60EFFF",
-    secondaryGlow: "rgba(96, 239, 255, 0.50)",
-    accent: "#FFE600",
-    accentGlow: "rgba(255, 230, 0, 0.50)"
-  },
-  {
-    name: "VAPORWAVE SUNSET",
-    primary: "#FF5E00",
-    primaryGlow: "rgba(255, 94, 0, 0.55)",
-    secondary: "#F72585",
-    secondaryGlow: "rgba(247, 37, 133, 0.50)",
-    accent: "#4CC9F0",
-    accentGlow: "rgba(76, 201, 240, 0.50)"
-  },
-  {
-    name: "COSMIC AURORA",
-    primary: "#3A86FF",
-    primaryGlow: "rgba(58, 134, 255, 0.55)",
-    secondary: "#FF006E",
-    secondaryGlow: "rgba(255, 0, 110, 0.50)",
-    accent: "#8338EC",
-    accentGlow: "rgba(131, 56, 236, 0.50)"
-  },
-  {
-    name: "NEO TOKYO MINT",
-    primary: "#00F5D4",
-    primaryGlow: "rgba(0, 245, 212, 0.55)",
-    secondary: "#7928CA",
-    secondaryGlow: "rgba(121, 40, 202, 0.50)",
-    accent: "#FFE600",
-    accentGlow: "rgba(255, 230, 0, 0.50)"
-  },
-  {
-    name: "KINETIC CRIMSON",
-    primary: "#FF1E56",
-    primaryGlow: "rgba(255, 30, 86, 0.55)",
-    secondary: "#00F0FF",
-    secondaryGlow: "rgba(0, 240, 255, 0.50)",
-    accent: "#FFBE0B",
-    accentGlow: "rgba(255, 190, 11, 0.50)"
-  },
-  {
-    name: "DEEP OCEAN ABYSS",
-    primary: "#00D2FF",
-    primaryGlow: "rgba(0, 210, 255, 0.55)",
-    secondary: "#3A7BD5",
-    secondaryGlow: "rgba(58, 123, 213, 0.50)",
-    accent: "#00FF87",
-    accentGlow: "rgba(0, 255, 135, 0.50)"
-  },
-  {
-    name: "SOLAR HYPERNOVA",
-    primary: "#FFD000",
-    primaryGlow: "rgba(255, 208, 0, 0.55)",
-    secondary: "#FF4500",
-    secondaryGlow: "rgba(255, 69, 0, 0.50)",
-    accent: "#FF007F",
-    accentGlow: "rgba(255, 0, 127, 0.50)"
-  },
-  {
-    name: "ULTRAVIOLET VOID",
-    primary: "#B026FF",
-    primaryGlow: "rgba(176, 38, 255, 0.55)",
-    secondary: "#00F0FF",
-    secondaryGlow: "rgba(0, 240, 255, 0.50)",
-    accent: "#00FF87",
-    accentGlow: "rgba(0, 255, 135, 0.50)"
+    name: "SYMBIOTE SURGE",
+    primary: "#FFFFFF",
+    primaryGlow: "rgba(255, 255, 255, 0.70)",
+    secondary: "#E62429",
+    secondaryGlow: "rgba(230, 36, 41, 0.55)",
+    accent: "#00E5FF",
+    accentGlow: "rgba(0, 229, 255, 0.50)"
   }
 ];
 
@@ -4408,7 +4332,78 @@ function setupEventListeners() {
     }
   });
 
-  // Keyboard Numpad & Digits (1-9) + Powers (C, V, T)
+  // Smart TV D-Pad, Remote & Keyboard Arrow Grid Navigation
+  let tvFocusIndex = 4;
+  function updateTvFocus() {
+    document.querySelectorAll('#singleMatrixGrid .glass-tile').forEach((t, idx) => {
+      t.classList.toggle('tv-focused', idx === tvFocusIndex);
+    });
+  }
+
+  // HTML5 Gamepad API loop for Smart TV & Bluetooth Controllers
+  let gpInterval = null;
+  let lastGpBtn = false;
+  window.addEventListener('gamepadconnected', () => {
+    console.log('[SPIDER CONTROLLER] Gamepad connected to device.');
+    if (!gpInterval) {
+      gpInterval = setInterval(() => {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        if (!gamepads || !gamepads[0]) return;
+        const gp = gamepads[0];
+        if (gp.buttons[12] && gp.buttons[12].pressed) {
+          tvFocusIndex = (tvFocusIndex >= 3) ? tvFocusIndex - 3 : tvFocusIndex + 6;
+          updateTvFocus();
+        } else if (gp.buttons[13] && gp.buttons[13].pressed) {
+          tvFocusIndex = (tvFocusIndex <= 5) ? tvFocusIndex + 3 : tvFocusIndex - 6;
+          updateTvFocus();
+        } else if (gp.buttons[14] && gp.buttons[14].pressed) {
+          tvFocusIndex = (tvFocusIndex % 3 > 0) ? tvFocusIndex - 1 : tvFocusIndex + 2;
+          updateTvFocus();
+        } else if (gp.buttons[15] && gp.buttons[15].pressed) {
+          tvFocusIndex = (tvFocusIndex % 3 < 2) ? tvFocusIndex + 1 : tvFocusIndex - 2;
+          updateTvFocus();
+        }
+        const btnA = gp.buttons[0] && gp.buttons[0].pressed;
+        if (btnA && !lastGpBtn) {
+          if (APP_STATE.currentView === 'view-singleplay' && APP_STATE.singlePlay.active) {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        tvFocusIndex = (tvFocusIndex >= 3) ? tvFocusIndex - 3 : tvFocusIndex + 6;
+        updateTvFocus();
+        return;
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        tvFocusIndex = (tvFocusIndex <= 5) ? tvFocusIndex + 3 : tvFocusIndex - 6;
+        updateTvFocus();
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        tvFocusIndex = (tvFocusIndex % 3 > 0) ? tvFocusIndex - 1 : tvFocusIndex + 2;
+        updateTvFocus();
+        return;
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        tvFocusIndex = (tvFocusIndex % 3 < 2) ? tvFocusIndex + 1 : tvFocusIndex - 2;
+        updateTvFocus();
+        return;
+      }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleTileClick(tvFocusIndex, e);
+        return;
+      }
+            handleTileClick(tvFocusIndex);
+          }
+        }
+        lastGpBtn = btnA;
+      }, 120);
+    }
+  });
+
+  // Keyboard Numpad & Digits (1-9) + Arrow Keys / D-Pad + Powers (C, V, T)
   window.addEventListener('keydown', (e) => {
     // Physical Desktop Numpad orientation:
     // [7] [8] [9] -> Row 1 (0, 1, 2)
@@ -4452,15 +4447,24 @@ function renderAvatarOptions() {
   const container = document.getElementById('avatarGrid');
   if (!container) return;
 
+  const SPIDER_SUITS = [
+    { key: 'hero_spiderman', name: 'CLASSIC PETER' },
+    { key: 'miles_stealth', name: 'MILES STEALTH' },
+    { key: 'iron_spider', name: 'IRON SPIDER' },
+    { key: 'spider_sense', name: 'SPIDER-SENSE' },
+    { key: 'spider_bot', name: 'SPIDER-BOT' },
+    { key: 'web_slinger', name: '2099 CYBER' }
+  ];
+
   container.innerHTML = '';
-  Object.keys(AVATARS).forEach(key => {
+  SPIDER_SUITS.forEach(suit => {
     const btn = document.createElement('button');
-    btn.className = `avatar-opt-btn ${APP_STATE.playerAvatar === key ? 'selected' : ''}`;
-    btn.innerHTML = AVATARS[key];
+    btn.className = `avatar-opt-btn ${APP_STATE.playerAvatar === suit.key ? 'selected' : ''}`;
+    btn.innerHTML = (AVATARS[suit.key] || AVATARS.hero_spiderman) + `<span style="display:block; font-size:0.6rem; font-family:var(--font-mono); margin-top:4px; font-weight:700;">${suit.name}</span>`;
     btn.addEventListener('click', () => {
       document.querySelectorAll('.avatar-opt-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      APP_STATE.playerAvatar = key;
+      APP_STATE.playerAvatar = suit.key;
     });
     container.appendChild(btn);
   });
