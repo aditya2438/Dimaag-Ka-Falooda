@@ -30,15 +30,18 @@ for (const file of filesToCopy) {
   }
 }
 
-// Copy audio assets
-const audioSrc = path.join(__dirname, 'audio');
-const audioDest = path.join(wwwDir, 'audio');
-if (fs.existsSync(audioSrc)) {
-  fs.cpSync(audioSrc, audioDest, { recursive: true });
-  const audioFiles = fs.readdirSync(audioDest);
-  console.log(`Copied audio/ (${audioFiles.length} audio tracks) -> www/audio/`);
-} else {
-  console.warn('Warning: audio/ directory not found');
+// Copy directories
+const dirsToCopy = ['audio', 'icons', 'screenshots'];
+for (const dir of dirsToCopy) {
+  const src = path.join(__dirname, dir);
+  const dest = path.join(wwwDir, dir);
+  if (fs.existsSync(src)) {
+    fs.cpSync(src, dest, { recursive: true });
+    const items = fs.readdirSync(dest);
+    console.log(`Copied ${dir}/ (${items.length} files) -> www/${dir}/`);
+  } else {
+    console.warn(`Warning: ${dir}/ directory not found`);
+  }
 }
 
 console.log('Mobile assets preparation complete! Ready for Capacitor sync.');

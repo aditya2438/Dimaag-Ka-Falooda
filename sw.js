@@ -1,26 +1,31 @@
 // sw.js - Service Worker for Offline Mobile Play & Real-Time Sync
-const CACHE_NAME = 'spider-falooda-v3';
+const CACHE_NAME = 'spider-falooda-v3.1';
 
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './style.css',
-  './game.js',
-  './config.js',
-  './manifest.json',
-  './audio/kesariya.mp3',
-  './audio/apna_bana_le.mp3',
-  './audio/sanam_re_lofi.mp3',
-  './audio/faasle.mp3',
-  './audio/samjho_na.mp3',
-  './audio/ishq_mubarak.mp3',
-  './audio/sahiba.mp3',
-  './audio/dhundhala.mp3',
-  './audio/haseen.mp3',
-  './audio/soni_soni.mp3',
-  './audio/jo_tum_mere_ho.mp3',
-  './audio/kho_gaye_hum_kahan.mp3',
-  './audio/sundari.mp3'
+  '/',
+  '/index.html',
+  '/style.css',
+  '/game.js',
+  '/config.js',
+  '/manifest.json',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/icons/icon-512-maskable.png',
+  '/screenshots/screenshot-desktop.png',
+  '/screenshots/screenshot-mobile.png',
+  '/audio/kesariya.mp3',
+  '/audio/apna_bana_le.mp3',
+  '/audio/sanam_re_lofi.mp3',
+  '/audio/faasle.mp3',
+  '/audio/samjho_na.mp3',
+  '/audio/ishq_mubarak.mp3',
+  '/audio/sahiba.mp3',
+  '/audio/dhundhala.mp3',
+  '/audio/haseen.mp3',
+  '/audio/soni_soni.mp3',
+  '/audio/jo_tum_mere_ho.mp3',
+  '/audio/kho_gaye_hum_kahan.mp3',
+  '/audio/sundari.mp3'
 ];
 
 self.addEventListener('install', (event) => {
@@ -66,7 +71,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first for game assets (HTML, CSS, JS, audio) for instantaneous offline loading
+  // Cache-first for game assets (HTML, CSS, JS, audio, icons) for instantaneous offline loading
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) return cachedResponse;
@@ -82,7 +87,7 @@ self.addEventListener('fetch', (event) => {
       }).catch(() => {
         // Fallback for navigation requests
         if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
+          return caches.match('/index.html') || caches.match('/');
         }
       });
     })
