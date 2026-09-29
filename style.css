@@ -582,8 +582,8 @@ header.funky-header {
   transform: scale(1.05);
 }
 
-.menu-bottom-row { display: flex; gap: 8px; margin-top: 6px; }
-.menu-bottom-row .btn-funky { flex: 1; }
+.menu-bottom-row { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; width: 100%; }
+.menu-bottom-row .btn-funky { flex: 1 1 140px; min-height: 42px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* 6. VIEW: SINGLE PLAYER (SHARED MOBILE/BASE RULES) */
 #view-singleplay {
@@ -1829,6 +1829,10 @@ header.funky-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
   background: rgba(14, 10, 16, 0.75);
   border: 1.5px solid rgba(230, 36, 41, 0.35);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.6);
@@ -1877,6 +1881,8 @@ header.funky-header {
   text-align: left;
   overflow: hidden;
   white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .mini-track-title {
   font-family: var(--font-display);
@@ -1974,7 +1980,8 @@ header.funky-header {
 
 .terminal-modal-card {
   width: 100%;
-  max-width: 490px;
+  max-width: min(94vw, 490px);
+  max-height: min(92dvh, 640px);
   background: #060A14;
   border: 1.5px solid rgba(0, 240, 255, 0.35);
   border-radius: 18px;
@@ -2172,6 +2179,7 @@ header.funky-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -2180,7 +2188,9 @@ header.funky-header {
 }
 .term-ctrl-buttons {
   display: flex;
-  gap: 6px;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 .term-ctrl-btn {
   background: rgba(255, 255, 255, 0.08);
@@ -2571,9 +2581,9 @@ header.funky-header {
 }
 
 /* SMART TV & BIGSCREEN (4K, 1080p TV Couch Gaming) */
-.is-tv #app,
 @media (min-width: 1600px), (min-height: 1050px) and (min-width: 1400px) {
-  #app {
+  #app,
+  .is-tv #app {
     max-width: 960px !important;
     padding: 16px 28px !important;
   }
@@ -2637,5 +2647,64 @@ header.funky-header {
     height: 35px !important;
     font-size: 0.68rem !important;
     padding: 3px 6px !important;
+  }
+}
+
+
+/* Universal Element Out-Of-Box Protection & Multi-Device Perfection */
+* {
+  box-sizing: border-box;
+}
+
+.btn-funky,
+.power-btn,
+.term-ctrl-btn,
+.mode-item-glass {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-width: 0;
+}
+
+.singleplay-responsive-layout {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.matrix-arena-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jugaad-powers-row {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  gap: 6px;
+}
+
+.power-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tablet & iPad Smooth Alignment */
+@media (min-width: 601px) and (max-width: 1024px) {
+  #app {
+    max-width: 680px !important;
+    height: 96dvh !important;
+    padding: 10px 16px !important;
+  }
+  .matrix-grid-dynamic {
+    max-width: min(100%, 50vh, 390px) !important;
+    max-height: min(100%, 50vh, 390px) !important;
   }
 }

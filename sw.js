@@ -1,31 +1,68 @@
 // sw.js - Service Worker for Offline Mobile Play & Real-Time Sync
-const CACHE_NAME = 'spider-falooda-v3.4.1';
+const CACHE_NAME = 'spider-falooda-v3.5.0';
 
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/game.js',
-  '/config.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/icons/icon-512-maskable.png',
-  '/screenshots/screenshot-desktop.png',
-  '/screenshots/screenshot-mobile.png',
-  '/audio/kesariya.mp3',
-  '/audio/apna_bana_le.mp3',
-  '/audio/sanam_re_lofi.mp3',
-  '/audio/faasle.mp3',
-  '/audio/samjho_na.mp3',
-  '/audio/ishq_mubarak.mp3',
-  '/audio/sahiba.mp3',
-  '/audio/dhundhala.mp3',
-  '/audio/haseen.mp3',
-  '/audio/soni_soni.mp3',
-  '/audio/jo_tum_mere_ho.mp3',
-  '/audio/kho_gaye_hum_kahan.mp3',
-  '/audio/sundari.mp3'
+  "/",
+  "/index.html",
+  "/style.css",
+  "/game.js",
+  "/config.js",
+  "/manifest.json",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/icon-512-maskable.png",
+  "/screenshots/screenshot-desktop.png",
+  "/screenshots/screenshot-mobile.png",
+  "/audio/aao_milo_chalo.mp3",
+  "/audio/apna_bana_le.mp3",
+  "/audio/bakhuda_tumhi_ho.mp3",
+  "/audio/bulleya.mp3",
+  "/audio/chahun_main_ya_naa.mp3",
+  "/audio/channa_mereya.mp3",
+  "/audio/deewani_mastani.mp3",
+  "/audio/dhundhala.mp3",
+  "/audio/dil_diyan_gallan.mp3",
+  "/audio/faasle.mp3",
+  "/audio/galliyan.mp3",
+  "/audio/hale_dil.mp3",
+  "/audio/haseen.mp3",
+  "/audio/hum_mar_jayenge.mp3",
+  "/audio/iktara.mp3",
+  "/audio/ilahi.mp3",
+  "/audio/ishq_mubarak.mp3",
+  "/audio/jo_tum_mere_ho.mp3",
+  "/audio/kabira.mp3",
+  "/audio/kesariya.mp3",
+  "/audio/khairiyat.mp3",
+  "/audio/kho_gaye_hum_kahan.mp3",
+  "/audio/labon_ko.mp3",
+  "/audio/main_rang_sharbaton_ka.mp3",
+  "/audio/mast_magan.mp3",
+  "/audio/mauja_hi_mauja.mp3",
+  "/audio/meherbaan.mp3",
+  "/audio/muskurane.mp3",
+  "/audio/pani_da_rang.mp3",
+  "/audio/pee_loon.mp3",
+  "/audio/pehli_nazar_mein.mp3",
+  "/audio/piya_aaye_na.mp3",
+  "/audio/raabta.mp3",
+  "/audio/sahiba.mp3",
+  "/audio/samjhawan.mp3",
+  "/audio/samjho_na.mp3",
+  "/audio/sanam_re_lofi.mp3",
+  "/audio/sawan_aaya_hai.mp3",
+  "/audio/shayad.mp3",
+  "/audio/soch_na_sake.mp3",
+  "/audio/soni_soni.mp3",
+  "/audio/subhanallah.mp3",
+  "/audio/sundari.mp3",
+  "/audio/sunn_raha_hai.mp3",
+  "/audio/tera_hone_laga_hoon.mp3",
+  "/audio/teri_meri.mp3",
+  "/audio/tu_hi_haqeeqat.mp3",
+  "/audio/tum_hi_ho.mp3",
+  "/audio/tum_se_hi.mp3",
+  "/audio/yeh_ishq_hai.mp3"
 ];
 
 self.addEventListener('install', (event) => {
@@ -55,6 +92,10 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Allow native browser range-streaming for audio files without SW interception
+  if (event.request.headers && event.request.headers.get('range')) {
+    return;
+  }
   const url = new URL(event.request.url);
 
   // 1. Network-first for leaderboard & server API submissions

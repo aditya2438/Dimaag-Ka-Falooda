@@ -1,0 +1,5 @@
+Spider-Beat-Run.apk
+tests/
+*.log
+.git/
+node_modules/

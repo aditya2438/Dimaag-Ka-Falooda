@@ -895,400 +895,350 @@ class LofiRadioEngine {
     "name": "KESARIYA",
     "artist": "Arijit Singh",
     "sub": "Brahmastra // Warm Saffron Love Song",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "url": "./audio/kesariya.mp3"
   },
   {
     "id": 1,
     "name": "APNA BANA LE",
     "artist": "Arijit Singh",
     "sub": "Bhediya // Soulful Romantic Melody",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "url": "./audio/apna_bana_le.mp3"
   },
   {
     "id": 2,
     "name": "SANAM RE (LOFI)",
     "artist": "Arijit Singh",
     "sub": "Sanam Re // Relaxing Acoustic Lo-Fi",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "url": "./audio/sanam_re_lofi.mp3"
   },
   {
     "id": 3,
     "name": "FAASLE",
     "artist": "Aditya Rikhari",
     "sub": "Aditya Rikhari // Heartfelt Reflection",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "url": "./audio/faasle.mp3"
   },
   {
     "id": 4,
     "name": "SAMJHO NA",
     "artist": "Aditya Rikhari",
     "sub": "Aditya Rikhari // Peaceful Melodious Flow",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "url": "./audio/samjho_na.mp3"
   },
   {
     "id": 5,
     "name": "ISHQ MUBARAK (LOFI)",
     "artist": "Arijit Singh",
     "sub": "Tum Bin 2 // Soulful Slowed Reverb",
-    "url": "./audio/ishq_mubarak.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "url": "./audio/ishq_mubarak.mp3"
   },
   {
     "id": 6,
     "name": "SAHIBA",
     "artist": "Aditya Rikhari",
     "sub": "Aditya Rikhari // Soulful Acoustic Love",
-    "url": "./audio/sahiba.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "url": "./audio/sahiba.mp3"
   },
   {
     "id": 7,
     "name": "DHUNDHALA",
     "artist": "Talwinder & Yashraj",
     "sub": "Talwinder // Chill Hypnotic Vibes",
-    "url": "./audio/dhundhala.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "url": "./audio/dhundhala.mp3"
   },
   {
     "id": 8,
     "name": "HASEEN",
     "artist": "Talwinder",
     "sub": "Talwinder // Smooth Romantic Lo-Fi",
-    "url": "./audio/haseen.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "url": "./audio/haseen.mp3"
   },
   {
     "id": 9,
     "name": "SONI SONI",
     "artist": "Darshan Raval",
     "sub": "Ishq Vishk Rebound // Romantic Chill",
-    "url": "./audio/soni_soni.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "url": "./audio/soni_soni.mp3"
   },
   {
     "id": 10,
     "name": "JO TUM MERE HO",
     "artist": "Anuv Jain",
     "sub": "Soft Whispers & Golden Sunset Echoes",
-    "url": "./audio/jo_tum_mere_ho.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "url": "./audio/jo_tum_mere_ho.mp3"
   },
   {
     "id": 11,
     "name": "KHO GAYE HUM KAHAN",
     "artist": "Jasleen Royal & Prateek",
     "sub": "Baar Baar Dekho // Ethereal Midnight Drift",
-    "url": "./audio/kho_gaye_hum_kahan.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "url": "./audio/kho_gaye_hum_kahan.mp3"
   },
   {
     "id": 12,
     "name": "SUNDARI",
     "artist": "Sanju Rathod",
     "sub": "Warm Folk Acoustic Lo-Fi Melody",
-    "url": "./audio/sundari.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "url": "./audio/sundari.mp3"
   },
   {
     "id": 13,
-    "name": "BAAZIGAR (CHILL LOFI)",
-    "artist": "Anuv Jain",
-    "sub": "Acoustic Guitar Soul & Soft Humming",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "name": "TUM SE HI",
+    "artist": "Mohit Chauhan",
+    "sub": "Jab We Met // Rainy Day Romance",
+    "url": "./audio/tum_se_hi.mp3"
   },
   {
     "id": 14,
-    "name": "HUSN",
-    "artist": "Anuv Jain",
-    "sub": "Gentle Fingerstyle Heartstrings",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/ishq_mubarak.mp3"
+    "name": "CHANNA MEREYA",
+    "artist": "Arijit Singh",
+    "sub": "Ae Dil Hai Mushkil // Soulful Farewell",
+    "url": "./audio/channa_mereya.mp3"
   },
   {
     "id": 15,
-    "name": "ALAG AASMAAN",
-    "artist": "Anuv Jain",
-    "sub": "Cloud Drift Acoustic Reverie",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/sahiba.mp3"
+    "name": "PEE LOON",
+    "artist": "Mohit Chauhan",
+    "sub": "Once Upon A Time In Mumbaai // Pure Soul",
+    "url": "./audio/pee_loon.mp3"
   },
   {
     "id": 16,
-    "name": "MISHRI",
-    "artist": "Anuv Jain",
-    "sub": "Sweet Melodic Nostalgia",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/dhundhala.mp3"
+    "name": "TERA HONE LAGA HOON",
+    "artist": "Atif Aslam",
+    "sub": "Ajab Prem Ki Ghazab Kahani // Gentle Acoustic",
+    "url": "./audio/tera_hone_laga_hoon.mp3"
   },
   {
     "id": 17,
-    "name": "COLD/MESS",
-    "artist": "Prateek Kuhad",
-    "sub": "Intimate Bedroom Acoustic Reverie",
-    "url": "./audio/ishq_mubarak.mp3",
-    "fallback": "./audio/haseen.mp3"
+    "name": "DIL DIYAN GALLAN",
+    "artist": "Atif Aslam",
+    "sub": "Tiger Zinda Hai // Candlelight Romance",
+    "url": "./audio/dil_diyan_gallan.mp3"
   },
   {
     "id": 18,
-    "name": "KASOOR",
-    "artist": "Prateek Kuhad",
-    "sub": "Soft Heart Strings & Acoustic Warmth",
-    "url": "./audio/sahiba.mp3",
-    "fallback": "./audio/soni_soni.mp3"
+    "name": "KHAIRIYAT",
+    "artist": "Arijit Singh",
+    "sub": "Chhichhore // Nostalgic Echoes",
+    "url": "./audio/khairiyat.mp3"
   },
   {
     "id": 19,
-    "name": "TUNE KAHA",
-    "artist": "Prateek Kuhad",
-    "sub": "Gentle Warm Breeze & Piano Chords",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/jo_tum_mere_ho.mp3"
+    "name": "SHAYAD",
+    "artist": "Arijit Singh",
+    "sub": "Love Aaj Kal // Heartstrings Melodious",
+    "url": "./audio/shayad.mp3"
   },
   {
     "id": 20,
-    "name": "NIT NIT (LOFI CHILL)",
-    "artist": "Jasleen Royal",
-    "sub": "Warm Dreamy Echoes & Soft Drums",
-    "url": "./audio/dhundhala.mp3",
-    "fallback": "./audio/kho_gaye_hum_kahan.mp3"
+    "name": "IKTARA",
+    "artist": "Kavita Seth & Tochi",
+    "sub": "Wake Up Sid // Soulful Guitar Strings",
+    "url": "./audio/iktara.mp3"
   },
   {
     "id": 21,
-    "name": "DIN SHAGNA DA",
-    "artist": "Jasleen Royal",
-    "sub": "Phillauri // Serene Acoustic Devotion",
-    "url": "./audio/haseen.mp3",
-    "fallback": "./audio/sundari.mp3"
+    "name": "MAST MAGAN",
+    "artist": "Arijit Singh",
+    "sub": "2 States // Divine Devotion Melodic",
+    "url": "./audio/mast_magan.mp3"
   },
   {
     "id": 22,
-    "name": "PEHLA NASHA (LOFI)",
-    "artist": "Udit Narayan & Sadhana",
-    "sub": "Jo Jeeta Wohi Sikandar // Nostalgic First Love",
-    "url": "./audio/soni_soni.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "name": "KABIRA",
+    "artist": "Arijit Singh",
+    "sub": "Yeh Jawaani Hai Deewani // Peaceful Folk Strings",
+    "url": "./audio/kabira.mp3"
   },
   {
     "id": 23,
-    "name": "TUM SE HI",
-    "artist": "Mohit Chauhan",
-    "sub": "Jab We Met // Rainy Day Windowpane Chill",
-    "url": "./audio/jo_tum_mere_ho.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "name": "SUBHANALLAH",
+    "artist": "Sreeram & Shilpa Rao",
+    "sub": "Yeh Jawaani Hai Deewani // Snowy Acoustic Glow",
+    "url": "./audio/subhanallah.mp3"
   },
   {
     "id": 24,
-    "name": "MATARGASHTI (ACOUSTIC)",
-    "artist": "Mohit Chauhan",
-    "sub": "Tamasha // Joyful Wanderlust Strings",
-    "url": "./audio/kho_gaye_hum_kahan.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "name": "ILAHI",
+    "artist": "Arijit Singh",
+    "sub": "Yeh Jawaani Hai Deewani // Wanderlust Acoustic",
+    "url": "./audio/ilahi.mp3"
   },
   {
     "id": 25,
-    "name": "PHOORR (CHILLOUT)",
-    "artist": "Mohit Chauhan",
-    "sub": "Jab Harry Met Sejal // Calm Evening Flow",
-    "url": "./audio/sundari.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "name": "BULLEYA",
+    "artist": "Amit Mishra & Shilpa",
+    "sub": "Ae Dil Hai Mushkil // Sufi Rock Strings",
+    "url": "./audio/bulleya.mp3"
   },
   {
     "id": 26,
-    "name": "DOBAARA",
-    "artist": "Mohit Chauhan",
-    "sub": "Soulful Yearning & Mountain Winds",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "name": "MUSKURANE",
+    "artist": "Arijit Singh",
+    "sub": "Citylights // Pure Melancholic Violin",
+    "url": "./audio/muskurane.mp3"
   },
   {
     "id": 27,
-    "name": "TERA HONE LAGA HOON",
-    "artist": "Atif Aslam",
-    "sub": "Ajab Prem Ki Ghazab Kahani // Gentle Romance",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/ishq_mubarak.mp3"
+    "name": "SAWAN AAYA HAI",
+    "artist": "Arijit Singh",
+    "sub": "Creature 3D // Monsoon Chill Strings",
+    "url": "./audio/sawan_aaya_hai.mp3"
   },
   {
     "id": 28,
-    "name": "JEENA JEENA",
-    "artist": "Atif Aslam",
-    "sub": "Badlapur // Melancholic Heartstrings",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sahiba.mp3"
+    "name": "SOCH NA SAKE",
+    "artist": "Arijit Singh & Tulsi",
+    "sub": "Airlift // Heartfelt Romantic Flow",
+    "url": "./audio/soch_na_sake.mp3"
   },
   {
     "id": 29,
-    "name": "TU JAANE NA (LOFI)",
-    "artist": "Atif Aslam",
-    "sub": "Soft Midnight Guitar Reverie",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/dhundhala.mp3"
+    "name": "SUNN RAHA HAI",
+    "artist": "Ankit Tiwari",
+    "sub": "Aashiqui 2 // Acoustic Guitar & Rain",
+    "url": "./audio/sunn_raha_hai.mp3"
   },
   {
     "id": 30,
-    "name": "DIL DIYAN GALLAN",
-    "artist": "Atif Aslam",
-    "sub": "Tiger Zinda Hai // Pure Candlelit Romance",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/haseen.mp3"
+    "name": "GALLIYAN",
+    "artist": "Ankit Tiwari",
+    "sub": "Ek Villain // Peaceful Night Echoes",
+    "url": "./audio/galliyan.mp3"
   },
   {
     "id": 31,
-    "name": "KHAIRIYAT (LOFI)",
-    "artist": "Arijit Singh",
-    "sub": "Chhichhore // Soulful Nostalgic Echoes",
-    "url": "./audio/ishq_mubarak.mp3",
-    "fallback": "./audio/soni_soni.mp3"
+    "name": "SAMJHAWAN",
+    "artist": "Arijit Singh & Shreya",
+    "sub": "Humpty Sharma // Soulful Love",
+    "url": "./audio/samjhawan.mp3"
   },
   {
     "id": 32,
-    "name": "CHANNA MEREYA (LOFI)",
-    "artist": "Arijit Singh",
-    "sub": "Ae Dil Hai Mushkil // Melodic Solitude",
-    "url": "./audio/sahiba.mp3",
-    "fallback": "./audio/jo_tum_mere_ho.mp3"
+    "name": "MAIN RANG SHARBATON KA",
+    "artist": "Atif Aslam",
+    "sub": "Phata Poster // Sweet Saffron Romance",
+    "url": "./audio/main_rang_sharbaton_ka.mp3"
   },
   {
     "id": 33,
-    "name": "TUM HI HO (SLOWED)",
-    "artist": "Arijit Singh",
-    "sub": "Aashiqui 2 // Deep Night Rain Acoustic",
-    "url": "./audio/dhundhala.mp3",
-    "fallback": "./audio/kho_gaye_hum_kahan.mp3"
+    "name": "LABON KO",
+    "artist": "KK",
+    "sub": "Bhool Bhulaiyaa // Timeless Nostalgic Soul",
+    "url": "./audio/labon_ko.mp3"
   },
   {
     "id": 34,
-    "name": "HAWAAYEIN",
-    "artist": "Arijit Singh",
-    "sub": "Jab Harry Met Sejal // Gentle Summer Breeze",
-    "url": "./audio/haseen.mp3",
-    "fallback": "./audio/sundari.mp3"
+    "name": "HALE DIL",
+    "artist": "Harshit Saxena",
+    "sub": "Murder 2 // Melodic Rain Echoes",
+    "url": "./audio/hale_dil.mp3"
   },
   {
     "id": 35,
-    "name": "AGAR TUM SAATH HO",
-    "artist": "Arijit & Alka Yagnik",
-    "sub": "Tamasha // Melancholic Rainstrings",
-    "url": "./audio/soni_soni.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "name": "BAKHUDA TUMHI HO",
+    "artist": "Atif Aslam",
+    "sub": "Kismat Konnection // Warm Gentle Breeze",
+    "url": "./audio/bakhuda_tumhi_ho.mp3"
   },
   {
     "id": 36,
-    "name": "RAABTA (LOFI REVERB)",
-    "artist": "Arijit Singh",
-    "sub": "Agent Vinod // Tender Midnight Serenade",
-    "url": "./audio/jo_tum_mere_ho.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "name": "PEHLI NAZAR MEIN",
+    "artist": "Atif Aslam",
+    "sub": "Race // Timeless Acoustic Love",
+    "url": "./audio/pehli_nazar_mein.mp3"
   },
   {
     "id": 37,
-    "name": "SHAYAD",
-    "artist": "Arijit Singh",
-    "sub": "Love Aaj Kal // Tender Acoustic Warmth",
-    "url": "./audio/kho_gaye_hum_kahan.mp3",
-    "fallback": "./audio/sanam_re_lofi.mp3"
+    "name": "MAUJA HI MAUJA",
+    "artist": "Mika Singh",
+    "sub": "Jab We Met // Energetic Desi Beat",
+    "url": "./audio/mauja_hi_mauja.mp3"
   },
   {
     "id": 38,
-    "name": "KABIRA (ACOUSTIC)",
-    "artist": "Arijit & Harshdeep",
-    "sub": "Yeh Jawaani Hai Deewani // Wanderer Rest",
-    "url": "./audio/sundari.mp3",
-    "fallback": "./audio/faasle.mp3"
+    "name": "TUM HI HO",
+    "artist": "Arijit Singh",
+    "sub": "Aashiqui 2 // Iconic Piano Ballad",
+    "url": "./audio/tum_hi_ho.mp3"
   },
   {
     "id": 39,
-    "name": "SUBHANALLAH",
-    "artist": "Sreerama Chandra",
-    "sub": "Yeh Jawaani Hai Deewani // Snowfall Whispers",
-    "url": "./audio/kesariya.mp3",
-    "fallback": "./audio/samjho_na.mp3"
+    "name": "RAABTA",
+    "artist": "Arijit Singh",
+    "sub": "Raabta // Ethereal Romantic Drift",
+    "url": "./audio/raabta.mp3"
   },
   {
     "id": 40,
-    "name": "IKTARA",
-    "artist": "Kavita Seth & Amitabh",
-    "sub": "Wake Up Sid // Serene Dawn Reflections",
-    "url": "./audio/apna_bana_le.mp3",
-    "fallback": "./audio/ishq_mubarak.mp3"
+    "name": "TERI MERI",
+    "artist": "Rahat Fateh Ali Khan & Shreya",
+    "sub": "Bodyguard // Soulful Melancholy",
+    "url": "./audio/teri_meri.mp3"
   },
   {
     "id": 41,
-    "name": "TERE BINA",
-    "artist": "A.R. Rahman",
-    "sub": "Guru // Ethereal Desert Breeze",
-    "url": "./audio/sanam_re_lofi.mp3",
-    "fallback": "./audio/sahiba.mp3"
+    "name": "CHAHUN MAIN YA NAA",
+    "artist": "Arijit Singh & Palak",
+    "sub": "Aashiqui 2 // Gentle Guitar Duet",
+    "url": "./audio/chahun_main_ya_naa.mp3"
   },
   {
     "id": 42,
-    "name": "KUN FAYA KUN",
-    "artist": "A.R. Rahman & Javed Ali",
-    "sub": "Rockstar // Spiritual Peace & Tranquility",
-    "url": "./audio/faasle.mp3",
-    "fallback": "./audio/dhundhala.mp3"
+    "name": "PIYA AAYE NA",
+    "artist": "KK & Tulsi Kumar",
+    "sub": "Aashiqui 2 // Heartbreaking Melody",
+    "url": "./audio/piya_aaye_na.mp3"
   },
   {
     "id": 43,
-    "name": "O SANAM",
-    "artist": "Lucky Ali",
-    "sub": "Sunoh // Vintage Nostalgic Wanderer",
-    "url": "./audio/samjho_na.mp3",
-    "fallback": "./audio/haseen.mp3"
+    "name": "HUM MAR JAYENGE",
+    "artist": "Arijit Singh & Tulsi",
+    "sub": "Aashiqui 2 // Passionate Vow",
+    "url": "./audio/hum_mar_jayenge.mp3"
   },
   {
     "id": 44,
-    "name": "NA TUM JANO NA HUM",
-    "artist": "Lucky Ali",
-    "sub": "Kaho Naa Pyaar Hai // Soft Piano Dream",
-    "url": "./audio/ishq_mubarak.mp3",
-    "fallback": "./audio/soni_soni.mp3"
+    "name": "YEH ISHQ HAI",
+    "artist": "Shreya Ghoshal",
+    "sub": "Jab We Met // Mountain Highway Joy",
+    "url": "./audio/yeh_ishq_hai.mp3"
   },
   {
     "id": 45,
-    "name": "JAANE KYUN",
-    "artist": "Vishal Dadlani",
-    "sub": "Dostana // Sunny Carefree Afternoon",
-    "url": "./audio/sahiba.mp3",
-    "fallback": "./audio/jo_tum_mere_ho.mp3"
+    "name": "AAO MILO CHALO",
+    "artist": "Shaan & Ustad Sultan",
+    "sub": "Jab We Met // Sunny Open Road",
+    "url": "./audio/aao_milo_chalo.mp3"
   },
   {
     "id": 46,
-    "name": "MAULA MERE MAULA",
-    "artist": "Roop Kumar Rathod",
-    "sub": "Anwar // Sacred Love & Ambient Sitar",
-    "url": "./audio/dhundhala.mp3",
-    "fallback": "./audio/kho_gaye_hum_kahan.mp3"
+    "name": "MEHERBAAN",
+    "artist": "Ash King & Shilpa Rao",
+    "sub": "Bang Bang // Serene Island Breeze",
+    "url": "./audio/meherbaan.mp3"
   },
   {
     "id": 47,
-    "name": "PEE LOON",
-    "artist": "Mohit Chauhan",
-    "sub": "Once Upon a Time in Mumbaai // Sweet Melody",
-    "url": "./audio/haseen.mp3",
-    "fallback": "./audio/sundari.mp3"
+    "name": "TU HI HAQEEQAT",
+    "artist": "Javed Ali",
+    "sub": "Tum Mile // Heartfelt Acoustic Soul",
+    "url": "./audio/tu_hi_haqeeqat.mp3"
   },
   {
     "id": 48,
-    "name": "ASAL MEIN",
-    "artist": "Darshan Raval",
-    "sub": "Indie Pop // Soft Heartbreak Reverie",
-    "url": "./audio/soni_soni.mp3",
-    "fallback": "./audio/kesariya.mp3"
+    "name": "PANI DA RANG",
+    "artist": "Ayushmann Khurrana",
+    "sub": "Vicky Donor // Acoustic Rainy Strum",
+    "url": "./audio/pani_da_rang.mp3"
   },
   {
     "id": 49,
-    "name": "HAWA BANKE",
-    "artist": "Darshan Raval",
-    "sub": "Whimsical Warm Breeze & Fingerpicking",
-    "url": "./audio/jo_tum_mere_ho.mp3",
-    "fallback": "./audio/apna_bana_le.mp3"
+    "name": "DEEWANI MASTANI",
+    "artist": "Shreya Ghoshal",
+    "sub": "Bajirao Mastani // Majestic Soulful Harmony",
+    "url": "./audio/deewani_mastani.mp3"
   }
 ];
 
