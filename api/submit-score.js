@@ -26,13 +26,13 @@ const KNOWN_AVATARS = [
   'babu_rao'
 ];
 
-// Sliding rate limiter per IP (5 submissions per 60 seconds)
+// Sliding rate limiter per IP (10 submissions per 60 seconds)
 const rateLimitMap = new Map();
 
 function isRateLimited(ip) {
   const now = Date.now();
   const windowMs = 60 * 1000;
-  const maxRequests = 5;
+  const maxRequests = 10;
 
   const timestamps = (rateLimitMap.get(ip) || []).filter(t => now - t < windowMs);
   if (timestamps.length >= maxRequests) {
@@ -64,8 +64,8 @@ function validatePayload(body) {
 
   const { username, avatar, score, level, mode, replayHash, actionChain } = body;
 
-  if (!username || typeof username !== 'string' || !/^[A-Za-z0-9_]{3,20}$/.test(username)) {
-    return { valid: false, error: 'Invalid username: must be 3-20 alphanumeric characters or underscores' };
+  if (!username || typeof username !== 'string' || !/^[A-Za-z0-9_]{2,25}$/.test(username)) {
+    return { valid: false, error: 'Invalid username: must be 2-25 alphanumeric characters or underscores' };
   }
 
   if (!avatar || typeof avatar !== 'string' || !KNOWN_AVATARS.includes(avatar)) {
@@ -76,23 +76,23 @@ function validatePayload(body) {
     return { valid: false, error: 'Invalid level: must be integer between 1 and 60' };
   }
 
-  if (!Number.isInteger(score) || score < 0 || score > 150000) {
+  if (!Number.isInteger(score) || score < 0 || score > 200000) {
     return { valid: false, error: 'Invalid score: out of allowed bounds' };
   }
 
   const allowedModes = ['solo', 'duel'];
-  if (!mode || !allowedModes.includes(mode)) {
+  if (mode && !allowedModes.includes(mode)) {
     return { valid: false, error: 'Invalid mode: must be solo or duel' };
   }
 
   // Max score boundary check
-  const maxAllowedScore = mode === 'duel' ? 25000 : level * 3500 + 5000;
+  const maxAllowedScore = mode === 'duel' ? 50000 : level * 5000 + 10000;
   if (score > maxAllowedScore) {
     return { valid: false, error: 'Implausible score for level achieved' };
   }
 
-  // Cryptographic action chain validation (Proof-of-Play)
-  if (replayHash && Array.isArray(actionChain)) {
+  // Cryptographic action chain validation (Proof-of-Play if provided)
+  if (replayHash && Array.isArray(actionChain) && actionChain.length > 0) {
     try {
       const serialized = JSON.stringify(actionChain);
       const computedHash = crypto.createHash('sha256').update(serialized).digest('hex');
@@ -105,8 +105,8 @@ function validatePayload(body) {
         const prevTime = actionChain[i - 1].t;
         const currTime = actionChain[i].t;
         if (typeof prevTime === 'number' && typeof currTime === 'number') {
-          if (currTime - prevTime < 35) {
-            return { valid: false, error: 'Human motor reflex limit violation detected (<35ms)' };
+          if (currTime - prevTime < 25) {
+            return { valid: false, error: 'Human motor reflex limit violation detected (<25ms)' };
           }
         }
       }
@@ -119,8 +119,17 @@ function validatePayload(body) {
 }
 
 module.exports = async function handler(req, res) {
+  // Global CORS headers for Web + Mobile APK support
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
+    res.setHeader('Allow', 'POST, OPTIONS');
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
@@ -138,10 +147,10 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: validation.error });
   }
 
-  const { username, avatar, score, level, mode, replayHash } = req.body;
+  const { username, avatar, score, level } = req.body;
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL || 'https://dfixypyqewrdofaufehg.supabase.co';
+  const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !supabaseSecretKey) {
     console.error('[SECURITY AUDIT] SUPABASE_URL or secret key missing in environment.');
@@ -151,7 +160,7 @@ module.exports = async function handler(req, res) {
   const supabase = createClient(supabaseUrl, supabaseSecretKey);
 
   try {
-    // Check existing score: never downgrade
+    // Check existing score: never downgrade high score
     const { data: existing, error: fetchErr } = await supabase
       .from('blind_matrix_leaderboard')
       .select('high_score, max_level')
@@ -160,7 +169,7 @@ module.exports = async function handler(req, res) {
 
     if (fetchErr) {
       console.error('[DB FETCH ERROR]', fetchErr.message);
-      return res.status(500).json({ error: 'Database query failed' });
+      return res.status(500).json({ error: 'Database query failed', details: fetchErr.message });
     }
 
     if (existing && existing.high_score >= score) {
@@ -171,24 +180,29 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // Only upsert verified columns that exist in the Postgres table schema
+    const upsertPayload = {
+      username: username,
+      avatar: avatar,
+      high_score: score,
+      max_level: Math.max(level, existing?.max_level || 1),
+      updated_at: new Date().toISOString()
+    };
+
     const { data: upsertData, error: upsertErr } = await supabase
       .from('blind_matrix_leaderboard')
-      .upsert({
-        username: username,
-        avatar: avatar,
-        high_score: score,
-        max_level: Math.max(level, existing?.max_level || 1),
-        mode: mode || 'solo',
-        replay_hash: replayHash || null,
-        updated_at: new Date().toISOString()
-      }, {
+      .upsert(upsertPayload, {
         onConflict: 'username'
       })
       .select();
 
     if (upsertErr) {
       console.error('[DB UPSERT ERROR]', upsertErr.message);
-      return res.status(500).json({ error: 'Database record upsert failed' });
+      return res.status(500).json({
+        error: 'Database record upsert failed',
+        details: upsertErr.message,
+        hint: upsertErr.hint
+      });
     }
 
     return res.status(200).json({
@@ -197,6 +211,6 @@ module.exports = async function handler(req, res) {
     });
   } catch (err) {
     console.error('[HANDLER ERROR]', err);
-    return res.status(500).json({ error: 'Internal processing error' });
+    return res.status(500).json({ error: 'Internal processing error', details: err?.message });
   }
 };

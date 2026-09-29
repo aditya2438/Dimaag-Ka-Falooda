@@ -1,3 +1,8 @@
+
+try {
+  localStorage.removeItem('bm_supa_key');
+  localStorage.removeItem('bm_supa_url');
+} catch(e) {}
 /* ==========================================================================
    DIMAAG KA FALOODA: BEAT RUN 2.0 - ULTRA FUNKY MASTER ENGINE (game.js)
    Engine Architecture: Pure Vanilla JS, Web Audio API + Speech Synth,
@@ -3828,53 +3833,94 @@ function startBotBehavior() {
    SECTION 11: LEADERBOARD & REALTIME BROADCAST
    ========================================================================== */
 const DEFAULT_LEADERBOARD = [
-  { username: 'PETER_PARKER', avatar: 'spider_mask',   high_score: 4200, max_level: 14 },
-  { username: 'MILES_STEALTH',avatar: 'miles_stealth', high_score: 3600, max_level: 12 },
-  { username: 'WEB_SLINGER',  avatar: 'web_slinger',   high_score: 3100, max_level: 10 },
-  { username: 'SPIDER_SENSE', avatar: 'spider_sense',  high_score: 2600, max_level: 8 },
-  { username: 'IRON_SPIDER',  avatar: 'iron_spider',   high_score: 2150, max_level: 7 }
+  { username: 'BHAIYU', avatar: 'hero_spiderman', high_score: 22049, max_level: 20 },
+  { username: 'ANSUKA', avatar: 'miles_stealth', high_score: 13819, max_level: 9 },
+  { username: 'CHINTU_884', avatar: 'spider_sense', high_score: 13519, max_level: 9 },
+  { username: 'CHINTU_407', avatar: 'web_slinger', high_score: 13204, max_level: 9 },
+  { username: 'CHINTU_724', avatar: 'iron_spider', high_score: 11198, max_level: 9 },
+  { username: 'CHINTU_949', avatar: 'spider_mask', high_score: 7167, max_level: 8 },
+  { username: 'CHINTU_234', avatar: 'hero_ironman', high_score: 5301, max_level: 7 },
+  { username: 'SHARMA_JI_KA_LADKA', avatar: 'sharma_beta', high_score: 4200, max_level: 14 },
+  { username: 'CHINTU_815', avatar: 'hero_cap', high_score: 4135, max_level: 5 },
+  { username: 'CHINTU_215', avatar: 'hero_deadpool', high_score: 4081, max_level: 5 }
 ];
 
 function getLocalLeaderboard() {
   const stored = localStorage.getItem('bm_local_leaderboard');
   if (stored) {
-    try { return JSON.parse(stored); } catch (e) { }
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length >= 5) return parsed;
+    } catch (e) { }
   }
   return DEFAULT_LEADERBOARD;
 }
 
 function saveLocalLeaderboard(data) {
-  localStorage.setItem('bm_local_leaderboard', JSON.stringify(data));
+  if (Array.isArray(data) && data.length > 0) {
+    localStorage.setItem('bm_local_leaderboard', JSON.stringify(data));
+  }
 }
 
 function initSupabase() {
-  if (APP_STATE.supabaseUrl && APP_STATE.supabaseKey && window.supabase) {
+  const url = (typeof CONFIG !== 'undefined' && CONFIG.SUPABASE_URL) || APP_STATE.supabaseUrl;
+  const key = (typeof CONFIG !== 'undefined' && CONFIG.SUPABASE_ANON_KEY) || APP_STATE.supabaseKey;
+
+  if (url && key && window.supabase) {
     try {
-      APP_STATE.supabaseClient = window.supabase.createClient(
-        APP_STATE.supabaseUrl,
-        APP_STATE.supabaseKey
-      );
+      if (!APP_STATE.supabaseClient) {
+        APP_STATE.supabaseClient = window.supabase.createClient(url, key);
 
-      APP_STATE.supabaseClient
-        .channel('public:blind_matrix_leaderboard')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'blind_matrix_leaderboard' }, () => {
-          loadLeaderboard();
-        })
-        .subscribe();
+        APP_STATE.supabaseClient
+          .channel('public:blind_matrix_leaderboard')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'blind_matrix_leaderboard' }, (payload) => {
+            console.log('[Realtime] Leaderboard change detected:', payload);
+            loadLeaderboard();
+          })
+          .subscribe((status) => {
+            console.log('[Realtime] Channel subscription status:', status);
+          });
 
-      console.log("Supabase Realtime connected.");
+        console.log('[Supabase Realtime] Initialized and subscribed successfully.');
+      }
     } catch (e) {
-      console.warn("Supabase init error:", e);
+      console.warn('[Supabase Realtime] Init error:', e);
     }
   }
 }
 
+let leaderboardPollingTimer = null;
+
 async function loadLeaderboard() {
   const listEl = document.getElementById('leaderboardList');
   if (!listEl) return;
-  listEl.innerHTML = '<li style="font-family: var(--font-main); font-size: 0.88rem; padding: 10px;">CONNECTING TO CLOUD...</li>';
 
-  let records = [];
+  // Active polling while leaderboard is open (updates live every 4 seconds)
+  if (!leaderboardPollingTimer) {
+    leaderboardPollingTimer = setInterval(async () => {
+      if (APP_STATE.currentView === 'view-leaderboard') {
+        const freshRecords = await fetchLeaderboardData();
+        renderLeaderboardRows(freshRecords, listEl);
+      } else {
+        clearInterval(leaderboardPollingTimer);
+        leaderboardPollingTimer = null;
+      }
+    }, 4000);
+  }
+
+  // Load and render
+  const records = await fetchLeaderboardData();
+  renderLeaderboardRows(records, listEl);
+}
+
+async function fetchLeaderboardData() {
+  const supaUrl = (typeof CONFIG !== 'undefined' && CONFIG.SUPABASE_URL) || APP_STATE.supabaseUrl;
+  const supaKey = (typeof CONFIG !== 'undefined' && CONFIG.SUPABASE_ANON_KEY) || APP_STATE.supabaseKey;
+
+  // 1. Try Supabase Client
+  if (!APP_STATE.supabaseClient && window.supabase) {
+    initSupabase();
+  }
 
   if (APP_STATE.supabaseClient) {
     try {
@@ -3884,25 +3930,51 @@ async function loadLeaderboard() {
         .order('high_score', { ascending: false })
         .limit(10);
 
-      if (!error && data && data.length > 0) {
-        records = data;
+      if (!error && Array.isArray(data) && data.length > 0) {
+        saveLocalLeaderboard(data);
+        return data;
       }
     } catch (e) {
-      console.warn("Supabase fetch failed, fallback to local:", e);
+      console.warn('[Leaderboard] SDK fetch failed, falling back to direct REST:', e);
     }
   }
 
-  if (records.length === 0) {
+  // 2. Direct resilient PostgREST query (works everywhere, zero dependencies)
+  try {
+    const resp = await fetch(`${supaUrl}/rest/v1/blind_matrix_leaderboard?select=*&order=high_score.desc&limit=10`, {
+      headers: {
+        'apikey': supaKey,
+        'Authorization': `Bearer ${supaKey}`
+      }
+    });
+    if (resp.ok) {
+      const restData = await resp.json();
+      if (Array.isArray(restData) && restData.length > 0) {
+        saveLocalLeaderboard(restData);
+        return restData;
+      }
+    }
+  } catch (e) {
+    console.warn('[Leaderboard] REST fetch error:', e);
+  }
+
+  // 3. Fallback to local storage / defaults
+  return getLocalLeaderboard();
+}
+
+function renderLeaderboardRows(records, listEl) {
+  if (!listEl) return;
+  if (!Array.isArray(records) || records.length === 0) {
     records = getLocalLeaderboard();
   }
 
-  records.sort((a, b) => b.high_score - a.high_score);
+  records.sort((a, b) => (Number(b.high_score) || 0) - (Number(a.high_score) || 0));
 
   listEl.innerHTML = '';
-  records.forEach((row, index) => {
+  records.slice(0, 10).forEach((row, index) => {
     const isMe = row.username === APP_STATE.playerHandle;
-    const avatarKey = (row.avatar && AVATARS[row.avatar]) ? row.avatar : 'cutting_chai';
-    const avatarSvg = AVATARS[avatarKey];
+    const avatarKey = (row.avatar && AVATARS[row.avatar]) ? row.avatar : 'spider_mask';
+    const avatarSvg = AVATARS[avatarKey] || AVATARS['spider_mask'];
 
     const li = document.createElement('li');
     li.className = `lb-row-item rank-${index + 1} ${isMe ? 'current-player' : ''}`;
@@ -3922,7 +3994,7 @@ async function loadLeaderboard() {
 
     const nameSpan = document.createElement('span');
     nameSpan.style.fontWeight = '800';
-    nameSpan.textContent = String(row.username || 'PLAYER'); // XSS prevention: strict text node escaping
+    nameSpan.textContent = String(row.username || 'PLAYER'); // XSS prevention
     userBlock.appendChild(nameSpan);
 
     const modeStr = (row.mode || 'solo').toUpperCase();
