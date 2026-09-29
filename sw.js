@@ -1,5 +1,5 @@
 // sw.js - Service Worker for Offline Mobile Play & Real-Time Sync
-const CACHE_NAME = 'spider-falooda-v3.1';
+const CACHE_NAME = 'spider-falooda-v3.3';
 
 const ASSETS_TO_CACHE = [
   '/',
@@ -45,7 +45,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[ServiceWorker] Removing old cache:', key);
+            console.log('[ServiceWorker] Purging outdated cache:', key);
             return caches.delete(key);
           }
         })
@@ -57,11 +57,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Network-first for leaderboard & server API submissions
+  // 1. Network-first for leaderboard & server API submissions
   if (url.pathname.includes('/api/') || url.hostname.includes('supabase.co')) {
     event.respondWith(
       fetch(event.request).catch(() => {
-        // Return synthetic offline response if API unreachable
         return new Response(JSON.stringify({ offline: true, message: 'Offline mode active. Score queued locally.' }), {
           headers: { 'Content-Type': 'application/json' },
           status: 503
@@ -71,7 +70,37 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first for game assets (HTML, CSS, JS, audio, icons) for instantaneous offline loading
+  // 2. Network-First with cache fallback for code scripts, styles, and HTML
+  // Guarantees all players instantly receive fresh leaderboard, styling, and game logic!
+  if (
+    url.pathname.endsWith('.js') ||
+    url.pathname.endsWith('.css') ||
+    url.pathname.endsWith('.html') ||
+    url.pathname === '/' ||
+    url.pathname.endsWith('/manifest.json')
+  ) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(event.request).then((cached) => {
+            if (cached) return cached;
+            if (event.request.mode === 'navigate') {
+              return caches.match('/index.html') || caches.match('/');
+            }
+          });
+        })
+    );
+    return;
+  }
+
+  // 3. Cache-first for audio tracks and visual images (heavy assets)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) return cachedResponse;
@@ -84,11 +113,6 @@ self.addEventListener('fetch', (event) => {
           cache.put(event.request, responseToCache);
         });
         return networkResponse;
-      }).catch(() => {
-        // Fallback for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html') || caches.match('/');
-        }
       });
     })
   );

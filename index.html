@@ -27,6 +27,7 @@
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js').then(function(reg) {
           console.log('[PWA] Service Worker registered:', reg.scope);
+          reg.update();
         }).catch(function(err) {
           console.warn('[PWA] Service Worker error:', err);
         });
@@ -41,7 +42,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
   <!-- Funky Fluid Glassmorphism Stylesheet -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3.3.0">
 
   <!-- Supabase JS Client for Realtime Global Leaderboard (Pinned with SRI integrity verification) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"
@@ -388,10 +389,10 @@
       <div class="leaderboard-glass-box">
         <div class="lb-header-row">
           <h2 class="kinetic-text">TOP 10 OPERATORS</h2>
-          <span id="lbSyncBadge" style="font-size: 0.72rem; color: var(--color-accent); font-family: var(--font-mono); font-weight: 800;">
-            LIVE REALTIME SYNC
-          </span>
         </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 6px; display: flex; justify-content: space-between;">
+          <span>GLOBAL HIGH SCORES</span>
+          <span style="color: var(--color-accent);">ALL 10 RANKS LIVE</span>
 
         <ul id="leaderboardList" class="lb-rows-container">
           <!-- Populated via game.js -->
@@ -504,6 +505,6 @@
   </div>
 
   <!-- External Master Game Engine Script -->
-  <script src="game.js" defer></script>
+  <script src="game.js?v=3.3.0" defer></script>
 </body>
 </html>
