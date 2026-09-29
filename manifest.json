@@ -1,0 +1,26 @@
+{
+  "name": "Dimaag Ka Falooda: Spider Beat Run",
+  "short_name": "Spider Beat Run",
+  "description": "High-stakes spatial memory reflex web game with dynamic matrix grid scaling, retro radio terminal, real Hindi Lo-Fi audio, and live DJ beat synchronizer.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06070A",
+  "theme_color": "#E62429",
+  "categories": ["games", "arcade", "music"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%2308070A'/%3E%3Cellipse cx='96' cy='96' rx='66' ry='78' fill='%23E62429'/%3E%3Cpath d='M48 78c12 18 30 27 42 27-6-15-12-33-15-42-9 3-21 9-27 15z' fill='%23FFFFFF' stroke='%23000000' stroke-width='6'/%3E%3Cpath d='M144 78c-12 18-30 27-42 27 6-15 12-33 15-42 9 3 21 9 27 15z' fill='%23FFFFFF' stroke='%23000000' stroke-width='6'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%2308070A'/%3E%3Cellipse cx='256' cy='256' rx='176' ry='208' fill='%23E62429'/%3E%3Cpath d='M128 208c32 48 80 72 112 72-16-40-32-88-40-112-24 8-56 24-72 40z' fill='%23FFFFFF' stroke='%23000000' stroke-width='16'/%3E%3Cpath d='M384 208c-32 48-80 72-112 72 16-40 32-88 40-112 24 8 56 24 72 40z' fill='%23FFFFFF' stroke='%23000000' stroke-width='16'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

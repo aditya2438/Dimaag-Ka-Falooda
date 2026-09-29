@@ -1,0 +1,88 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Build Spider-Man Game Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Dependencies & Capacitor
+        run: |
+          npm install
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      - name: Initialize Capacitor Android Project
+        run: |
+          npx cap init "Spider Beat Run" "com.aditya.spiderfalooda" --web-dir "."
+          npx cap add android
+
+      - name: Configure Android Permissions & Assets
+        run: |
+          # Copy web assets into android capacitor assets
+          npx cap sync android
+
+      - name: Build Android Debug APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Copy & Rename APK
+        run: |
+          mkdir -p output
+          cp android/app/build/outputs/apk/debug/app-debug.apk output/Spider-Beat-Run.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Spider-Beat-Run-Android-APK
+          path: output/Spider-Beat-Run.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Create or Update GitHub Release with APK
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/heads/main')
+        with:
+          tag_name: v3.0.0-apk
+          name: "Spider Beat Run 3.0 Mobile Android APK"
+          body: |
+            ### 🕷️ Dimaag Ka Falooda: Spider Beat Run (Mobile Android Edition)
+            - **100% Native Mobile App Performance** on all Android phones & tablets
+            - **Complete Offline Support**: Play without internet anytime, anywhere!
+            - **Automatic Real-Time Sync**: Scores update to the global leaderboard table automatically when reconnected!
+            - **13 Real Lo-Fi Hindi Audio Tracks** bundled inside the app
+            - **Spider-Man Suit & Powers**: Web-Zip, Spider-Sense, Peter Tingle
+
+            📥 **Direct Download**: Download `Spider-Beat-Run.apk` below and tap to install on your Android device!
+          files: output/Spider-Beat-Run.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
